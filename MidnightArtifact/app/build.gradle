@@ -20,6 +20,24 @@ android {
         }
     }
 
+    productFlavors {
+
+        atman {}
+        yingyongbao {}
+        wandoujia {}
+        lenovo {}
+        sougouphone {}
+        pp {}
+        huawei {}
+        meizu {}
+        mumayi {}
+
+        productFlavors.all { flavor ->
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        }
+
+    }
+
     buildTypes {
         release {
             // 不显示Log, 在java代码中的调用方式为：BuildConfig.LOG_DEBUG

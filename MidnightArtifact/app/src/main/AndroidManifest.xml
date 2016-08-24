@@ -59,7 +59,7 @@
 
         <!--友盟相关-->
         <meta-data android:value="5785ad9c67e58e13f00017c8" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="atman_android" android:name="UMENG_CHANNEL"/>
+        <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/>
         <!--<meta-data android:value="b497399e2469db28e7f2c238c6713e1c" android:name="UMENG_MESSAGE_SECRET" />-->
 
         <service
