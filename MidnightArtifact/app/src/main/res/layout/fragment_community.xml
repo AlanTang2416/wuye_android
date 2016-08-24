@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/community_listview"
+        android:divider="@null"
+        android:layout_below="@+id/community_top_title_ll"
+        android:layout_marginTop="@dimen/dimen_dp_f3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/community_top_title_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/part_fragment_top_bar" />
+    </LinearLayout>
+</RelativeLayout>

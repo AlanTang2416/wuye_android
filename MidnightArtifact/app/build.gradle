@@ -1,0 +1,71 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId "com.atman.wysq"
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName "2.0.0"
+    }
+    signingConfigs {
+        releaseConfig {
+            keyAlias 'wys7'
+            keyPassword 'atmanatman'
+            storeFile file('../keystore/wys7.keystore')
+            storePassword 'atmanatman'
+        }
+    }
+
+    buildTypes {
+        release {
+            // 不显示Log, 在java代码中的调用方式为：BuildConfig.LOG_DEBUG
+            buildConfigField "boolean", "LEO_DEBUG", "false"
+
+            minifyEnabled false
+            shrinkResources true
+            zipAlignEnabled true
+
+            signingConfig signingConfigs.releaseConfig
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LEO_DEBUG", "true"
+            versionNameSuffix "-debug"
+
+            minifyEnabled false
+            shrinkResources false
+            zipAlignEnabled true
+            signingConfig signingConfigs.releaseConfig
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        task nativeLibsToJar(type: Zip, description: "create a jar archive of the native libs") {
+            destinationDir file("$projectDir/libs")
+            baseName "Native_Libs2"
+            extension "jar"
+            from fileTree(dir: "src/jniLibs", include: "**/*.so")
+            into "lib"
+        }
+
+        tasks.withType(JavaCompile) {
+            compileTask -> compileTask.dependsOn(nativeLibsToJar)
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile project(':baselibs')
+    compile files('libs/Native_Libs2.jar')
+    compile files('libs/SocialSDK_Sina.jar')
+    compile files('libs/SocialSDK_QQZone_3.jar')
+    compile files('libs/alipaySdk-20160516.jar')
+}

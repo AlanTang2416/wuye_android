@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">午夜神器</string>
+
+    <string name="tab_community">社区</string>
+    <string name="tab_mall">商城</string>
+    <string name="tab_message">消息</string>
+    <string name="tab_discover">发现</string>
+    <string name="tab_personal">我的</string>
+
+    <!--我的-->
+    <string name="personal_recharge_str">充值</string>
+    <string name="personal_myorder_str">我的订单</string>
+    <string name="personal_task_str">任务</string>
+    <string name="personal_maillist_str">通讯录邀请</string>
+    <string name="personal_service_str">联系客服</string>
+    <string name="personal_service_phone_str">400-820-5310</string>
+
+</resources>

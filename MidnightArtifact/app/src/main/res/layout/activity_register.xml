@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dimen_dp_20"
+    android:paddingRight="@dimen/dimen_dp_20"
+    android:paddingTop="@dimen/dimen_dp_30">
+
+    <com.base.baselibs.widget.MyCleanEditText
+        android:id="@+id/register_username_et"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_40"
+        android:background="@drawable/red_edit_bg"
+        android:gravity="center_vertical"
+        android:hint="手机号"
+        android:textColorHint="@color/text_hintcolor"
+        android:maxLength="11"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:nextFocusForward="@+id/login_password_et"
+        android:paddingLeft="@dimen/dimen_dp_10"
+        android:paddingRight="@dimen/dimen_dp_10"
+        android:singleLine="true"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/dimen_sp_18" />
+
+    <com.base.baselibs.widget.MyCleanEditText
+        android:id="@+id/register_password_et"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_40"
+        android:layout_marginTop="@dimen/dimen_dp_10"
+        android:background="@drawable/red_edit_bg"
+        android:gravity="center_vertical"
+        android:textColorHint="@color/text_hintcolor"
+        android:hint="密码"
+        android:maxLength="16"
+        android:paddingLeft="@dimen/dimen_dp_10"
+        android:paddingRight="@dimen/dimen_dp_10"
+        android:password="true"
+        android:singleLine="true"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/dimen_sp_18" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_40"
+        android:layout_marginTop="@dimen/dimen_dp_10"
+        android:orientation="horizontal">
+
+        <com.base.baselibs.widget.MyCleanEditText
+            android:id="@+id/register_code_et"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/red_edit_bg"
+            android:gravity="center_vertical"
+            android:hint="验证码"
+            android:textColorHint="@color/text_hintcolor"
+            android:inputType="number"
+            android:maxLength="6"
+            android:paddingLeft="@dimen/dimen_dp_10"
+            android:paddingRight="@dimen/dimen_dp_10"
+            android:singleLine="true"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/dimen_sp_18" />
+
+        <TextView
+            android:id="@+id/register_code_bt"
+            android:layout_width="@dimen/dimen_dp_120"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dimen_dp_10"
+            android:textSize="@dimen/dimen_sp_14"
+            android:background="@drawable/text_code_bg"
+            android:gravity="center"
+            android:text="获取短信验证码"
+            android:textColor="@color/color_black" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:layout_marginTop="@dimen/dimen_dp_15"
+        android:id="@+id/register_gender_rg"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/dimen_dp_20"
+        android:paddingRight="@dimen/dimen_dp_20"
+        android:dividerPadding="@dimen/dimen_dp_6"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:showDividers="middle">
+
+        <RadioButton
+            android:id="@+id/register_man_rt"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="true"
+            android:drawableTop="@drawable/register_gender_man_selector"
+            android:gravity="center"
+            android:text="男"
+            android:textColor="@color/tab_text_selector"
+            android:textSize="@dimen/dimen_sp_14" />
+
+        <RadioButton
+            android:id="@+id/register_weman_rt"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/register_gender_weman_selector"
+            android:gravity="center"
+            android:text="女"
+            android:textColor="@color/tab_text_selector"
+            android:textSize="@dimen/dimen_sp_14" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_dp_10"
+        android:gravity="center"
+        android:text="一旦注册成功，性别将无法修改，请谨慎选择"
+        android:textSize="@dimen/dimen_sp_14" />
+
+    <Button
+        android:id="@+id/register_sumbit_bt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_45"
+        android:layout_marginTop="@dimen/dimen_dp_15"
+        android:background="@drawable/bt_nomal_selector"
+        android:enabled="false"
+        android:text="注 册"
+        android:textColor="@drawable/bt_nomal_text_selector"
+        android:textSize="@dimen/dimen_sp_18" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_dp_15"
+        android:gravity="center"
+        android:text="轻触上面的“注册”按钮，即表示你同意"
+        android:textSize="@dimen/dimen_sp_14" />
+
+    <TextView
+        android:id="@+id/register_agreement_tx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/transparent_hollow_selector"
+        android:layout_gravity="center"
+        android:text="《午夜神器用户协议》"
+        android:textColor="#ff0000"
+        android:textSize="@dimen/dimen_sp_14" />
+</LinearLayout>

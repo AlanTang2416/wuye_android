@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="#5D5580"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.base.baselibs.widget.RoundImageView
+        xmlns:roundiv="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/base_gesturelock_head_iv"
+        android:layout_width="@dimen/dimen_dp_70"
+        android:layout_height="@dimen/dimen_dp_70"
+        android:layout_marginTop="@dimen/dimen_dp_40"
+        android:layout_centerInParent="true"
+        roundiv:border_outside_color="@color/color_white"
+        roundiv:border_thickness="@dimen/dimen_dp_1"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/base_gesturelock_tx"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_dp_35"
+        android:layout_marginBottom="@dimen/dimen_dp_20"
+        android:gravity="center"
+        android:textColor="@color/color_black"
+        android:text="绘制解锁图案"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_weight="1">
+
+        <com.base.baselibs.widget.LockPatternView
+            android:id="@+id/base_gesturelock_lpv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/base_gesturelock_forgot_pw_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_dp_10"
+        android:gravity="center|bottom"
+        android:text="忘记密码？"
+        android:textColor="#2176D2"/>
+
+</LinearLayout>

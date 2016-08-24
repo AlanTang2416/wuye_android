@@ -1,0 +1,54 @@
+<resources>
+
+    <dimen name="dimen_dp_f7">-5dp</dimen>
+    <dimen name="dimen_dp_f5">-4dp</dimen>
+    <dimen name="dimen_dp_f3">-2dp</dimen>
+    <dimen name="dimen_dp_1">1dp</dimen>
+    <dimen name="dimen_dp_2">2dp</dimen>
+    <dimen name="dimen_dp_3">2dp</dimen>
+    <dimen name="dimen_dp_4">3dp</dimen>
+    <dimen name="dimen_dp_5">4dp</dimen>
+    <dimen name="dimen_dp_6">4dp</dimen>
+    <dimen name="dimen_dp_7">5dp</dimen>
+    <dimen name="dimen_dp_8">6dp</dimen>
+    <dimen name="dimen_dp_10">7dp</dimen>
+    <dimen name="dimen_dp_12">8dp</dimen>
+    <dimen name="dimen_dp_13">9dp</dimen>
+    <dimen name="dimen_dp_15">10dp</dimen>
+    <dimen name="dimen_dp_16">11dp</dimen>
+    <dimen name="dimen_dp_20">13dp</dimen>
+    <dimen name="dimen_dp_25">17dp</dimen>
+    <dimen name="dimen_dp_30">25dp</dimen>
+    <dimen name="dimen_dp_35">23dp</dimen>
+    <dimen name="dimen_dp_40">29dp</dimen>
+    <dimen name="dimen_dp_45">30dp</dimen>
+    <dimen name="dimen_dp_46">31dp</dimen>
+    <dimen name="dimen_dp_48">40dp</dimen>
+    <dimen name="dimen_dp_50">33dp</dimen>
+    <dimen name="dimen_dp_55">43dp</dimen>
+    <dimen name="dimen_dp_58">50dp</dimen>
+    <dimen name="dimen_dp_60">50dp</dimen>
+    <dimen name="dimen_dp_65">65dp</dimen>
+    <dimen name="dimen_dp_70">65dp</dimen>
+    <dimen name="dimen_dp_75">70dp</dimen>
+    <dimen name="dimen_dp_80">70dp</dimen>
+    <dimen name="dimen_dp_90">60dp</dimen>
+    <dimen name="dimen_dp_92">75dp</dimen>
+    <dimen name="dimen_dp_100">67dp</dimen>
+    <dimen name="dimen_dp_120">80dp</dimen>
+    <dimen name="dimen_dp_150">130dp</dimen>
+    <dimen name="dimen_dp_170">113dp</dimen>
+    <dimen name="dimen_dp_250">167dp</dimen>
+
+    <dimen name="dimen_sp_9">7sp</dimen>
+    <dimen name="dimen_sp_10">8sp</dimen>
+    <dimen name="dimen_sp_11">9sp</dimen>
+    <dimen name="dimen_sp_12">9sp</dimen>
+    <dimen name="dimen_sp_13">10sp</dimen>
+    <dimen name="dimen_sp_14">10sp</dimen>
+    <dimen name="dimen_sp_15">11sp</dimen>
+    <dimen name="dimen_sp_16">11sp</dimen>
+    <dimen name="dimen_sp_17">13sp</dimen>
+    <dimen name="dimen_sp_18">13sp</dimen>
+    <dimen name="dimen_sp_30">21sp</dimen>
+</resources>
