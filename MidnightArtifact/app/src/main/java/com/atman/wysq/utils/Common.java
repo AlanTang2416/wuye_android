@@ -21,11 +21,11 @@ public class Common {
 
 
     /**************************http基础访问路径*****************************/
-//    public static String hostUrl = "http://192.168.1.134:8080/";
-//    public static String ImageUrl = "http://192.168.1.134:8001";
+    public static String hostUrl = "http://192.168.1.134:8080/";
+    public static String ImageUrl = "http://192.168.1.134:8001";
 
-    public static String hostUrl = "http://api.5ys7.com/";
-    public static String ImageUrl = "http://api.5ys7.com";
+//    public static String hostUrl = "http://api.5ys7.com/";
+//    public static String ImageUrl = "http://api.5ys7.com";
     /**************************http基础访问路径*****************************/
 
 

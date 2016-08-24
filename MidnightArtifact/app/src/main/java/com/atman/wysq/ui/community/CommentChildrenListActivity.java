@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -47,7 +48,7 @@ import okhttp3.Response;
  * 邮箱 bltang@atman.com
  * 电话 18578909061
  */
-public class CommentChildrenListActivity extends MyBaseActivity implements AdapterInterface {
+public class CommentChildrenListActivity extends MyBaseActivity implements AdapterInterface,View.OnTouchListener {
 
     @Bind(R.id.blogdetail_comment_lv)
     PullToRefreshListView blogdetailCommentLv;
@@ -195,6 +196,8 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
                     , MyBaseApplication.getApp().getOptionsNot());
             childrencommentHostTx.setVisibility(View.INVISIBLE);
         }
+
+        blogdetailSendBt.setOnTouchListener(this);
     }
 
     private void sendMessage(View v) {
@@ -357,5 +360,17 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
     @Override
     public void onItemClick(View view, int position) {
 
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (isFastDoubleClick()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
 }

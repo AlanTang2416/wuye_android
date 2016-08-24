@@ -7,15 +7,16 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,7 +71,8 @@ import okhttp3.Response;
  * 邮箱 bltang@atman.com
  * 电话 18578909061
  */
-public class PostingsDetailActivity extends MyBaseActivity implements AdapterInterface, UMShareListener {
+public class PostingsDetailActivity extends MyBaseActivity implements AdapterInterface
+        , UMShareListener, View.OnTouchListener {
 
     @Bind(R.id.blogdetail_comment_lv)
     PullToRefreshListView blogdetailCommentLv;
@@ -82,6 +84,8 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
     ImageView blogdetailAddemolIv;
     @Bind(R.id.ll_facechoose)
     RelativeLayout llFacechoose;
+    @Bind(R.id.blogdetail_send_bt)
+    Button blogdetailSendBt;
 
     private Context mContext = PostingsDetailActivity.this;
     private ListView mListView;
@@ -151,7 +155,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         tilte = getIntent().getStringExtra("tilte");
         bolgId = getIntent().getIntExtra("id", -1);
         isMy = getIntent().getBooleanExtra("isMy", false);
-        LogUtils.e("id:" + bolgId+",isMy:"+isMy);
+        LogUtils.e("id:" + bolgId + ",isMy:" + isMy);
 
         setBarTitleTx(tilte);
 
@@ -196,15 +200,16 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         blogdetailCommentLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mAdapter!=null && position>1) {
-                    GetPostingsDetailsCommentListModel.BodyEntity mBodyEntity = mAdapter.getItem(position-2);
+                if (mAdapter != null && position > 1) {
+                    GetPostingsDetailsCommentListModel.BodyEntity mBodyEntity = mAdapter.getItem(position - 2);
                     startActivity(CommentChildrenListActivity.buildIntent(mContext, mBodyEntity.getBlog_id(), mBodyEntity.getBlog_comment_id()
                             , mBodyEntity.getIcon(), mBodyEntity.getVerify_status(), mBodyEntity.getUser_name()
                             , mBodyEntity.getSex(), mBodyEntity.getUserLevel(), mBodyEntity.getCreate_time()
-                            , mBodyEntity.getUser_id(), mBodyEntity.getContent(), blogUserId, isAnonymity,anonymityImg,isReplay));
+                            , mBodyEntity.getUser_id(), mBodyEntity.getContent(), blogUserId, isAnonymity, anonymityImg, isReplay));
                 }
             }
         });
+        blogdetailSendBt.setOnTouchListener(this);
     }
 
     private void sendMessage(View v) {
@@ -213,7 +218,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
         }
 
-        if (llFacechoose.getVisibility()==View.VISIBLE) {
+        if (llFacechoose.getVisibility() == View.VISIBLE) {
             llFacechoose.setVisibility(View.GONE);
         }
         String str = blogdetailAddcommentEt.getText().toString().trim();
@@ -284,7 +289,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                 isLast = true;
                 onLoad(PullToRefreshBase.Mode.PULL_FROM_START, blogdetailCommentLv);
             } else {
-                if (mGetPostingsDetailsCommentListModel.getBody().size()<20) {
+                if (mGetPostingsDetailsCommentListModel.getBody().size() < 20) {
                     isLast = true;
                 } else {
                     isLast = false;
@@ -323,7 +328,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             blogdetailAddcommentEt.setText("");
             showToast("评论成功");
             if (isReplay == 0) {
-                Toast.makeText(mContext,"+1经验值",Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "+1经验值", Toast.LENGTH_LONG).show();
                 isReplay = 1;
             }
         } else if (id == Common.NET_ADD_LIKE) {
@@ -339,15 +344,15 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         } else if (id == Common.NET_GET_AWARDLIST) {
             GetRewardListModel mGetRewardListModel = mGson.fromJson(data, GetRewardListModel.class);
             int num = 0;
-            for (int i=0;i<mGetRewardListModel.getBody().size();i++) {
+            for (int i = 0; i < mGetRewardListModel.getBody().size(); i++) {
                 num += mGetRewardListModel.getBody().get(i).getUser_award_gold_num();
             }
-            if (num==0) {
+            if (num == 0) {
                 blogdetailFlowerTv.setText("暂时无人献花");
             } else {
-                blogdetailFlowerTv.setText(num+"朵鲜花");
+                blogdetailFlowerTv.setText(num + "朵鲜花");
             }
-            if (num>0) {
+            if (num > 0) {
                 RewardGridViewAdapter mRewardListAdapter = new RewardGridViewAdapter(mContext, mGetRewardListModel.getBody());
                 blogdetailFlowerGv.setAdapter(mRewardListAdapter);
                 blogdetailFlowerGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -357,10 +362,10 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                     }
                 });
             }
-        } else if (id==Common.NET_DELETE_POST) {
+        } else if (id == Common.NET_DELETE_POST) {
             Intent mIntent = new Intent();
             mIntent.putExtra("id", id);
-            setResult(RESULT_OK,mIntent);
+            setResult(RESULT_OK, mIntent);
             finish();
         }
     }
@@ -439,15 +444,15 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         int CostGolden = MyBaseApplication.mGetGoldenRoleModel.getBody().get("5").getCost_golden();
         PromptDialog.Builder builder = new PromptDialog.Builder(this);
         builder.setCancelable(false);
-        builder.setMessage("献花一次将花费您"+CostGolden+"个金币哦！");
+        builder.setMessage("献花一次将花费您" + CostGolden + "个金币哦！");
         builder.setPositiveButton("继续献花", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 OkHttpUtils.postString().url(Common.Url_Add_Award)
                         .addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                        .content("{\"oid\":"+bolgId+"}").mediaType(Common.JSON).id(Common.NET_ADD_AWARD).tag(Common.NET_ADD_AWARD)
-                        .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this,true));
+                        .content("{\"oid\":" + bolgId + "}").mediaType(Common.JSON).id(Common.NET_ADD_AWARD).tag(Common.NET_ADD_AWARD)
+                        .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
             }
         });
         builder.setNegativeButton("取消献花", new DialogInterface.OnClickListener() {
@@ -517,32 +522,33 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         if (temp.contains("<wysqimg=")) {
             String[] strList = temp.split("<wysqimg=");
             String mContent = "";
+            int n = 0;
             for (int i = 0; i < strList.length; i++) {
                 String str = "";
                 String img = "";
 
-                if (mContent!="") {
+                if (mContent != "") {
                     mContent += "<br />";
                 }
 
                 if (strList[i].contains("=wysqimg>")) {
                     img = strList[i].substring(0, strList[i].indexOf("=wysqimg>"));
                     str = strList[i].substring(strList[i].indexOf("=wysqimg>") + 9, strList[i].length());
-                    mContent +=  "<br /><img src=\"" + Common.ImageUrl + img + "\"/>" + str;
+                    mContent += "<br /><img src=\"" + Common.ImageUrl + img + "\"/>" + str;
                 } else {
                     str = strList[i];
-                    mContent +=  str;
+                    mContent += str;
                 }
 
                 if (!img.isEmpty()) {
-                    if (imgStr!="") {
+                    if (imgStr != "") {
                         imgStr += ",";
                     }
                     imgStr += Common.ImageUrl + img;
                     View mImageView = LayoutInflater.from(mContext).inflate(R.layout.part_postingsdetail_imageview, null);
                     WebView mWb = (WebView) mImageView.findViewById(R.id.part_posting_wb);
 
-                    String customHtml = getHtmlData("<br /><img src=\"" + Common.ImageUrl + img + "\"/>");
+                    String customHtml = getHtmlData("<br /><img src=\"" + Common.ImageUrl + img + "\"/>",n);
                     mWb.getSettings().setDefaultTextEncodingName("utf-8");
                     mWb.getSettings().setBlockNetworkImage(false);
                     mWb.getSettings().setJavaScriptEnabled(true);
@@ -552,8 +558,10 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                     } else {
                         mWb.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
                     }
+                    LogUtils.e("customHtml:"+customHtml);
                     mWb.loadData(customHtml, "text/html; charset=utf-8", "UTF-8");
                     blogdetailContentLl.addView(mImageView);
+                    n += 1;
                 }
 
                 if (!str.isEmpty()) {
@@ -601,7 +609,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         String[] str;
         if (isMy) {
             str = new String[]{"分享", favoriteStr, "举报", "把TA加入黑名单", "删除"};
-        }  else {
+        } else {
             str = new String[]{"分享", favoriteStr, "举报", "把TA加入黑名单"};
         }
         builder.setItems(str, new DialogInterface.OnClickListener() {
@@ -668,7 +676,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                         showLogin();
                         return;
                     }
-                    if (mGetBlogDetailModel.getBody().size()>0
+                    if (mGetBlogDetailModel.getBody().size() > 0
                             && MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getUser_id()
                             == mGetBlogDetailModel.getBody().get(0).getUser_id()) {
                         showToast("不能将自己加入黑名单");
@@ -676,15 +684,15 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                     }
                     OkHttpUtils.postString().url(Common.Url_Add_BlackList)
                             .addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                            .content("{\"black_user_id\":"+mGetBlogDetailModel.getBody().get(0).getUser_id()+"}")
+                            .content("{\"black_user_id\":" + mGetBlogDetailModel.getBody().get(0).getUser_id() + "}")
                             .mediaType(Common.JSON).id(Common.NET_ADD_BLACKLIST).tag(Common.NET_ADD_BLACKLIST)
-                            .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this,true));
+                            .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
                 } else if (which == 4) {//删除
                     if (!isLogin()) {
                         showLogin();
                         return;
                     }
-                    OkHttpUtils.postString().url(Common.Url_Delete_Post+bolgId).mediaType(Common.JSON)
+                    OkHttpUtils.postString().url(Common.Url_Delete_Post + bolgId).mediaType(Common.JSON)
                             .content("{}")
                             .addHeader("cookie", MyBaseApplication.getApp().getCookie())
                             .id(Common.NET_DELETE_POST).tag(Common.NET_DELETE_POST)
@@ -701,6 +709,18 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         builder.show();
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (isFastDoubleClick()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
     // js通信接口
     public class MyJSInterface {
 
@@ -711,8 +731,8 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         }
 
         @JavascriptInterface
-        public void openImage(String img, int num) {
-            LogUtils.e("imgStr:"+imgStr+",num:"+num);
+        public void openImage(int num) {
+            LogUtils.e("imgStr:" + imgStr + ",num:" + num);
             Intent intent = new Intent();
             intent.putExtra("image", imgStr);
             intent.putExtra("num", num);
@@ -721,16 +741,18 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         }
     }
 
-    private String getHtmlData(String bodyHTML) {
+    private String getHtmlData(String bodyHTML, int m) {
         String head = "<head>" +
                 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
                 "<style>*{margin:0;padding:0;}img{max-width: 100%; width:100%; height:auto;}</style>" +
                 "</head>";
-        return "<html>" + head + "<body>" + bodyHTML + getJS() +"</body></html>";
+        return "<html>" + head + "<body>" + bodyHTML + getJS(m) + "</body></html>";
     }
 
-    private String getJS() {
-        return "<script>var str=\"\";var imgs = document.querySelectorAll('img');[].forEach.call(imgs,function(co,index){str=str+co.src+',';co.onclick=function(){imagelistner.openImage(str,index);}})</script>";
+    private String getJS(int num) {
+        return "<script>document.querySelectorAll('img')[0].onclick = function() {\n" +
+                "    imagelistner.openImage("+num+");\n" +
+                "}</script>";
     }
 
     @Override
@@ -758,10 +780,10 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                     showLogin();
                     return;
                 }
-                OkHttpUtils.postString().url(Common.Url_Add_Like+"1/"+mAdapter.getItem(position).getBlog_comment_id())
+                OkHttpUtils.postString().url(Common.Url_Add_Like + "1/" + mAdapter.getItem(position).getBlog_comment_id())
                         .addHeader("cookie", MyBaseApplication.getApp().getCookie())
                         .content("{}").mediaType(Common.JSON).id(Common.NET_ADD_LIKE).tag(Common.NET_ADD_LIKE)
-                        .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this,true));
+                        .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
                 break;
         }
     }

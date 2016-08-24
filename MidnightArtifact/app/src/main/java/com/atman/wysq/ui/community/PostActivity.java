@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -65,7 +66,7 @@ import okhttp3.Response;
  * 邮箱 bltang@atman.com
  * 电话 18578909061
  */
-public class PostActivity extends MyBaseActivity implements AdapterInterface {
+public class PostActivity extends MyBaseActivity implements AdapterInterface,View.OnTouchListener {
 
     @Bind(R.id.post_photograph_iv)
     ImageView postPhotographIv;
@@ -87,6 +88,7 @@ public class PostActivity extends MyBaseActivity implements AdapterInterface {
     ListView postContentLv;
 
     private Context mContext = PostActivity.this;
+    private RelativeLayout barRightRl;
     private List<PostContentModel> mPostContentModelList = new ArrayList<>();
     private EditText mFocusEditText;
     private int blogBoardId;
@@ -124,7 +126,8 @@ public class PostActivity extends MyBaseActivity implements AdapterInterface {
         blogBoardId = getIntent().getIntExtra("blogBoardId", -1);
         setBarTitleTx("发布秘密");
         setBarRightIv(R.mipmap.bt_create_ok);
-        getBarRightRl().setOnClickListener(new View.OnClickListener() {
+        barRightRl = getBarRightRl();
+        barRightRl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (postTitleEt.getText().toString().trim().isEmpty()) {
@@ -177,6 +180,11 @@ public class PostActivity extends MyBaseActivity implements AdapterInterface {
         });
 
         initData();
+
+        postPhotographIv.setOnTouchListener(this);
+        postAlbumIv.setOnTouchListener(this);
+        postFaceIv.setOnTouchListener(this);
+        barRightRl.setOnTouchListener(this);
     }
 
     private void initData() {
@@ -463,5 +471,17 @@ public class PostActivity extends MyBaseActivity implements AdapterInterface {
             }
         });
         builder.show();
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (isFastDoubleClick()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
 }

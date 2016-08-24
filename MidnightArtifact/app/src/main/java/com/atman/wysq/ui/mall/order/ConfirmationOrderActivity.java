@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atman.wysq.R;
@@ -42,7 +44,7 @@ import okhttp3.Response;
  * 邮箱 bltang@atman.com
  * 电话 18578909061
  */
-public class ConfirmationOrderActivity extends MyBaseActivity implements PayDialog.payResultCallback {
+public class ConfirmationOrderActivity extends MyBaseActivity implements PayDialog.payResultCallback, View.OnTouchListener {
 
     @Bind(R.id.confirmationorder_name_tx)
     TextView confirmationorderNameTx;
@@ -74,6 +76,8 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
     TextView confirmationorderNumBt;
     @Bind(R.id.confirmationorder_add_bt)
     Button confirmationorderAddBt;
+    @Bind(R.id.confirmationorder_addr_rl)
+    RelativeLayout confirmationorderAddrRl;
 
     private Context mContext = ConfirmationOrderActivity.this;
     private GetAddressListResponseModel mGetAddressListResponseModel;
@@ -119,9 +123,26 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
 
         confirmationorderReduceBt.setEnabled(false);
         confirmationorderGoodsnameTv.setText(goodsName);
-        confirmationorderGoodspeiceTv.setText("¥ "+ MyTools.formatfloat(Float.parseFloat(GoodsPrice)));
-        confirmationorderOrderpriceTx.setText("¥ "+ MyTools.formatfloat(Float.parseFloat(GoodsPrice)));
-        ImageLoader.getInstance().displayImage(Common.ImageUrl+goodsUrl,confirmationorderGoodsIv,MyBaseApplication.getApp().getOptionsNot());
+        confirmationorderGoodspeiceTv.setText("¥ " + MyTools.formatfloat(Float.parseFloat(GoodsPrice)));
+        confirmationorderOrderpriceTx.setText("¥ " + MyTools.formatfloat(Float.parseFloat(GoodsPrice)));
+        ImageLoader.getInstance().displayImage(Common.ImageUrl + goodsUrl, confirmationorderGoodsIv
+                , MyBaseApplication.getApp().getOptionsNot());
+
+        confirmationorderAddrRl.setOnTouchListener(this);
+        confirmationorderEmptyTx.setOnTouchListener(this);
+        confirmationorderPlayBt.setOnTouchListener(this);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (isFastDoubleClick()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -144,7 +165,7 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (whatPay ==1) {
+        if (whatPay == 1) {
             MyBaseApplication.getApp().setFilterLock(false);
         }
     }
@@ -164,7 +185,7 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
                 confirmationorderNameTx.setText(mGetAddressListResponseModel.getBody().get(0).getReceiver_name());
                 confirmationorderPhoneTx.setText(mGetAddressListResponseModel.getBody().get(0).getReceiver_phone());
                 confirmationorderAddrTx.setText(mGetAddressListResponseModel.getBody().get(0).getReceiver_area_name()
-                        +mGetAddressListResponseModel.getBody().get(0).getReceiver_address());
+                        + mGetAddressListResponseModel.getBody().get(0).getReceiver_address());
                 mAddreId = mGetAddressListResponseModel.getBody().get(0).getAddress_id();
                 confirmationorderEmptyTx.setVisibility(View.GONE);
             }
@@ -172,12 +193,12 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
             mAddOrderResponseModel = mGson.fromJson(data, AddOrderResponseModel.class);
             if (confirmationorderAlipayIv.getVisibility() == View.VISIBLE) {
                 OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_Alipay + mAddOrderResponseModel.getBody().getOrder_id()).content("{}")
-                        .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
                         .id(Common.NET_RECHARGE_ADD_ORDER_ALIPAY).tag(Common.NET_RECHARGE_ADD_ORDER_ALIPAY)
                         .build().execute(new MyStringCallback(mContext, this, true));
             } else {
-                OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_WeiXin).content("{\"order_id\":\""+mAddOrderResponseModel.getBody().getOrder_id()+"\"}")
-                        .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_WeiXin).content("{\"order_id\":\"" + mAddOrderResponseModel.getBody().getOrder_id() + "\"}")
+                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
                         .id(Common.NET_RECHARGE_ADD_ORDER_WEIXIN).tag(Common.NET_RECHARGE_ADD_ORDER_WEIXIN)
                         .build().execute(new MyStringCallback(mContext, this, true));
             }
@@ -185,9 +206,9 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
             whatPay = 0;
             MyBaseApplication.getApp().setFilterLock(true);
             AliPayResponseModel mAliPayResponseOneModel = mGson.fromJson(data, AliPayResponseModel.class);
-            String parms = mAliPayResponseOneModel.getBody().getParam().replace("\\\"","\"");
+            String parms = mAliPayResponseOneModel.getBody().getParam().replace("\\\"", "\"");
             int start = parms.indexOf("&sign");
-            LogUtils.e("mContext:"+mContext);
+            LogUtils.e("mContext:" + mContext);
             mPayDialog.aliPay(mContext, parms.substring(0, start));
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_WEIXIN) {
             whatPay = 1;
@@ -208,7 +229,7 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
 
     @OnClick({R.id.confirmationorder_alipay_iv, R.id.confirmationorder_alipay_rl, R.id.confirmationorder_empty_tx,
             R.id.confirmationorder_weixinpay_iv, R.id.confirmationorder_weixinpay_rl, R.id.confirmationorder_play_bt,
-            R.id.confirmationorder_reduce_bt, R.id.confirmationorder_add_bt,R.id.confirmationorder_addr_rl})
+            R.id.confirmationorder_reduce_bt, R.id.confirmationorder_add_bt, R.id.confirmationorder_addr_rl})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.confirmationorder_addr_rl:
@@ -245,21 +266,20 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
                 break;
             case R.id.confirmationorder_reduce_bt:
                 num -= 1;
-                if (num>1) {
-                    confirmationorderNumBt.setText(num+"");
-                    confirmationorderOrderpriceTx.setText("¥ "+MyTools.formatfloat(Float.parseFloat(GoodsPrice)*num));
+                if (num > 1) {
+                    confirmationorderNumBt.setText(num + "");
+                    confirmationorderOrderpriceTx.setText("¥ " + MyTools.formatfloat(Float.parseFloat(GoodsPrice) * num));
                 } else {
                     confirmationorderNumBt.setText("1");
-                    confirmationorderOrderpriceTx.setText("¥ "+MyTools.formatfloat(Float.parseFloat(GoodsPrice)));
+                    confirmationorderOrderpriceTx.setText("¥ " + MyTools.formatfloat(Float.parseFloat(GoodsPrice)));
                     confirmationorderReduceBt.setEnabled(false);
                 }
                 break;
             case R.id.confirmationorder_add_bt:
-                LogUtils.e("confirmationorder_add_bt");
                 confirmationorderReduceBt.setEnabled(true);
                 num += 1;
-                confirmationorderNumBt.setText(num+"");
-                confirmationorderOrderpriceTx.setText("¥ "+MyTools.formatfloat(Float.parseFloat(GoodsPrice)*num));
+                confirmationorderNumBt.setText(num + "");
+                confirmationorderOrderpriceTx.setText("¥ " + MyTools.formatfloat(Float.parseFloat(GoodsPrice) * num));
                 break;
         }
     }
@@ -271,8 +291,8 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
             return;
         }
         if (requestCode == Common.toManageAddress) {
-            mAddreId = data.getIntExtra("addressId",-1);
-            if (mAddreId>0) {
+            mAddreId = data.getIntExtra("addressId", -1);
+            if (mAddreId > 0) {
                 confirmationorderNameTx.setText(data.getStringExtra("name"));
                 confirmationorderPhoneTx.setText(data.getStringExtra("phone"));
                 confirmationorderAddrTx.setText(data.getStringExtra("address"));

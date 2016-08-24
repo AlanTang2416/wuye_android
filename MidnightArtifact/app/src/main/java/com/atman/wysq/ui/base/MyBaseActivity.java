@@ -24,7 +24,11 @@ import android.widget.Toast;
 import com.atman.wysq.R;
 import com.atman.wysq.ui.MainActivity;
 import com.atman.wysq.ui.SplashActivity;
+import com.atman.wysq.ui.community.CommentChildrenListActivity;
+import com.atman.wysq.ui.community.PostActivity;
+import com.atman.wysq.ui.community.PostingsDetailActivity;
 import com.atman.wysq.ui.login.LoginActivity;
+import com.atman.wysq.ui.mall.order.ConfirmationOrderActivity;
 import com.atman.wysq.utils.ScreenObserver;
 import com.base.baselibs.base.BaseAppCompatActivity;
 import com.base.baselibs.util.LogUtils;
@@ -347,7 +351,11 @@ public class MyBaseActivity extends BaseAppCompatActivity {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            if (isFastDoubleClick()) {
+            if (!(mAty instanceof ConfirmationOrderActivity)
+                    && !(mAty instanceof CommentChildrenListActivity)
+                    && !(mAty instanceof PostActivity)
+                    && !(mAty instanceof PostingsDetailActivity)
+                    && isFastDoubleClick()) {
                 return true;
             }
         }
@@ -359,7 +367,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
      *
      * @return
      */
-    public static boolean isFastDoubleClick() {
+    public boolean isFastDoubleClick() {
         long now = System.currentTimeMillis();
         long timeD = now - lastClickTime;
         lastClickTime = now;
