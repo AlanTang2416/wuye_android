@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/contentview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <RadioGroup
+            android:id="@+id/tabs_rg"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/dimen_dp_58"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_white"
+            android:dividerPadding="@dimen/dimen_dp_6"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_dp_7"
+            android:showDividers="middle">
+
+            <RadioButton
+                android:id="@+id/tab_community"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="true"
+                android:drawableTop="@drawable/tab_community_selector"
+                android:gravity="center"
+                android:text="@string/tab_community"
+                android:textColor="@color/tab_text_selector"
+                android:textSize="@dimen/dimen_sp_11" />
+
+            <RadioButton
+                android:id="@+id/tab_mall"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/tab_mall_selector"
+                android:gravity="center"
+                android:text="@string/tab_mall"
+                android:textColor="@color/tab_text_selector"
+                android:textSize="@dimen/dimen_sp_11" />
+
+            <RadioButton
+                android:id="@+id/tab_message"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/tab_message_selector"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="@string/tab_message"
+                android:textColor="@color/tab_text_selector"
+                android:textSize="@dimen/dimen_sp_11" />
+
+            <RadioButton
+                android:id="@+id/tab_discover"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/tab_discover_selector"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="@string/tab_discover"
+                android:textColor="@color/tab_text_selector"
+                android:textSize="@dimen/dimen_sp_11" />
+
+            <RadioButton
+                android:id="@+id/tab_personal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/tab_personal_selector"
+                android:gravity="center"
+                android:text="@string/tab_personal"
+                android:textColor="@color/tab_text_selector"
+                android:textSize="@dimen/dimen_sp_11" />
+
+        </RadioGroup>
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_above="@id/tabs_rg"
+            android:background="@color/color_line" />
+
+        <com.base.baselibs.widget.NoSwipeViewPager
+            android:id="@+id/main_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/view_line" />
+    </RelativeLayout>
+
+
+</LinearLayout>

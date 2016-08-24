@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_above="@+id/wel_bottom"
+        android:id="@+id/splash_iv_one"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
+
+    <ImageView
+        android:layout_above="@+id/wel_bottom"
+        android:id="@+id/splash_iv_two"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
+
+    <TextView
+        android:id="@+id/jump_tx"
+        android:layout_marginTop="@dimen/dimen_dp_15"
+        android:layout_marginRight="@dimen/dimen_dp_15"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="跳过 5 s"
+        android:textColor="@color/color_white"
+        android:padding="@dimen/dimen_dp_5"/>
+
+    <ImageView
+        android:id="@+id/wel_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:src="@mipmap/welcome_bottom"/>
+
+</RelativeLayout>

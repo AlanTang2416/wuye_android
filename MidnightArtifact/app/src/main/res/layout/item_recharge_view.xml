@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/dimen_dp_10"
+    android:paddingRight="@dimen/dimen_dp_10">
+
+    <ImageView
+        android:layout_width="@dimen/dimen_dp_20"
+        android:layout_height="@dimen/dimen_dp_20"
+        android:layout_marginBottom="@dimen/dimen_dp_10"
+        android:layout_marginTop="@dimen/dimen_dp_10"
+        android:layout_marginRight="@dimen/dimen_dp_10"
+        android:src="@mipmap/icon_gold" />
+
+    <TextView
+        android:id="@+id/item_reharge_num_tx"
+        android:layout_width="@dimen/dimen_dp_100"
+        android:layout_height="wrap_content"
+        android:text="2525金币"
+        android:textColor="#161616"
+        android:textSize="@dimen/dimen_sp_15" />
+
+    <TextView
+        android:id="@+id/item_reharge_more_tx"
+        android:layout_weight="4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+送10%"
+        android:textColor="#A6006B"
+        android:textSize="@dimen/dimen_sp_15" />
+
+    <Button
+        android:id="@+id/item_reharge_bt"
+        android:layout_width="@dimen/dimen_dp_60"
+        android:layout_height="@dimen/dimen_dp_30"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bt_itemrecharge_selector"
+        android:text="$30.00"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/dimen_sp_11"/>
+
+</LinearLayout>

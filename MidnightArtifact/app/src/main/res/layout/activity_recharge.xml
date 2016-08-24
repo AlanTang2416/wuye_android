@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/recharge_top_iv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:src="@mipmap/shop_back_img"/>
+
+    <TextView
+        android:id="@+id/recharge_surpluscoin_tx"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_40"
+        android:gravity="center_vertical"
+        android:background="@color/color_white"
+        android:textColor="@color/color_black"
+        android:paddingLeft="@dimen/dimen_dp_15"
+        android:text="剩余金币：47"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_1"
+        android:src="@color/color_line"/>
+
+    <ListView
+        android:id="@+id/recharge_listview"
+        android:background="@color/color_white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

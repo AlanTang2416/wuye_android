@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="false"  >
+    <!-- 定义一个动画帧，Drawable为img0，持续时间20毫秒 -->
+<item android:drawable="@drawable/loading_pic1" android:duration="80" />
+<item android:drawable="@drawable/loading_pic2" android:duration="80" />
+<item android:drawable="@drawable/loading_pic3" android:duration="80" />
+<item android:drawable="@drawable/loading_pic4" android:duration="80" />
+<item android:drawable="@drawable/loading_pic5" android:duration="80" />
+<item android:drawable="@drawable/loading_pic6" android:duration="80" />
+<item android:drawable="@drawable/loading_pic7" android:duration="80" />
+<item android:drawable="@drawable/loading_pic8" android:duration="80" />
+<item android:drawable="@drawable/loading_pic9" android:duration="80" />
+<item android:drawable="@drawable/loading_pic10" android:duration="80" />
+<item android:drawable="@drawable/loading_pic11" android:duration="80" />
+<item android:drawable="@drawable/loading_pic12" android:duration="80" />
+</animation-list>

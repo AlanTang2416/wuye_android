@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:paddingLeft="@dimen/dimen_dp_20"
+    android:paddingRight="@dimen/dimen_dp_20">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_dp_30"
+        android:background="@drawable/login_edit_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_dp_50"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_dp_50"
+                android:layout_height="@dimen/dimen_dp_50"
+                android:src="@mipmap/login_username_ic" />
+
+            <com.base.baselibs.widget.MyCleanEditText
+                android:id="@+id/login_username_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="手机号"
+                android:maxLength="11"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:nextFocusForward="@+id/login_password_et"
+                android:paddingLeft="@dimen/dimen_dp_5"
+                android:paddingRight="@dimen/dimen_dp_5"
+                android:singleLine="true"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/dimen_sp_18" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_dp_50"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_dp_50"
+                android:layout_height="@dimen/dimen_dp_50"
+                android:src="@mipmap/login_passwd_ic" />
+
+            <com.base.baselibs.widget.MyCleanEditText
+                android:id="@+id/login_password_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="密码"
+                android:maxLength="16"
+                android:paddingLeft="@dimen/dimen_dp_5"
+                android:paddingRight="@dimen/dimen_dp_5"
+                android:password="true"
+                android:singleLine="true"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/dimen_sp_18" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/login_sumbit_bt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_45"
+        android:text="登 录"
+        android:enabled="false"
+        android:textColor="@drawable/bt_nomal_text_selector"
+        android:layout_marginTop="@dimen/dimen_dp_25"
+        android:textSize="18sp"
+        android:background="@drawable/bt_nomal_selector"/>
+
+    <LinearLayout
+        android:id="@+id/ly_four"
+        android:layout_marginTop="@dimen/dimen_dp_15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/dimen_dp_15"
+        android:paddingRight="@dimen/dimen_dp_15"
+        android:layout_gravity="center_vertical|right">
+        <TextView
+            android:id="@+id/login_forgetPW_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="忘记密码？"
+            android:background="@drawable/transparent_hollow_selector"
+            android:textColor="#676767"
+            android:textSize="@dimen/dimen_sp_14"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/tangbingliang/Desktop/gitTestProjects/AndroidDevelope/MidnightArtifact/handmark_pull_library/build/intermediates/res/merged/debug/drawable-xhdpi-v4/default_ptr_flip.png",
+        "source": "/Users/tangbingliang/Desktop/gitTestProjects/AndroidDevelope/MidnightArtifact/handmark_pull_library/src/main/res/drawable-xhdpi/default_ptr_flip.png"
+    },
+    {
+        "merged": "/Users/tangbingliang/Desktop/gitTestProjects/AndroidDevelope/MidnightArtifact/handmark_pull_library/build/intermediates/res/merged/debug/drawable-xhdpi-v4/default_ptr_rotate.png",
+        "source": "/Users/tangbingliang/Desktop/gitTestProjects/AndroidDevelope/MidnightArtifact/handmark_pull_library/src/main/res/drawable-xhdpi/default_ptr_rotate.png"
+    },
+    {
+        "merged": "/Users/tangbingliang/Desktop/gitTestProjects/AndroidDevelope/MidnightArtifact/handmark_pull_library/build/intermediates/res/merged/debug/drawable-xhdpi-v4/indicator_arrow.png",
+        "source": "/Users/tangbingliang/Desktop/gitTestProjects/AndroidDevelope/MidnightArtifact/handmark_pull_library/src/main/res/drawable-xhdpi/indicator_arrow.png"
+    }
+]
