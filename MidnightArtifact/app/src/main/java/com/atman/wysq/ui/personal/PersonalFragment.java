@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.atman.wysq.R;
+import com.atman.wysq.model.event.YunXinAuthOutEvent;
 import com.atman.wysq.model.response.GetTaskAllModel;
 import com.atman.wysq.model.response.GetUserInfoModel;
 import com.atman.wysq.model.response.HeadImgResultModel;
@@ -38,6 +39,10 @@ import com.base.baselibs.widget.PromptDialog;
 import com.base.baselibs.widget.pullzoom.PullZoomScrollVIew;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tbl.okhttputils.OkHttpUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 
@@ -88,6 +93,12 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //第2步:注册一个在后台线程执行的方法,用于接收事件
+    public void onUserEvent(YunXinAuthOutEvent event) {//参数必须是ClassEvent类型, 否则不会调用此方法
+        hitSetring();
     }
 
     @Override
@@ -277,6 +288,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         OkHttpUtils.getInstance().cancelTag(Common.NET_GETUSERINFO);
     }
 

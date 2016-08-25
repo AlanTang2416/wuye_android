@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.atman.wysq.R;
 import com.atman.wysq.model.request.LoginRequestModel;
+import com.atman.wysq.model.response.GetChatTokenModel;
 import com.atman.wysq.model.response.GetUserInfoModel;
 import com.atman.wysq.model.response.LoginResultModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
@@ -25,6 +27,11 @@ import com.base.baselibs.util.MD5Util;
 import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.util.StringUtils;
 import com.base.baselibs.widget.MyCleanEditText;
+import com.netease.nimlib.sdk.AbortableFuture;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.auth.AuthService;
+import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.tbl.okhttputils.OkHttpUtils;
 
 import butterknife.Bind;
@@ -53,6 +60,8 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
     private String passWord = "";
 
     private TextView barRightTx;
+
+    private AbortableFuture<LoginInfo> loginRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +150,10 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                         .addHeader("cookie", MyBaseApplication.getApp().getCookie())
                         .tag(Common.NET_GETUSERINFO).id(Common.NET_GETUSERINFO).build()
                         .execute(new MyStringCallback(mContext, this, true));
+                OkHttpUtils.get().url(Common.Url_Get_ChatToken)
+                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .tag(Common.NET_GET_CHATTOKEN).id(Common.NET_GET_CHATTOKEN).build()
+                        .execute(new MyStringCallback(mContext, this, true));
             }
         } else if (id == Common.NET_GETUSERINFO) {
             GetUserInfoModel mGetUserInfoModel = mGson.fromJson(data, GetUserInfoModel.class);
@@ -148,6 +161,35 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
             Intent mIntent = new Intent();
             setResult(RESULT_OK,mIntent);
             finish();
+        } else if (id == Common.NET_GET_CHATTOKEN) {
+            GetChatTokenModel mGetChatTokenModel = mGson.fromJson(data, GetChatTokenModel.class);
+            PreferenceUtil.savePreference(mContext,PreferenceUtil.PARM_YUNXIN_TOKEN, mGetChatTokenModel.getBody());
+            final String account = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_USERID);
+            final String token = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_YUNXIN_TOKEN);
+            // 登录
+            loginRequest = NIMClient.getService(AuthService.class).login(new LoginInfo(account, token));
+            loginRequest.setCallback(new RequestCallback<LoginInfo>() {
+                @Override
+                public void onSuccess(LoginInfo param) {
+                    LogUtils.e("YunXin>>onSuccess");
+                    MyBaseApplication.getApp().setAuthServiceObserver();
+                }
+
+                @Override
+                public void onFailed(int code) {
+                    if (code == 302 || code == 404) {
+                        showToast("帐号或密码错误");
+                    } else {
+                        showToast("登录失败" + code);
+                    }
+                }
+
+                @Override
+                public void onException(Throwable exception) {
+                    showToast("无效输入");
+                }
+            });
+
         }
     }
 

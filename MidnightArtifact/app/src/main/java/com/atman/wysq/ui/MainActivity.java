@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 
 import com.atman.wysq.R;
 import com.atman.wysq.adapter.MyFragmentAdapter;
+import com.atman.wysq.model.event.YunXinAuthOutEvent;
 import com.atman.wysq.model.response.CheckVersionModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
@@ -38,6 +39,10 @@ import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.NoSwipeViewPager;
 import com.base.baselibs.widget.PromptDialog;
 import com.tbl.okhttputils.OkHttpUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 
@@ -119,7 +124,25 @@ public class MainActivity extends MyBaseActivity {
         OkHttpUtils.get().url(Common.Url_Get_Version+"?version="+MyBaseApplication.mVersionName.replace("v",""))
                 .addHeader("cookie",MyBaseApplication.getApp().getCookie())
                 .id(Common.NET_GET_VERSION).tag(Common.NET_GET_VERSION).build().execute(new MyStringCallback(mContext, this, false));
+        EventBus.getDefault().register(this);
     }
+
+    //在注册了的Activity中,声明处理事件的方法
+    @Subscribe(threadMode = ThreadMode.MAIN) //第2步:注册一个在后台线程执行的方法,用于接收事件
+    public void onUserEvent(YunXinAuthOutEvent event) {//参数必须是ClassEvent类型, 否则不会调用此方法
+        PromptDialog.Builder builder = new PromptDialog.Builder(mContext);
+        builder.setTitle("账号异常");
+        builder.setMessage("您的账号已在别处登录，请退出登录，如非您本人操作，请尽快修改您的密码！");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
+
 
     public static Intent buildIntent(Context context, boolean isToWeb){
         Intent intent = new Intent(context, MainActivity.class);
@@ -258,6 +281,7 @@ public class MainActivity extends MyBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

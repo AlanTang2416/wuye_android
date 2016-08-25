@@ -31,6 +31,8 @@ import com.base.baselibs.util.StringUtils;
 import com.base.baselibs.widget.BottomDialog;
 import com.base.baselibs.widget.CustomImageView;
 import com.base.baselibs.widget.PromptDialog;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.auth.AuthService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tbl.okhttputils.OkHttpUtils;
 
@@ -158,6 +160,7 @@ public class MyInformationActivity extends MyBaseActivity {
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mHeadImgUrl
                     , myinfoHeadIv, MyBaseApplication.getApp().getOptions());
         } else if (id == Common.NET_LOGOUT) {
+            NIMClient.getService(AuthService.class).logout();
             showToast("已退出登录");
             clearData();
         } else if (id == Common.NET_GET_VERSION) {

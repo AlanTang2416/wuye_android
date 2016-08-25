@@ -139,6 +139,8 @@ public class Common {
     public static String Url_Delete_Post = hostUrl + "rest/blog/delete/";
     //性别认证
     public static String Url_Verify = hostUrl + "rest/user/verify";
+    //获取聊天token
+    public static String Url_Get_ChatToken = hostUrl + "rest/chat/chattoken";
     /**************************http访问路径*****************************/
 
 
@@ -252,6 +254,8 @@ public class Common {
     public static int NET_VERIFY = 53;
     //性别认证照相
     public static int NET_RESET_HEAD_TWO = 54;
+    //获取聊天token
+    public static int NET_GET_CHATTOKEN = 55;
     /**************************http访问回应识别码*****************************/
 
 

@@ -86,4 +86,10 @@ dependencies {
     compile files('libs/SocialSDK_Sina.jar')
     compile files('libs/SocialSDK_QQZone_3.jar')
     compile files('libs/alipaySdk-20160516.jar')
+    compile files('libs/nim-avchat-2.7.0.jar')
+    compile files('libs/nim-basesdk-2.7.0.jar')
+    compile files('libs/nim-chatroom-2.7.0.jar')
+    compile files('libs/nim-lucene-2.7.0.jar')
+    compile files('libs/nim-rts-2.7.0.jar')
+    compile files('libs/nrtc-sdk.jar')
 }
