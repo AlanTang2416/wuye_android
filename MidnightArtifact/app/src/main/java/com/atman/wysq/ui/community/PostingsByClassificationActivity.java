@@ -3,10 +3,11 @@ package com.atman.wysq.ui.community;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -19,20 +20,14 @@ import com.atman.wysq.adapter.PostingListAdapter;
 import com.atman.wysq.model.response.GetBolgListModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
-import com.atman.wysq.utils.Common;
-import com.base.baselibs.iimp.AdapterInterface;
-import com.base.baselibs.net.MyStringCallback;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.tbl.okhttputils.OkHttpUtils;
+import com.base.baselibs.util.LogUtils;
+import com.base.baselibs.widget.NoSwipeViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import okhttp3.Call;
 import okhttp3.Response;
 
 /**
@@ -42,7 +37,7 @@ import okhttp3.Response;
  * 邮箱 bltang@atman.com
  * 电话 18578909061
  */
-public class PostingsByClassificationActivity extends MyBaseActivity implements AdapterInterface {
+public class PostingsByClassificationActivity extends MyBaseActivity {
 
     @Bind(R.id.postings_tab_new_rt)
     RadioButton postingsTabNewRt;
@@ -52,33 +47,18 @@ public class PostingsByClassificationActivity extends MyBaseActivity implements 
     RadioButton postingsTabBoutiqueRt;
     @Bind(R.id.postings_top_tab_rg)
     RadioGroup postingsTopTabRg;
-    @Bind(R.id.pullToRefreshListView)
-    PullToRefreshListView pullToRefreshListView;
-    @Bind(R.id.postings_totop_iv)
-    ImageView postingsTotopIv;
+    @Bind(R.id.postings_viewpager)
+    NoSwipeViewPager postingsViewpager;
 
     private Context mContext = PostingsByClassificationActivity.this;
-
-    private View mTopRootView;
-    private LinearLayout postingsTopLl;
-    private View mEmpty;
-    private TextView mEmptyTX;
-    private RelativeLayout rightRl;
-
-    private PostingListAdapter mAdapter;
-    private GetBolgListModel mGetBolgListModel;
-    private List<GetBolgListModel.BodyEntity> topList = new ArrayList<>();
 
     private String title;
     private String canPost;
     private int id;
-    private int position = -1;
-    private int typeId = 0; //0：热门 2:精品 3:最新
-    private int mPage = 1;
-    private int blogId;
-
-    public PostingsByClassificationActivity() {
-    }
+    private int[] typeId = {3, 0, 2}; //0：热门 2:精品 3:最新
+    private final String[] TAG = {"new", "hot", "highly"};
+    private Adapter adapter;
+    private Fragment fg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,9 +96,48 @@ public class PostingsByClassificationActivity extends MyBaseActivity implements 
                 }
             }
         });
-
+        initViewpager();
         initBottomBar();
-        initListView();
+    }
+
+    private void initViewpager() {
+        postingsViewpager.setPagingEnabled(true);//是否支持手势滑动
+        adapter = new Adapter(getSupportFragmentManager());
+
+        for (int i=0;i<3;i++) {
+            PostingsByClassificationFragment oneFragment = new PostingsByClassificationFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", id);
+            bundle.putInt("typeId", typeId[i]);
+            oneFragment.setArguments(bundle);
+            adapter.addFragment(oneFragment, TAG[i]);
+        }
+
+        postingsViewpager.setOffscreenPageLimit(3);
+        postingsViewpager.setAdapter(adapter);
+        postingsViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position==0) {
+                    postingsTabNewRt.performClick();
+                } else if (position==1) {
+                    postingsTabHotRt.performClick();
+                } else if (position==2) {
+                    postingsTabBoutiqueRt.performClick();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        selectItem(1);
     }
 
     private void canToPost() {
@@ -139,14 +158,14 @@ public class PostingsByClassificationActivity extends MyBaseActivity implements 
             }
         } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("001")) {//认证女性用户才可以
             if (MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")
-                    && MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getVerify_status()==1) {
+                    && MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getVerify_status() == 1) {
                 isCan = true;
             } else {
                 showToast("已认证女性用户才可以发帖");
             }
         } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("101")) {//男用户和认证女性用户才可以
             if ((MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")
-                    && MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getVerify_status()==1)
+                    && MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getVerify_status() == 1)
                     || MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("M")) {
                 isCan = true;
             } else {
@@ -161,14 +180,14 @@ public class PostingsByClassificationActivity extends MyBaseActivity implements 
             }
         } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("011")) {//女性用户和女性用户才可以发帖
             if ((MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")
-                    && MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getVerify_status()==1)
+                    && MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getVerify_status() == 1)
                     || MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")) {
                 isCan = true;
             } else {
                 showToast("女性用户和已认证女性用户才可以发帖");
             }
         } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("000")) {//管理员才可以发帖
-            if (MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getType()==2) {
+            if (MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getType() == 2) {
                 isCan = true;
             } else {
                 showToast("只有管理员用户才可以发帖");
@@ -183,79 +202,29 @@ public class PostingsByClassificationActivity extends MyBaseActivity implements 
         postingsTopTabRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                mAdapter.clearData();
                 switch (checkedId) {
                     case R.id.postings_tab_new_rt:
-                        postingsTabNewRt.performClick();
-                        typeId = 3;
-                        mPage = 1;
-                        mAdapter.clearData();
-                        mAdapter.setTypeId(typeId);
-                        dohttp(true);
+                        selectItem(0);
                         break;
                     case R.id.postings_tab_hot_rt:
-                        postingsTabHotRt.performClick();
-                        typeId = 0;
-                        mPage = 1;
-                        mAdapter.clearData();
-                        mAdapter.setTypeId(typeId);
-                        dohttp(true);
+                        selectItem(1);
                         break;
                     case R.id.postings_tab_boutique_rt:
-                        postingsTabBoutiqueRt.performClick();
-                        typeId = 2;
-                        mPage = 1;
-                        mAdapter.clearData();
-                        mAdapter.setTypeId(typeId);
-                        dohttp(true);
+                        selectItem(2);
                         break;
                 }
             }
         });
     }
 
-    private void initListView() {
-        initRefreshView(PullToRefreshBase.Mode.BOTH, pullToRefreshListView);
-
-        mEmpty = LayoutInflater.from(mContext).inflate(R.layout.part_list_empty, null);
-        mEmptyTX = (TextView) mEmpty.findViewById(R.id.empty_list_tx);
-        mEmptyTX.setText("暂无帖子");
-
-        mTopRootView = LayoutInflater.from(mContext).inflate(R.layout.part_posting_top_root_view, null);
-        postingsTopLl = (LinearLayout) mTopRootView.findViewById(R.id.postings_top_ll);
-
-        mAdapter = new PostingListAdapter(mContext, getmWidth(), this);
-        pullToRefreshListView.setEmptyView(mEmpty);
-        pullToRefreshListView.getRefreshableView().addHeaderView(mTopRootView);
-        pullToRefreshListView.setAdapter(mAdapter);
-        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
-        pullToRefreshListView.getRefreshableView().setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem >= 5 && totalItemCount!=0) {
-                    postingsTotopIv.setVisibility(View.VISIBLE);
-                } else {
-                    postingsTotopIv.setVisibility(View.GONE);
-                }
-            }
-        });
-        postingsTotopIv.setVisibility(View.GONE);
+    private void selectItem(int i) {
+        postingsViewpager.setCurrentItem(i, true);
+        fg = adapter.getItem(i);
     }
 
     @Override
     public void doInitBaseHttp() {
         super.doInitBaseHttp();
-        dohttp(true);
     }
 
     @Override
@@ -266,138 +235,39 @@ public class PostingsByClassificationActivity extends MyBaseActivity implements 
     @Override
     public void onStringResponse(String data, Response response, int id) {
         super.onStringResponse(data, response, id);
-        if (id == Common.NET_GET_BLOGLIST) {
-            mGetBolgListModel = mGson.fromJson(data, GetBolgListModel.class);
-            if (mGetBolgListModel.getBody() == null
-                    || mGetBolgListModel.getBody().size() == 0) {
-                if (mAdapter != null && mAdapter.getCount() > 0) {
-                    showToast("没有更多");
-                }
-                onLoad(PullToRefreshBase.Mode.PULL_FROM_START, pullToRefreshListView);
-            } else {
-                onLoad(PullToRefreshBase.Mode.BOTH, pullToRefreshListView);
-                List<GetBolgListModel.BodyEntity> bottomList = mGetBolgListModel.getBody();
-                if (mPage == 1) {
-                    postingsTopLl.removeAllViews();
-                    for (int i = 0; i < bottomList.size(); i++) {
-                        if (bottomList.get(i).getStick() == 1) {
-                            topList.add(bottomList.get(i));
-                            View mTopChildrenView = LayoutInflater.from(mContext).inflate(R.layout.part_posting_top_children_view, null);
-                            TextView mTopChildrenTx = (TextView) mTopChildrenView.findViewById(R.id.part_posting_top_children_title_tx);
-                            mTopChildrenTx.setText(bottomList.get(i).getTitle());
-                            mTopChildrenTx.setTag(bottomList.get(i).getBlog_id());
-                            mTopChildrenTx.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    toPostingsDetail((Integer) v.getTag(), "");
-
-                                }
-                            });
-                            postingsTopLl.addView(mTopChildrenView);
-                            bottomList.remove(i);
-                            i--;
-                        }
-                    }
-                }
-                if (topList.size() == 0) {
-                    postingsTopLl.setVisibility(View.GONE);
-                } else {
-                    postingsTopLl.setVisibility(View.VISIBLE);
-                }
-                if (mPage == 1) {
-                    mAdapter.clearData();
-                }
-                mAdapter.addBody(bottomList);
-            }
-        } else if (id==Common.NET_GET_BLOGCOLLECTION) {
-            showToast("收藏成功");
-            mAdapter.setFavoriteById(1, position);
-        } else if (id==Common.NET_GET_BLOGCOLLECTION_NOT) {
-            showToast("已取消收藏");
-            mAdapter.setFavoriteById(0, position);
-        } else if (id == Common.NET_ADD_BROWSE) {
-            mAdapter.addBrowse(blogId);
-        }
-    }
-
-    @Override
-    public void onError(Call call, Exception e, int code, int id) {
-        super.onError(call, e, code, id);
-        mPage = 1;
-        onLoad(PullToRefreshBase.Mode.BOTH, pullToRefreshListView);
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        super.onPullUpToRefresh(refreshView);
-        mPage += 1;
-        dohttp(false);
-    }
-
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        super.onPullDownToRefresh(refreshView);
-        mPage = 1;
-        dohttp(false);
-    }
-
-    private void dohttp(boolean b) {
-        OkHttpUtils.get().url(Common.Url_Get_BlogList + id + "/" + typeId + "/" + mPage).id(Common.NET_GET_BLOGLIST)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                .tag(Common.NET_GET_BLOGLIST).build().execute(new MyStringCallback(mContext, this, b));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        OkHttpUtils.getInstance().cancelTag(Common.NET_GET_BLOGLIST);
-        OkHttpUtils.getInstance().cancelTag(Common.NET_ADD_BROWSE);
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        switch (view.getId()) {
-            case R.id.item_bloglist_browse_ll:
-            case R.id.item_bloglist_root_ll:
-            case R.id.item_bloglist_comment_ll:
-                toPostingsDetail(mAdapter.getItem(position).getBlog_id(), mAdapter.getItem(position).getTitle());
-                break;
-            case R.id.item_bloglist_collection_ll:
-                if (!isLogin()) {
-                    showLogin();
-                    return;
-                }
-                this.position = position;
-                if (mAdapter.getItem(position).getFavorite_id()>0) {//已收藏，点击取消收藏
-                    OkHttpUtils.delete().url(Common.Url_Get_BlogCollection_Not + mAdapter.getItem(position).getBlog_id())
-                            .id(Common.NET_GET_BLOGCOLLECTION_NOT)
-                            .addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                            .tag(Common.NET_GET_BLOGCOLLECTION_NOT).build()
-                            .execute(new MyStringCallback(mContext, PostingsByClassificationActivity.this, true));
-                } else {//未收藏，点击收藏
-                    OkHttpUtils.postString().url(Common.Url_Get_BlogCollection + mAdapter.getItem(position).getBlog_id())
-                            .id(Common.NET_GET_BLOGCOLLECTION).content("{}").mediaType(Common.JSON)
-                            .addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                            .tag(Common.NET_GET_BLOGCOLLECTION).build()
-                            .execute(new MyStringCallback(mContext, PostingsByClassificationActivity.this, true));
-                }
-                break;
+    static class Adapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public Adapter(FragmentManager fm) {
+            super(fm);
         }
-    }
 
-    private void toPostingsDetail(int Id, String title) {
-        blogId = Id;
-        startActivity(PostingsDetailActivity.buildIntent(mContext, title, blogId, false));
-        OkHttpUtils.postString().url(Common.Url_Add_Browse+blogId).mediaType(Common.JSON)
-                .content("{}")
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                .id(Common.NET_ADD_BROWSE).tag(Common.NET_ADD_BROWSE)
-                .build().execute(new MyStringCallback(mContext, PostingsByClassificationActivity.this, false));
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
+        }
 
-    }
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
 
-    @OnClick(R.id.postings_totop_iv)
-    public void onClick() {
-        pullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
+        }
     }
 }
