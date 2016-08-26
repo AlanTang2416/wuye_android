@@ -25,12 +25,24 @@
             android:showDividers="middle">
 
             <RadioButton
-                android:id="@+id/tab_community"
+                android:id="@+id/tab_message"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:button="@null"
                 android:checked="true"
+                android:drawableTop="@drawable/tab_message_selector"
+                android:gravity="center"
+                android:text="@string/tab_message"
+                android:textColor="@color/tab_text_selector"
+                android:textSize="@dimen/dimen_sp_11" />
+
+            <RadioButton
+                android:id="@+id/tab_community"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
                 android:drawableTop="@drawable/tab_community_selector"
                 android:gravity="center"
                 android:text="@string/tab_community"
@@ -46,19 +58,6 @@
                 android:drawableTop="@drawable/tab_mall_selector"
                 android:gravity="center"
                 android:text="@string/tab_mall"
-                android:textColor="@color/tab_text_selector"
-                android:textSize="@dimen/dimen_sp_11" />
-
-            <RadioButton
-                android:id="@+id/tab_message"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:button="@null"
-                android:drawableTop="@drawable/tab_message_selector"
-                android:gravity="center"
-                android:visibility="gone"
-                android:text="@string/tab_message"
                 android:textColor="@color/tab_text_selector"
                 android:textSize="@dimen/dimen_sp_11" />
 

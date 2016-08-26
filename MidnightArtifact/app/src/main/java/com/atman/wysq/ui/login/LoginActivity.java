@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atman.wysq.R;
+import com.atman.wysq.model.event.YunXinAuthOutEvent;
 import com.atman.wysq.model.request.LoginRequestModel;
 import com.atman.wysq.model.response.GetChatTokenModel;
 import com.atman.wysq.model.response.GetUserInfoModel;
@@ -33,6 +34,8 @@ import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.tbl.okhttputils.OkHttpUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -182,6 +185,8 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                     } else {
                         showToast("登录失败" + code);
                     }
+                    MyBaseApplication.getApp().cleanLoginData();
+                    EventBus.getDefault().post(new YunXinAuthOutEvent());
                 }
 
                 @Override

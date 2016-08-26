@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
-        android:layout_weight="1"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
 
         <ListView
-            android:id="@+id/country_lvcountry"
+            android:id="@+id/mofriend_listview"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center" />
 
         <TextView
-            android:id="@+id/title_layout_no_friends"
+            android:id="@+id/mofriend_no_friends"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/dimen_dp_30"
             android:layout_gravity="right|top"
@@ -26,27 +26,28 @@
             android:visibility="gone" />
 
         <LinearLayout
-            android:id="@+id/title_layout"
+            android:id="@+id/mofriend_title_layout"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/dimen_dp_30"
             android:layout_gravity="right|top"
             android:background="#efeff4"
-            android:orientation="vertical" >
+            android:visibility="gone"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/title_layout_catalog"
+                android:id="@+id/mofriend_title_layout_catalog"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="#efeff4"
                 android:paddingBottom="@dimen/dimen_dp_5"
                 android:paddingLeft="@dimen/dimen_dp_10"
                 android:paddingTop="@dimen/dimen_dp_5"
-                android:textSize="@dimen/dimen_sp_14"
-                android:textColor="#979797" />
+                android:textColor="#979797"
+                android:textSize="@dimen/dimen_sp_14" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/dialog"
+            android:id="@+id/mofriend_dialog"
             android:layout_width="@dimen/dimen_dp_80"
             android:layout_height="@dimen/dimen_dp_80"
             android:layout_gravity="center"
@@ -57,11 +58,11 @@
             android:visibility="invisible" />
 
         <com.atman.wysq.widget.telephonebook.SideBar
-            android:layout_marginTop="@dimen/dimen_dp_50"
-            android:layout_marginBottom="@dimen/dimen_dp_50"
-            android:id="@+id/sidrbar"
+            android:id="@+id/mofriend_sidrbar"
             android:layout_width="@dimen/dimen_dp_30"
             android:layout_height="fill_parent"
-            android:layout_gravity="right|center" />
+            android:layout_gravity="right|center"
+            android:layout_marginBottom="@dimen/dimen_dp_50"
+            android:layout_marginTop="@dimen/dimen_dp_50" />
     </FrameLayout>
 </LinearLayout>

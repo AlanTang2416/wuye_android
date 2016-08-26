@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_friends_root_ll"
+    android:clickable="true"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="@color/color_white"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/item_friends_catalog_tv"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dimen_dp_30"
+        android:background="#efeff4"
+        android:textSize="@dimen/dimen_sp_14"
+        android:paddingBottom="@dimen/dimen_dp_5"
+        android:paddingLeft="@dimen/dimen_dp_10"
+        android:paddingTop="@dimen/dimen_dp_5"
+        android:textColor="#979797" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_dp_10"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="@dimen/dimen_dp_40"
+            android:layout_height="@dimen/dimen_dp_40">
+
+            <ImageView
+                android:id="@+id/item_friends_head_iv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher"/>
+
+            <ImageView
+                android:id="@+id/item_friends_gender_iv"
+                android:layout_width="@dimen/dimen_dp_15"
+                android:layout_height="@dimen/dimen_dp_15"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/personal_name_tx"
+                android:src="@mipmap/personal_man_ic"/>
+
+            <com.base.baselibs.widget.CustomImageView
+                xmlns:img="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/item_friends_verify_img"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_dp_13"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                img:circle="false"
+                img:radius="@dimen/dimen_dp_5"
+                android:src="@mipmap/personal_identification"/>
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/item_friends_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dimen_dp_10"
+            android:paddingBottom="@dimen/dimen_dp_10"
+            android:paddingTop="@dimen/dimen_dp_10"
+            android:textSize="@dimen/dimen_sp_14"
+            android:text="hhhh"
+            android:textColor="#3C3C3C" />
+
+        <TextView
+            android:id="@+id/item_friends_level_tx"
+            android:layout_marginLeft="@dimen/dimen_dp_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dimen_dp_3"
+            android:paddingBottom="@dimen/dimen_dp_3"
+            android:paddingLeft="@dimen/dimen_dp_5"
+            android:paddingRight="@dimen/dimen_dp_5"
+            android:text="Lv.2"
+            android:background="@drawable/level_blue_frame_bg"
+            android:textSize="@dimen/dimen_sp_10"
+            android:textColor="#54BEF9"/>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,16 +1,20 @@
 package com.atman.wysq.ui.message;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.atman.wysq.R;
 import com.atman.wysq.ui.base.MyBaseFragment;
+import com.atman.wysq.ui.yunxinfriend.MoFriendsActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 描述 消息
@@ -23,6 +27,10 @@ public class MessageFragment extends MyBaseFragment {
 
     @Bind(R.id.fragment_bar_title_iv)
     ImageView fragmentBarTitleIv;
+    @Bind(R.id.fragment_bar_right_iv)
+    ImageView fragmentBarRightIv;
+    @Bind(R.id.fragment_bar_right_rl)
+    RelativeLayout fragmentBarRightRl;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +48,8 @@ public class MessageFragment extends MyBaseFragment {
     public void initWidget(View... v) {
         super.initWidget(v);
         fragmentBarTitleIv.setImageResource(R.mipmap.top_message_ic);
+        fragmentBarRightIv.setVisibility(View.VISIBLE);
+        fragmentBarRightIv.setImageResource(R.mipmap.message_top_right_ic);
     }
 
     @Override
@@ -71,5 +81,19 @@ public class MessageFragment extends MyBaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @OnClick({R.id.fragment_bar_right_iv, R.id.fragment_bar_right_rl})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fragment_bar_right_iv:
+            case R.id.fragment_bar_right_rl:
+                if (!isLogin()) {
+                    showLogin();
+                } else {
+                    startActivity(new Intent(getActivity(), MoFriendsActivity.class));
+                }
+                break;
+        }
     }
 }

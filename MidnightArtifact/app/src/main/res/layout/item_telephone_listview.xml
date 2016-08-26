@@ -10,12 +10,12 @@
         android:id="@+id/item_telephone_catalog_tv"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/dimen_dp_30"
-        android:background="#646964"
+        android:background="#efeff4"
         android:textSize="@dimen/dimen_sp_14"
         android:paddingBottom="@dimen/dimen_dp_5"
-        android:paddingLeft="@dimen/dimen_dp_5"
+        android:paddingLeft="@dimen/dimen_dp_10"
         android:paddingTop="@dimen/dimen_dp_5"
-        android:textColor="#000000" />
+        android:textColor="#979797" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_dp_5"
+            android:layout_marginLeft="@dimen/dimen_dp_10"
             android:gravity="center_vertical"
             android:paddingBottom="@dimen/dimen_dp_10"
             android:paddingTop="@dimen/dimen_dp_10"

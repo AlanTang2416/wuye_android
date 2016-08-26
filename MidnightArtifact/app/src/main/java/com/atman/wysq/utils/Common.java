@@ -141,6 +141,8 @@ public class Common {
     public static String Url_Verify = hostUrl + "rest/user/verify";
     //获取聊天token
     public static String Url_Get_ChatToken = hostUrl + "rest/chat/chattoken";
+    //获取好友列表
+    public static String Url_Get_Fans = hostUrl + "rest/user/fans";
     /**************************http访问路径*****************************/
 
 
@@ -256,6 +258,8 @@ public class Common {
     public static int NET_RESET_HEAD_TWO = 54;
     //获取聊天token
     public static int NET_GET_CHATTOKEN = 55;
+    //获取好友列表
+    public static int NET_GET_FANS = 56;
     /**************************http访问回应识别码*****************************/
 
 

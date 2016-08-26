@@ -54,6 +54,7 @@
         <activity android:name=".ui.community.MycollectionActivity"/>
         <activity android:name=".ui.community.MySecretListActivity"/>
         <activity android:name=".ui.community.ReplyListActivity"/>
+        <activity android:name=".ui.yunxinfriend.MoFriendsActivity"/>
 
         <activity android:name="com.choicepicture_library.ImageGridActivity"/>
 

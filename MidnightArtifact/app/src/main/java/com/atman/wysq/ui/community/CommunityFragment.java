@@ -183,15 +183,6 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
     @Override
     public void doInitBaseHttp() {
         super.doInitBaseHttp();
-        OkHttpUtils.get().url(Common.Url_AdList + 4).addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                .tag(Common.NET_AD_LIST).id(Common.NET_AD_LIST).build()
-                .execute(new MyStringCallback(getActivity(), this, true));
-//        if (isLogin()) {
-//            OkHttpUtils.get().url(Common.Url_Get_UserComment + "1/1")
-//                    .addHeader("cookie", MyBaseApplication.getApp().getCookie())
-//                    .tag(Common.NET_GET_USERCOMMENT).id(Common.NET_GET_USERCOMMENT).build()
-//                    .execute(new MyStringCallback(getActivity(), this, false));
-//        }
     }
 
     @Override
@@ -204,6 +195,9 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && getActivity() != null && isError) {
             isError = false;
+            OkHttpUtils.get().url(Common.Url_AdList + 4).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .tag(Common.NET_AD_LIST).id(Common.NET_AD_LIST).build()
+                    .execute(new MyStringCallback(getActivity(), this, true));
             OkHttpUtils.get().url(Common.Url_Get_BlogBoard).addHeader("cookie", MyBaseApplication.getApp().getCookie())
                     .tag(Common.NET_GET_BLOGBOARD).id(Common.NET_GET_BLOGBOARD).build()
                     .execute(new MyStringCallback(getActivity(), this, true));
@@ -238,21 +232,26 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
 
         // 设置循环，在调用setData方法前调用
         if (cycleViewPager==null) {
-            OkHttpUtils.get().url(Common.Url_AdList + 4).addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                    .tag(Common.NET_AD_LIST).id(Common.NET_AD_LIST).build()
-                    .execute(new MyStringCallback(getActivity(), this, true));
+            if (getUserVisibleHint()) {
+                OkHttpUtils.get().url(Common.Url_AdList + 4).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .tag(Common.NET_AD_LIST).id(Common.NET_AD_LIST).build()
+                        .execute(new MyStringCallback(getActivity(), this, true));
+            }
             return;
         }
-        cycleViewPager.setCycle(true);
-        cycleViewPager.setHitIndicator(true);
+        if (infos.size()<=1) {
+            cycleViewPager.setCycle(false);
+            cycleViewPager.setScrollable(false);
+            cycleViewPager.setWheel(false);
+        } else {
+            cycleViewPager.setCycle(true);
+            cycleViewPager.setScrollable(true);
+            cycleViewPager.setWheel(true);
+            cycleViewPager.setTime(5000);
+        }
 
         // 在加载数据前设置是否循环
         cycleViewPager.setData(views, infos, mAdCycleViewListener);
-        //设置轮播
-        cycleViewPager.setWheel(true);
-
-        // 设置轮播时间，默认5000ms
-        cycleViewPager.setTime(5000);
         //设置圆点指示图标组居中显示，默认靠右
         cycleViewPager.setIndicatorCenter();
     }

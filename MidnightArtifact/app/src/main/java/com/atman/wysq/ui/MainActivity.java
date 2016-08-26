@@ -171,15 +171,15 @@ public class MainActivity extends MyBaseActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
-                    case R.id.tab_community:
+                    case R.id.tab_message:
                         viewpager.setCurrentItem(0,false);
                         fg = adapter.getItem(0);
                         break;
-                    case R.id.tab_mall:
+                    case R.id.tab_community:
                         viewpager.setCurrentItem(1,false);
                         fg = adapter.getItem(1);
                         break;
-                    case R.id.tab_message:
+                    case R.id.tab_mall:
                         viewpager.setCurrentItem(2,false);
                         fg = adapter.getItem(2);
                         break;
@@ -196,7 +196,7 @@ public class MainActivity extends MyBaseActivity {
         });
 
         //挨着给每个RadioButton加入drawable限制边距以控制显示大小
-        RadioButton[] bt = {tabCommunity,tabMall,tabMessage,tabDiscover,tabPersonal};
+        RadioButton[] bt = {tabMessage, tabCommunity,tabMall,tabDiscover,tabPersonal};
         for (int i=0;i<bt.length;i++) {
             Drawable[] drs = bt[i].getCompoundDrawables();
             Rect r = new Rect(0, 0, drs[1].getMinimumWidth() + 20, drs[1].getMinimumHeight() + 20);
@@ -208,9 +208,9 @@ public class MainActivity extends MyBaseActivity {
     private void initViewpager() {
         viewpager.setPagingEnabled(false);//是否支持手势滑动
         adapter = new MyFragmentAdapter(getSupportFragmentManager());
+        adapter.addFragment(new MessageFragment(), MESSAGE_TAG);
         adapter.addFragment(new CommunityFragment(), COMMUNITY_TAG);
         adapter.addFragment(new MallFragment(), MALL_TAG);
-        adapter.addFragment(new MessageFragment(), MESSAGE_TAG);
         adapter.addFragment(new DiscoverFragment(), DISCOVER_TAG);
         adapter.addFragment(new PersonalFragment(), PERSONAL_TAG);
         viewpager.setOffscreenPageLimit(4);
@@ -286,24 +286,13 @@ public class MainActivity extends MyBaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-//        if(fg instanceof NewsFragment){
-//            boolean b = NewsFragment.onKeyDown(keyCode, event);
-//            if (b) {
-//                return true;
-//            } else {
-//                return super.onKeyDown(keyCode, event);
-//            }
-//        } else {
         return super.onKeyDown(keyCode, event);
-//        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         /*然后在碎片中调用重写的onActivityResult方法*/
-//        LogUtils.e("Main>>>>>>>>");
         fg.onActivityResult(requestCode, resultCode, data);
     }
 }
