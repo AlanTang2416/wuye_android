@@ -110,15 +110,15 @@ public class MoFriendsActivity extends MyBaseActivity implements AdapterInterfac
     @Override
     public void doInitBaseHttp() {
         super.doInitBaseHttp();
-        OkHttpUtils.get().url(Common.Url_Get_Fans)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                .tag(Common.NET_GET_FANS).id(Common.NET_GET_FANS).build()
-                .execute(new MyStringCallback(mContext, this, true));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        OkHttpUtils.get().url(Common.Url_Get_Fans)
+                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .tag(Common.NET_GET_FANS).id(Common.NET_GET_FANS).build()
+                .execute(new MyStringCallback(mContext, this, true));
     }
 
     @Override
@@ -280,5 +280,6 @@ public class MoFriendsActivity extends MyBaseActivity implements AdapterInterfac
 
     @Override
     public void onItemClick(View view, int position) {
+        startActivity(OtherPersonalActivity.buildIntent(mContext, adapter.getItem(position).getUserExt().getUser_id()));
     }
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/dimen_dp_20"
+    android:paddingBottom="@dimen/dimen_dp_20"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="#7394de">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/dimen_sp_15"
+            android:text="总守护数"/>
+        <ImageView
+            android:layout_width="@dimen/dimen_dp_20"
+            android:layout_height="@dimen/dimen_dp_19"
+            android:src="@mipmap/other_guard_top_ic"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/otherguardian_num_tx"
+        android:layout_marginLeft="@dimen/dimen_dp_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/dimen_sp_35"
+        android:text="60"/>
+
+</LinearLayout>

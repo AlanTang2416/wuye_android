@@ -61,7 +61,7 @@ public class SortGroupFriendsAdapter extends BaseAdapter implements SectionIndex
         }
     }
 
-    public Object getItem(int position) {
+    public GetFansModel.BodyEntity getItem(int position) {
         return list.get(position);
     }
 

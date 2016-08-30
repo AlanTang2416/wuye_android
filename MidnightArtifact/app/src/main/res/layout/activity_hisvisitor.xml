@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
+            xmlns:ptr="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/pullToRefreshListView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:divider="@color/color_line"
+            android:dividerHeight="@dimen/dimen_dp_1"
+            android:scrollbars="none"
+            ptr:ptrAnimationStyle="flip"
+            ptr:ptrMode="disabled"
+            ptr:ptrScrollingWhileRefreshingEnabled="true" />
+
+        <ImageView
+            android:id="@+id/hisdvisitor_totop_iv"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:layout_width="@dimen/dimen_dp_40"
+            android:layout_height="@dimen/dimen_dp_40"
+            android:layout_marginBottom="@dimen/dimen_dp_30"
+            android:layout_marginRight="@dimen/dimen_dp_10"
+            android:src="@mipmap/icon_list_backtotop"/>
+    </RelativeLayout>
+
+</LinearLayout>

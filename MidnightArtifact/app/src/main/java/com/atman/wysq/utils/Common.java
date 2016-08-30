@@ -143,6 +143,18 @@ public class Common {
     public static String Url_Get_ChatToken = hostUrl + "rest/chat/chattoken";
     //获取好友列表
     public static String Url_Get_Fans = hostUrl + "rest/user/fans";
+    //获取用户基本信息
+    public static String Url_Get_UserIndex = hostUrl + "rest/user/index";
+    //获取访客信息
+    public static String Url_Get_Browse = hostUrl + "rest/user/browse/";
+    //获取守护者信息
+    public static String Url_Get_Guard = hostUrl + "rest/user/guard/";
+    //加好友
+    public static String Url_Add_Friends = hostUrl + "rest/user/addfan/";
+    //删除好友
+    public static String Url_Delete_Friends = hostUrl + "rest/user/follow/";
+    //获取物流URL
+    public static String Url_Get_Logistics = hostUrl + "rest/order/logistics/";
     /**************************http访问路径*****************************/
 
 
@@ -260,6 +272,18 @@ public class Common {
     public static int NET_GET_CHATTOKEN = 55;
     //获取好友列表
     public static int NET_GET_FANS = 56;
+    //获取用户基本信息
+    public static int NET_GET_USERINDEX = 57;
+    //获取访客信息
+    public static int NET_GET_BROWSE = 58;
+    //获取守护者信息
+    public static int NET_GET_GUARD = 59;
+    //加好友
+    public static int NET_ADD_FRIEND = 60;
+    //删除好友
+    public static int NET_DLELTE_FRIEND = 61;
+    //获取物流URL
+    public static int NET_GET_LOGISTICS = 62;
     /**************************http访问回应识别码*****************************/
 
 

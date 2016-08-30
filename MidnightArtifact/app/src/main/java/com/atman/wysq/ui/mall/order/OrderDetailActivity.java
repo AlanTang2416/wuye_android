@@ -12,10 +12,12 @@ import android.widget.TextView;
 import com.atman.wysq.R;
 import com.atman.wysq.model.response.AliPayResponseModel;
 import com.atman.wysq.model.response.GetAddressByOrderIdModel;
+import com.atman.wysq.model.response.GetLogisticsModel;
 import com.atman.wysq.model.response.GetOrderDetailModel;
 import com.atman.wysq.model.response.WeiXinPayResponseModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
+import com.atman.wysq.ui.base.WebPageActivity;
 import com.atman.wysq.ui.mall.GoodsDetailActivity;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.MyTools;
@@ -64,6 +66,10 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
     Button orderDetailBt;
     @Bind(R.id.two_ll)
     LinearLayout twoLl;
+    @Bind(R.id.order_detail_logistics_tx)
+    TextView orderDetailLogisticsTx;
+    @Bind(R.id.four_rl)
+    LinearLayout fourRl;
 
     private Context mContext = OrderDetailActivity.this;
 
@@ -135,7 +141,7 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (whatPay ==1) {
+        if (whatPay == 1) {
             MyBaseApplication.getApp().setFilterLock(false);
         }
     }
@@ -162,6 +168,11 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
             MyBaseApplication.getApp().setFilterLock(true);
             WeiXinPayResponseModel WeiXinPayResponseModelm = mGson.fromJson(data, WeiXinPayResponseModel.class);
             mPayDialog.weixinPay(WeiXinPayResponseModelm);
+        } else if(id == Common.NET_GET_LOGISTICS) {
+            GetLogisticsModel mGetLogisticsModel = mGson.fromJson(data, GetLogisticsModel.class);
+            if (mGetLogisticsModel.getBody()!=null) {
+                startActivity(WebPageActivity.buildIntent(mContext, mGetLogisticsModel.getBody(), "物流跟踪"));
+            }
         }
     }
 
@@ -218,6 +229,14 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
             twoLl.setVisibility(View.GONE);
             orderDetailHeadIv.setImageResource(R.mipmap.jinbin);
         }
+
+        if (mGetOrderDetailModel.getBody().getTransport_id()!=null) {
+            orderDetailLogisticsTx.setText(mGetOrderDetailModel.getBody().getTransport_id()
+                    +"["+mGetOrderDetailModel.getBody().getTransport_company()+"]");
+            fourRl.setVisibility(View.VISIBLE);
+        } else {
+            fourRl.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -227,11 +246,18 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
         OkHttpUtils.getInstance().cancelTag(Common.NET_GET_ADDRESS_LIST);
         OkHttpUtils.getInstance().cancelTag(Common.NET_RECHARGE_ADD_ORDER_ALIPAY);
         OkHttpUtils.getInstance().cancelTag(Common.NET_RECHARGE_ADD_ORDER_WEIXIN);
+        OkHttpUtils.getInstance().cancelTag(Common.NET_GET_LOGISTICS);
     }
 
-    @OnClick({R.id.order_detail_bt, R.id.three_rl})
+    @OnClick({R.id.order_detail_bt, R.id.three_rl, R.id.four_rl})
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.four_rl:
+                OkHttpUtils.get().url(Common.Url_Get_Logistics + orderId)
+                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .tag(Common.NET_GET_LOGISTICS).id(Common.NET_GET_LOGISTICS).build()
+                        .execute(new MyStringCallback(mContext, this, true));
+                break;
             case R.id.order_detail_bt:
                 if (mGetOrderDetailModel.getBody().getType() == 1) {
                     mPayDialog = new PayDialog(mContext, orderId + "", this);
@@ -270,4 +296,5 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
     public void payResult(String str) {
         MyBaseApplication.getApp().setFilterLock(false);
     }
+
 }

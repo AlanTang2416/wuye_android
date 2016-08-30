@@ -36,7 +36,7 @@
         <activity android:name=".ui.personal.TaskListActivity"/>
         <activity android:name=".ui.personal.RechargeActivity"/>
         <activity android:name=".ui.base.BaseGestureLockActivity" android:launchMode="singleTask"/>
-        <activity android:name=".ui.WebPageActivity"/>
+        <activity android:name=".ui.base.WebPageActivity"/>
         <activity android:name=".ui.mall.TwoLevelCategoryListActivity"/>
         <activity android:name=".ui.mall.GoodsDetailActivity"/>
         <activity android:name=".ui.mall.order.ConfirmationOrderActivity"/>
@@ -55,6 +55,10 @@
         <activity android:name=".ui.community.MySecretListActivity"/>
         <activity android:name=".ui.community.ReplyListActivity"/>
         <activity android:name=".ui.yunxinfriend.MoFriendsActivity"/>
+        <activity android:name=".ui.yunxinfriend.OtherPersonalActivity"/>
+        <activity android:name=".ui.yunxinfriend.HisDynamicsActivity"/>
+        <activity android:name=".ui.yunxinfriend.HisVisitorActivity"/>
+        <activity android:name=".ui.yunxinfriend.HisGuardianActivity"/>
 
         <activity android:name="com.choicepicture_library.ImageGridActivity"/>
 

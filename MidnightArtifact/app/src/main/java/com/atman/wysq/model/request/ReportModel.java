@@ -11,9 +11,9 @@ public class ReportModel {
 
     private String content;
     private int type;
-    private int obj_id;
+    private long obj_id;
 
-    public ReportModel(String content, int type, int obj_id) {
+    public ReportModel(String content, int type, long obj_id) {
         this.content = content;
         this.obj_id = obj_id;
         this.type = type;

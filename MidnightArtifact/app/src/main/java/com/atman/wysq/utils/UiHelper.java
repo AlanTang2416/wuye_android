@@ -12,7 +12,7 @@ import android.provider.MediaStore;
 import android.widget.Toast;
 
 import com.atman.wysq.model.response.MallTopResponseModel;
-import com.atman.wysq.ui.WebPageActivity;
+import com.atman.wysq.ui.base.WebPageActivity;
 import com.atman.wysq.ui.community.PostingsDetailActivity;
 import com.atman.wysq.ui.login.LoginActivity;
 import com.atman.wysq.ui.mall.GoodsDetailActivity;

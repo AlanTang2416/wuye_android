@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:img="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/otherpersonal_dynamic_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_80"
+        android:background="@drawable/white_hollow_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_dp_15"
+        android:paddingRight="@dimen/dimen_dp_10">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TA的动态"
+                android:textColor="@color/personal_item_tx"
+                android:textSize="@dimen/dimen_sp_12" />
+
+            <TextView
+                android:id="@+id/otherpersonal_dynamic_number_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_dp_5"
+                android:text="暂无"
+                android:textColor="@color/personal_item_tx"
+                android:textSize="@dimen/dimen_sp_16" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
+
+            <GridView
+                android:id="@+id/otherpersonal_dynamic_gv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_dp_15"
+                android:layout_marginRight="@dimen/dimen_dp_5"
+                android:gravity="right"
+                android:numColumns="4"
+                android:visibility="gone" />
+
+            <com.base.baselibs.widget.CustomImageView
+                android:id="@+id/otherpersonal_dynmic_one_iv"
+                android:layout_width="@dimen/dimen_dp_55"
+                android:layout_height="@dimen/dimen_dp_55"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                img:circle="false"
+                img:radius="@dimen/dimen_dp_5" />
+
+            <com.base.baselibs.widget.CustomImageView
+                android:id="@+id/otherpersonal_dynmic_two_iv"
+                android:layout_width="@dimen/dimen_dp_55"
+                android:layout_height="@dimen/dimen_dp_55"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                img:circle="false"
+                img:radius="@dimen/dimen_dp_5" />
+
+            <com.base.baselibs.widget.CustomImageView
+                android:id="@+id/otherpersonal_dynmic_three_iv"
+                android:layout_width="@dimen/dimen_dp_55"
+                android:layout_height="@dimen/dimen_dp_55"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                img:circle="false"
+                img:radius="@dimen/dimen_dp_5" />
+
+            <com.base.baselibs.widget.CustomImageView
+                android:id="@+id/otherpersonal_dynmic_four_iv"
+                android:layout_width="@dimen/dimen_dp_55"
+                android:layout_height="@dimen/dimen_dp_55"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                img:circle="false"
+                img:radius="@dimen/dimen_dp_5" />
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_dp_15"
+            android:layout_marginLeft="@dimen/dimen_dp_10"
+            android:src="@mipmap/right_arrow" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/color_line" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="@dimen/dimen_dp_10"
+        android:background="@color/color_line" />
+
+    <LinearLayout
+        android:id="@+id/otherpersonal_visitor_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_50"
+        android:background="@drawable/white_hollow_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_dp_15"
+        android:paddingRight="@dimen/dimen_dp_15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="访    客"
+            android:textColor="@color/personal_item_tx"
+            android:textSize="@dimen/dimen_sp_16" />
+
+        <TextView
+            android:id="@+id/otherpersonal_visitor_num_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_dp_30"
+            android:text=""
+            android:textColor="@color/personal_item_tx"
+            android:textSize="@dimen/dimen_sp_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal">
+
+            <com.base.baselibs.widget.RoundImageView
+                android:id="@+id/otherpersonal_visitor_one_iv"
+                android:layout_width="@dimen/dimen_dp_30"
+                android:layout_height="@dimen/dimen_dp_30"
+                android:src="@mipmap/ic_launcher"
+                android:visibility="gone" />
+
+            <com.base.baselibs.widget.RoundImageView
+                android:id="@+id/otherpersonal_visitor_two_iv"
+                android:layout_width="@dimen/dimen_dp_30"
+                android:layout_height="@dimen/dimen_dp_30"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:src="@mipmap/ic_launcher"
+                android:visibility="gone" />
+
+            <com.base.baselibs.widget.RoundImageView
+                android:id="@+id/otherpersonal_visitor_three_iv"
+                android:layout_width="@dimen/dimen_dp_30"
+                android:layout_height="@dimen/dimen_dp_30"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:src="@mipmap/ic_launcher"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/dimen_dp_15"
+            android:background="@color/color_line" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/otherpersonal_friends_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_50"
+        android:background="@drawable/white_hollow_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_dp_15"
+        android:paddingRight="@dimen/dimen_dp_15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="守护者"
+            android:textColor="@color/personal_item_tx"
+            android:textSize="@dimen/dimen_sp_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/otherpersonal_guardian_one_rl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/otherpersonal_guardian_top_one_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/other_guard_one" />
+
+                <com.base.baselibs.widget.RoundImageView
+                    android:id="@+id/otherpersonal_guardian_one_iv"
+                    android:layout_width="@dimen/dimen_dp_30"
+                    android:layout_height="@dimen/dimen_dp_30"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_launcher" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/otherpersonal_guardian_two_rl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/otherpersonal_guardian_top_two_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/other_guard_one" />
+
+                <com.base.baselibs.widget.RoundImageView
+                    android:id="@+id/otherpersonal_guardian_two_iv"
+                    android:layout_width="@dimen/dimen_dp_30"
+                    android:layout_height="@dimen/dimen_dp_30"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_launcher" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/otherpersonal_guardian_three_rl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/otherpersonal_guardian_top_three_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/other_guard_one" />
+
+                <com.base.baselibs.widget.RoundImageView
+                    android:id="@+id/otherpersonal_guardian_three_iv"
+                    android:layout_width="@dimen/dimen_dp_30"
+                    android:layout_height="@dimen/dimen_dp_30"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_launcher" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/color_line" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="@dimen/dimen_dp_10"
+        android:background="@color/color_line" />
+
+    <LinearLayout
+        android:id="@+id/otherpersonal_relationship_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_50"
+        android:background="@drawable/white_hollow_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_dp_15"
+        android:paddingRight="@dimen/dimen_dp_15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关        系"
+            android:textColor="@color/personal_item_tx"
+            android:textSize="@dimen/dimen_sp_16" />
+
+        <TextView
+            android:id="@+id/otherpersonal_relationship_tv"
+            android:layout_marginLeft="@dimen/dimen_dp_15"
+            android:gravity="center_vertical|right"
+            android:textSize="@dimen/dimen_sp_15"
+            android:textColor="#ff8896"
+            android:text="好友"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/otherpersonal_relationship_bt"
+            android:layout_marginLeft="@dimen/dimen_dp_10"
+            android:textSize="@dimen/dimen_sp_11"
+            android:paddingTop="@dimen/dimen_dp_2"
+            android:paddingBottom="@dimen/dimen_dp_2"
+            android:paddingLeft="@dimen/dimen_dp_7"
+            android:paddingRight="@dimen/dimen_dp_7"
+            android:textColor="@color/color_white"
+            android:background="@drawable/level_red_circular_bg"
+            android:text="加好友"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/dimen_dp_15"
+            android:background="@color/color_line" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/otherpersonal_oftenaddr_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_50"
+        android:background="@drawable/white_hollow_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_dp_15"
+        android:paddingRight="@dimen/dimen_dp_15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="常出没地"
+            android:textColor="@color/personal_item_tx"
+            android:textSize="@dimen/dimen_sp_16" />
+
+        <TextView
+            android:id="@+id/otherpersonal_oftenaddr_tv"
+            android:layout_marginLeft="@dimen/dimen_sp_15"
+            android:gravity="center_vertical|right"
+            android:textSize="@dimen/dimen_sp_15"
+            android:textColor="#ff8896"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/color_line" />
+
+    <ImageView
+        android:id="@+id/otherpersonal_chat_iv"
+        android:layout_width="@dimen/dimen_dp_50"
+        android:layout_height="@dimen/dimen_dp_50"
+        android:layout_marginTop="@dimen/dimen_dp_50"
+        android:src="@mipmap/other_chat_ic" />
+
+</LinearLayout>

@@ -56,6 +56,25 @@ public class GetOrderDetailModel {
         private int comment_type;
         private int order_type;
         private int address_id;
+        private String transport_company;
+
+        public String getTransport_id() {
+            return transport_id;
+        }
+
+        public void setTransport_id(String transport_id) {
+            this.transport_id = transport_id;
+        }
+
+        public String getTransport_company() {
+            return transport_company;
+        }
+
+        public void setTransport_company(String transport_company) {
+            this.transport_company = transport_company;
+        }
+
+        private String transport_id;
 
         public String getOrder_id() {
             return order_id;

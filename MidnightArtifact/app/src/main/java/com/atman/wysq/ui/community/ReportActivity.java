@@ -44,7 +44,7 @@ public class ReportActivity extends MyBaseActivity {
 
     private Context mContext = ReportActivity.this;
 
-    private int id;
+    private long id;
     private String str = "";
 
     Handler handler = new Handler(){
@@ -66,7 +66,7 @@ public class ReportActivity extends MyBaseActivity {
         ButterKnife.bind(this);
     }
 
-    public static Intent buildIntent(Context context, int id) {
+    public static Intent buildIntent(Context context, long id) {
         Intent intent = new Intent(context, ReportActivity.class);
         intent.putExtra("id", id);
         return intent;
@@ -76,7 +76,7 @@ public class ReportActivity extends MyBaseActivity {
     public void initWidget(View... v) {
         super.initWidget(v);
 
-        id = getIntent().getIntExtra("id", -1);
+        id = getIntent().getLongExtra("id", -1);
 
         setBarTitleTx("举报");
         setBarRightIv(R.mipmap.bt_create_ok);

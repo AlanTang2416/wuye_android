@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/otherpersonal_head_rl"
+        android:layout_width="@dimen/dimen_dp_65"
+        android:layout_height="@dimen/dimen_dp_65"
+        android:layout_centerInParent="true">
+
+        <com.base.baselibs.widget.CustomImageView xmlns:img="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/otherpersonal_head_iv"
+            android:layout_width="@dimen/dimen_dp_65"
+            android:layout_height="@dimen/dimen_dp_65"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/ic_launcher"
+            img:circle="false"
+            img:radius="@dimen/dimen_dp_5" />
+
+        <ImageView
+            android:id="@+id/otherpersonal_gender_iv"
+            android:layout_width="@dimen/dimen_dp_15"
+            android:layout_height="@dimen/dimen_dp_15"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/personal_man_ic" />
+
+        <com.base.baselibs.widget.CustomImageView xmlns:img="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/otherpersonal_head_verify_img"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_dp_20"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/personal_identification"
+            android:visibility="gone"
+            img:circle="false"
+            img:radius="@dimen/dimen_dp_5" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/otherpersonal_head_rl"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dimen_dp_5">
+
+        <TextView
+            android:id="@+id/otherpersonal_name_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_dp_5"
+            android:text="name"
+            android:textColor="#7F2505"
+            android:textSize="@dimen/dimen_sp_16" />
+
+        <TextView
+            android:id="@+id/otherpersonal_vip_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/otherpersonal_name_tx"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_dp_5"
+            android:paddingLeft="@dimen/dimen_dp_5"
+            android:paddingRight="@dimen/dimen_dp_5"
+            android:background="@drawable/level_red_bg"
+            android:text="VIP.0"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/dimen_sp_12" />
+
+        <ImageView
+            android:id="@+id/otherpersonal_svip_iv"
+            android:layout_width="@dimen/dimen_dp_50"
+            android:layout_height="@dimen/dimen_dp_16"
+            android:layout_below="@+id/otherpersonal_name_tx"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/dimen_dp_5"
+            android:src="@mipmap/other_svip_ic" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/otherpersonal_back_ll"
+        android:layout_width="@dimen/dimen_dp_48"
+        android:layout_height="@dimen/dimen_dp_48"
+        android:clickable="true"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/otherpersonal_back_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:scaleType="centerInside"
+            android:src="@mipmap/back_white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/otherpersonal_more_ll"
+        android:layout_width="@dimen/dimen_dp_48"
+        android:layout_height="@dimen/dimen_dp_48"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/otherpersonal_right_more_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:scaleType="centerInside"
+            android:src="@mipmap/other_more_ic" />
+    </LinearLayout>
+
+</RelativeLayout>
