@@ -7,13 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.atman.wysq.R;
 import com.atman.wysq.model.event.YunXinAuthOutEvent;
 import com.atman.wysq.model.response.ConfigModel;
 import com.atman.wysq.model.response.GetGoldenRoleModel;
-import com.atman.wysq.model.response.GetUserInfoModel;
+import com.atman.wysq.model.response.GetUserIndexModel;
 import com.atman.wysq.ui.MainActivity;
 import com.atman.wysq.yunxin.DemoCache;
 import com.atman.wysq.yunxin.utils.SystemUtil;
@@ -80,7 +79,7 @@ public class MyBaseApplication extends BaseApplication {
     public static int mUserCion = 0;
     public static List<ConfigModel.ShopEntity> mShop ;
     public static GetGoldenRoleModel mGetGoldenRoleModel ;
-    public static GetUserInfoModel mGetUserInfoModel ;
+    public static GetUserIndexModel mGetUserIndexModel ;
     public boolean isLock = true;
     public boolean isFilterLock = false;
     public static boolean isUnRead = false;

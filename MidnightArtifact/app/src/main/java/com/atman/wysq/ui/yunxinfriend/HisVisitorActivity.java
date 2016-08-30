@@ -53,6 +53,7 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
     private GetHisVisitorAdapter mAdapter;
     private View mEmpty;
     private TextView mEmptyTX;
+    private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,18 +62,20 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
         ButterKnife.bind(this);
     }
 
-    public static Intent buildIntent(Context context, long id){
+    public static Intent buildIntent(Context context, long id, String title){
         Intent intent = new Intent(context, HisVisitorActivity.class);
         intent.putExtra("id", id);
+        intent.putExtra("title", title);
         return intent;
     }
 
     @Override
     public void initWidget(View... v) {
         super.initWidget(v);
-        setBarTitleTx("TA的访客");
 
         id = getIntent().getLongExtra("id", id);
+        title = getIntent().getStringExtra("title");
+        setBarTitleTx(title);
 
         headView = LayoutInflater.from(mContext).inflate(R.layout.part_visitor_head_view, null);
         headViewNumTx = (TextView) headView.findViewById(R.id.othervisitor_num_tx);
@@ -183,7 +186,7 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
 
     @Override
     public void onItemClick(View view, int position) {
-        if (mAdapter.getItem(position).getUser_id() == MyBaseApplication.mGetUserInfoModel.getBody().getUserId()) {
+        if (mAdapter.getItem(position).getUser_id() == MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
             showWraning("亲，这是你自己哦！");
             return;
         }

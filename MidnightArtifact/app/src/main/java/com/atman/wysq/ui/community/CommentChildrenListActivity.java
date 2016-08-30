@@ -295,12 +295,12 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
                 GetChildrenCommentModel.BodyEntity body = new GetChildrenCommentModel.BodyEntity();
                 body.setContent(blogdetailAddcommentEt.getText().toString().trim());
                 body.setCreate_time(System.currentTimeMillis());
-                body.setIcon(MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getIcon());
-                body.setSex(MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex());
-                body.setVerify_status(MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getVerify_status());
-                body.setUserLevel(MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getUserLevel());
-                body.setUser_name(MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getNick_name());
-                body.setUser_id(MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getUser_id());
+                body.setIcon(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon());
+                body.setSex(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex());
+                body.setVerify_status(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status());
+                body.setUserLevel(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUserLevel());
+                body.setUser_name(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getNick_name());
+                body.setUser_id(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id());
                 mAdapter.addBody(body);
             }
             blogdetailAddcommentEt.setText("");

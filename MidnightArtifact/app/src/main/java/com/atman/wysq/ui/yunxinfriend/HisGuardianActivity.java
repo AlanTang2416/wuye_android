@@ -51,6 +51,7 @@ public class HisGuardianActivity extends MyBaseActivity implements AdapterInterf
     private TextView mEmptyTX;
     private GetHisGuardianAdapter mAdapter;
     private GetHisGuardModel mGetHisGuardModel;
+    private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,18 +60,20 @@ public class HisGuardianActivity extends MyBaseActivity implements AdapterInterf
         ButterKnife.bind(this);
     }
 
-    public static Intent buildIntent(Context context, long id) {
+    public static Intent buildIntent(Context context, long id, String title) {
         Intent intent = new Intent(context, HisGuardianActivity.class);
         intent.putExtra("id", id);
+        intent.putExtra("title", title);
         return intent;
     }
 
     @Override
     public void initWidget(View... v) {
         super.initWidget(v);
-        setBarTitleTx("TA的守护者");
 
         id = getIntent().getLongExtra("id", -1);
+        title = getIntent().getStringExtra("title");
+        setBarTitleTx(title);
 //        id = 450000168;
 
         headView = LayoutInflater.from(mContext).inflate(R.layout.part_guardian_head_view, null);
@@ -182,7 +185,7 @@ public class HisGuardianActivity extends MyBaseActivity implements AdapterInterf
 
     @Override
     public void onItemClick(View view, int position) {
-        if (mAdapter.getItem(position).getUser_id() == MyBaseApplication.mGetUserInfoModel.getBody().getUserId()) {
+        if (mAdapter.getItem(position).getUser_id() == MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
             showWraning("亲，这是你自己哦！");
             return;
         }

@@ -175,8 +175,8 @@ public class MySecretListActivity extends MyBaseActivity implements AdapterInter
     }
 
     private void doHttp(boolean b) {
-        if (MyBaseApplication.mGetUserInfoModel!=null) {
-            OkHttpUtils.get().url(Common.Url_Get_My_Sceret + MyBaseApplication.mGetUserInfoModel.getBody().getUserId() + "/"  + mStateId + "/" + mPage)
+        if (MyBaseApplication.mGetUserIndexModel!=null) {
+            OkHttpUtils.get().url(Common.Url_Get_My_Sceret + MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserId() + "/"  + mStateId + "/" + mPage)
                     .addHeader("cookie", MyBaseApplication.getApp().getCookie())
                     .tag(Common.NET_GET_MYSECRET).id(Common.NET_GET_MYSECRET).build()
                     .execute(new MyStringCallback(mContext, this, b));

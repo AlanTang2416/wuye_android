@@ -301,7 +301,7 @@
         android:id="@+id/otherpersonal_relationship_ll"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_dp_50"
-        android:background="@drawable/white_hollow_selector"
+        android:background="@color/color_white"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -356,8 +356,9 @@
     <LinearLayout
         android:id="@+id/otherpersonal_oftenaddr_ll"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_dp_50"
-        android:background="@drawable/white_hollow_selector"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/dimen_dp_50"
+        android:background="@color/color_white"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -378,6 +379,10 @@
             android:textSize="@dimen/dimen_sp_15"
             android:textColor="#ff8896"
             android:layout_weight="1"
+            android:layout_marginTop="@dimen/dimen_dp_5"
+            android:layout_marginBottom="@dimen/dimen_dp_5"
+            android:lines="2"
+            android:ellipsize="end"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
 

@@ -15,11 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atman.wysq.R;
 import com.atman.wysq.model.event.YunXinAuthOutEvent;
 import com.atman.wysq.model.response.GetTaskAllModel;
+import com.atman.wysq.model.response.GetUserIndexModel;
 import com.atman.wysq.model.response.GetUserInfoModel;
 import com.atman.wysq.model.response.HeadImgResultModel;
 import com.atman.wysq.model.response.HeadImgSuccessModel;
@@ -27,6 +29,8 @@ import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.base.MyBaseFragment;
 import com.atman.wysq.ui.login.LoginActivity;
 import com.atman.wysq.ui.mall.order.MyOrderListActivity;
+import com.atman.wysq.ui.yunxinfriend.HisGuardianActivity;
+import com.atman.wysq.ui.yunxinfriend.HisVisitorActivity;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.UiHelper;
 import com.base.baselibs.net.MyStringCallback;
@@ -36,6 +40,7 @@ import com.base.baselibs.util.StringUtils;
 import com.base.baselibs.widget.BottomDialog;
 import com.base.baselibs.widget.CustomImageView;
 import com.base.baselibs.widget.PromptDialog;
+import com.base.baselibs.widget.RoundImageView;
 import com.base.baselibs.widget.pullzoom.PullZoomScrollVIew;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tbl.okhttputils.OkHttpUtils;
@@ -70,13 +75,22 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     private CustomImageView personalHeadVerifyImg;
     private TextView personalNameTx;
     private TextView personalGendercertificationTv;
-    private GetUserInfoModel mGetUserInfoModel;
+    private GetUserIndexModel mGetUserIndexModel;
 
     private LinearLayout personalMaillistLl;
     private LinearLayout personalServiceLl;
     private LinearLayout personalTaskLl;
     private LinearLayout personalRechargeLl;
     private LinearLayout personalMyorderLl;
+    private LinearLayout personalVisitorLl;
+    private LinearLayout personalFriendsLl;
+
+    private TextView personalVisitorNumTx;
+    private TextView personalMycoinTv;
+    private RoundImageView personalVisitorOneIv, personalVisitorTwoIv, personalVisitorThreeIv;
+    private RoundImageView personalGuardianOneIv, personalGuardianTwoIv, personalGuardianThreeIv;
+    private ImageView personalGuardianTopOneIv, personalGuardianTopTwoIv, personalGuardianTopThreeIv;
+    private RelativeLayout personalGuardianOneRl,personalGuardianTwoRl,personalGuardianThreeRl;
 
     private String mHeadImgUrl;
     private boolean isHead = false;
@@ -124,6 +138,26 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalTaskLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_task_ll);
         personalRechargeLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_recharge_ll);
         personalMyorderLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_myorder_ll);
+        personalVisitorNumTx = (TextView) personalScrollview.findViewById(R.id.personal_visitor_num_tx);
+        personalMycoinTv = (TextView) personalScrollview.findViewById(R.id.personal_mycoin_tv);
+
+        personalVisitorLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_visitor_ll);
+        personalVisitorLl.setOnClickListener(this);
+        personalVisitorOneIv = (RoundImageView) personalScrollview.findViewById(R.id.personal_visitor_one_iv);
+        personalVisitorTwoIv = (RoundImageView) personalScrollview.findViewById(R.id.personal_visitor_two_iv);
+        personalVisitorThreeIv = (RoundImageView) personalScrollview.findViewById(R.id.personal_visitor_three_iv);
+
+        personalFriendsLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_friends_ll);
+        personalFriendsLl.setOnClickListener(this);
+        personalGuardianOneIv = (RoundImageView) personalScrollview.findViewById(R.id.personal_guardian_one_iv);
+        personalGuardianTwoIv = (RoundImageView) personalScrollview.findViewById(R.id.personal_guardian_two_iv);
+        personalGuardianThreeIv = (RoundImageView) personalScrollview.findViewById(R.id.personal_guardian_three_iv);
+        personalGuardianTopOneIv = (ImageView) personalScrollview.findViewById(R.id.personal_guardian_top_one_iv);
+        personalGuardianTopTwoIv = (ImageView) personalScrollview.findViewById(R.id.personal_guardian_top_two_iv);
+        personalGuardianTopThreeIv = (ImageView) personalScrollview.findViewById(R.id.personal_guardian_top_three_iv);
+        personalGuardianOneRl = (RelativeLayout) personalScrollview.findViewById(R.id.personal_guardian_one_rl);
+        personalGuardianTwoRl = (RelativeLayout) personalScrollview.findViewById(R.id.personal_guardian_two_rl);
+        personalGuardianThreeRl = (RelativeLayout) personalScrollview.findViewById(R.id.personal_guardian_three_rl);
 
         personalSettingIv.setOnClickListener(this);
         personalHeadIv.setOnClickListener(this);
@@ -152,9 +186,9 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         if (!isLogin()) {
             hitSetring();
         } else {
-            OkHttpUtils.get().url(Common.Url_GetUserInfo+ PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID))
+            OkHttpUtils.get().url(Common.Url_Get_UserIndex + "/" + PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID))
                     .addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                    .tag(Common.NET_GETUSERINFO).id(Common.NET_GETUSERINFO).build()
+                    .tag(Common.NET_GET_USERINDEX).id(Common.NET_GET_USERINDEX).build()
                     .execute(new MyStringCallback(getActivity(), this, true));
         }
     }
@@ -187,9 +221,9 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     @Override
     public void onStringResponse(String data, Response response, int id) {
         super.onStringResponse(data, response, id);
-        if (id == Common.NET_GETUSERINFO) {
-            mGetUserInfoModel = mGson.fromJson(data, GetUserInfoModel.class);
-            MyBaseApplication.mGetUserInfoModel = mGetUserInfoModel;
+        if (id == Common.NET_GET_USERINDEX) {
+            mGetUserIndexModel = mGson.fromJson(data, GetUserIndexModel.class);
+            MyBaseApplication.mGetUserIndexModel = mGetUserIndexModel;
             UpDateUI();
             OkHttpUtils.get().url(Common.Url_Get_Task)
                     .addHeader("cookie", MyBaseApplication.getApp().getCookie())
@@ -257,18 +291,18 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     }
 
     private void UpDateUI() {
-        MyBaseApplication.mUserCion = mGetUserInfoModel.getBody().getUserExt().getGold_coin();
-        MyBaseApplication.mHEAD_URL = mGetUserInfoModel.getBody().getUserExt().getIcon();
+        MyBaseApplication.mUserCion = mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getGold_coin();
+        MyBaseApplication.mHEAD_URL = mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon();
         personalSettingIv.setVisibility(View.VISIBLE);
         personalGenderIv.setVisibility(View.VISIBLE);
-        personalNameTx.setText(mGetUserInfoModel.getBody().getNickName());
-        if (mGetUserInfoModel.getBody().getUserExt().getSex().equals("M")) {
+        personalNameTx.setText(mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
+        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("M")) {
             personalGenderIv.setImageResource(R.mipmap.personal_man_ic);
         } else {
             personalGenderIv.setImageResource(R.mipmap.personal_weman_ic);
         }
-        if (mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")) {
-            if (mGetUserInfoModel.getBody().getUserExt().getVerify_status()==1) {//已认证
+        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("F")) {
+            if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()==1) {//已认证
                 personalGendercertificationTv.setVisibility(View.GONE);
                 personalGenderIv.setVisibility(View.GONE);
                 personalHeadVerifyImg.setVisibility(View.VISIBLE);
@@ -281,15 +315,86 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             personalGendercertificationTv.setVisibility(View.GONE);
             personalHeadVerifyImg.setVisibility(View.GONE);
         }
-        ImageLoader.getInstance().displayImage(Common.ImageUrl + mGetUserInfoModel.getBody().getUserExt().getIcon()
+        ImageLoader.getInstance().displayImage(Common.ImageUrl + mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
                 , personalHeadIv, MyBaseApplication.getApp().getOptions());
+
+        personalVisitorNumTx.setText(""+mGetUserIndexModel.getBody().getVisitorMap().getVisitorSize());
+        initVisitorIV();
+
+        initguardianIV();
+
+        personalMycoinTv.setText(mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getGold_coin()+"｜更多");
+    }
+
+    private void initguardianIV() {
+        int num = mGetUserIndexModel.getBody().getGuardlist().size();
+        if (num==1) {
+            personalGuardianOneRl.setVisibility(View.GONE);
+            personalGuardianTwoRl.setVisibility(View.GONE);
+            personalGuardianThreeRl.setVisibility(View.VISIBLE);
+            personalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_one);
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
+                    ,personalGuardianThreeIv,MyBaseApplication.getApp().getOptionsNot());
+        } else if (num==2) {
+            personalGuardianOneRl.setVisibility(View.GONE);
+            personalGuardianTwoRl.setVisibility(View.VISIBLE);
+            personalGuardianThreeRl.setVisibility(View.VISIBLE);
+            personalGuardianTopTwoIv.setImageResource(R.mipmap.other_guard_one);
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
+                    ,personalGuardianTwoIv,MyBaseApplication.getApp().getOptionsNot());
+            personalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_two);
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(1).getIcon()
+                    ,personalGuardianThreeIv,MyBaseApplication.getApp().getOptionsNot());
+        } else if (num>=3) {
+            personalGuardianOneRl.setVisibility(View.VISIBLE);
+            personalGuardianTwoRl.setVisibility(View.VISIBLE);
+            personalGuardianThreeRl.setVisibility(View.VISIBLE);
+            personalGuardianTopOneIv.setImageResource(R.mipmap.other_guard_one);
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
+                    ,personalGuardianOneIv,MyBaseApplication.getApp().getOptionsNot());
+            personalGuardianTopTwoIv.setImageResource(R.mipmap.other_guard_two);
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(1).getIcon()
+                    ,personalGuardianTwoIv,MyBaseApplication.getApp().getOptionsNot());
+            personalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_three);
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(2).getIcon()
+                    ,personalGuardianThreeIv,MyBaseApplication.getApp().getOptionsNot());
+        }
+    }
+
+    private void initVisitorIV() {
+        int num = mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();
+        if (num==1) {
+            personalVisitorOneIv.setVisibility(View.GONE);
+            personalVisitorTwoIv.setVisibility(View.GONE);
+            personalVisitorThreeIv.setVisibility(View.VISIBLE);
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
+                    ,personalVisitorThreeIv,MyBaseApplication.getApp().getOptionsNot());
+        } else if (num==2) {
+            personalVisitorOneIv.setVisibility(View.GONE);
+            personalVisitorTwoIv.setVisibility(View.VISIBLE);
+            personalVisitorThreeIv.setVisibility(View.VISIBLE);
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
+                    ,personalVisitorTwoIv,MyBaseApplication.getApp().getOptionsNot());
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(1).getIcon()
+                    ,personalVisitorThreeIv,MyBaseApplication.getApp().getOptionsNot());
+        } else if (num>=3) {
+            personalVisitorOneIv.setVisibility(View.VISIBLE);
+            personalVisitorTwoIv.setVisibility(View.VISIBLE);
+            personalVisitorThreeIv.setVisibility(View.VISIBLE);
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
+                    ,personalVisitorOneIv,MyBaseApplication.getApp().getOptionsNot());
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(1).getIcon()
+                    ,personalVisitorTwoIv,MyBaseApplication.getApp().getOptionsNot());
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(2).getIcon()
+                    ,personalVisitorThreeIv,MyBaseApplication.getApp().getOptionsNot());
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        OkHttpUtils.getInstance().cancelTag(Common.NET_GETUSERINFO);
+        OkHttpUtils.getInstance().cancelTag(Common.NET_GET_USERINDEX);
     }
 
     @Override
@@ -301,6 +406,14 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.personal_friends_ll:
+                startActivity(HisGuardianActivity.buildIntent(getActivity()
+                        , mGetUserIndexModel.getBody().getUserDetailBean().getUserId(), "我的守护者"));
+                break;
+            case R.id.personal_visitor_ll:
+                startActivity(HisVisitorActivity.buildIntent(getActivity()
+                        , mGetUserIndexModel.getBody().getUserDetailBean().getUserId(), "我的访客"));
+                break;
             case R.id.personal_myorder_ll:
                 if (!isLogin()) {
                     showLogin();
@@ -356,7 +469,9 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
                 if (!isLogin()) {
                     showLogin();
                 } else {
-                    getActivity().startActivity(new Intent(getActivity(), RechargeActivity.class));
+                    getActivity().startActivity(RechargeActivity.buildIntent(getActivity()
+                            , mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getGold_coin()
+                            , mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getConvert_coin()));
                 }
                 break;
         }

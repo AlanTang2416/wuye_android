@@ -7,13 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.atman.wysq.R;
 import com.atman.wysq.model.event.YunXinAuthOutEvent;
 import com.atman.wysq.model.request.LoginRequestModel;
 import com.atman.wysq.model.response.GetChatTokenModel;
-import com.atman.wysq.model.response.GetUserInfoModel;
+import com.atman.wysq.model.response.GetUserIndexModel;
 import com.atman.wysq.model.response.LoginResultModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
@@ -23,7 +22,6 @@ import com.base.baselibs.iimp.EditCheckBack;
 import com.base.baselibs.iimp.MyTextWatcher;
 import com.base.baselibs.iimp.MyTextWatcherTwo;
 import com.base.baselibs.net.MyStringCallback;
-import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.MD5Util;
 import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.util.StringUtils;
@@ -148,9 +146,9 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                     .addHeader("cookie", MyBaseApplication.getApp().getCookie())
                     .tag(Common.NET_GET_CHATTOKEN).id(Common.NET_GET_CHATTOKEN).build()
                     .execute(new MyStringCallback(mContext, this, true));
-        } else if (id == Common.NET_GETUSERINFO) {
-            GetUserInfoModel mGetUserInfoModel = mGson.fromJson(data, GetUserInfoModel.class);
-            MyBaseApplication.mGetUserInfoModel = mGetUserInfoModel;
+        } else if (id == Common.NET_GET_USERINDEX) {
+            GetUserIndexModel mGetUserIndexModel = mGson.fromJson(data, GetUserIndexModel.class);
+            MyBaseApplication.mGetUserIndexModel = mGetUserIndexModel;
             Intent mIntent = new Intent();
             setResult(RESULT_OK,mIntent);
             finish();
@@ -189,9 +187,9 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                             && PreferenceUtil.getBoolPreferences(LoginActivity.this, PreferenceUtil.PARM_ISOPEN_GESTURE)) {
                         startActivityForResult(new Intent(mContext, CreateGestrureLockActivity.class), Common.toLoginCreateGesrure);
                     } else {
-                        OkHttpUtils.get().url(Common.Url_GetUserInfo+ mLoginResultModel.getBody())
+                        OkHttpUtils.get().url(Common.Url_Get_UserIndex +"/"+ mLoginResultModel.getBody())
                                 .addHeader("cookie", MyBaseApplication.getApp().getCookie())
-                                .tag(Common.NET_GETUSERINFO).id(Common.NET_GETUSERINFO).build()
+                                .tag(Common.NET_GET_USERINDEX).id(Common.NET_GET_USERINDEX).build()
                                 .execute(new MyStringCallback(mContext, LoginActivity.this, true));
                     }
                 }
@@ -221,7 +219,7 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        OkHttpUtils.getInstance().cancelTag(LoginActivity.this);
+        OkHttpUtils.getInstance().cancelTag(Common.NET_GET_USERINDEX);
     }
 
     @OnClick({R.id.login_sumbit_bt, R.id.login_forgetPW_tx})

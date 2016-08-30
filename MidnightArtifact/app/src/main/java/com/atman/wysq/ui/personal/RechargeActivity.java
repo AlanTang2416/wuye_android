@@ -1,10 +1,9 @@
 package com.atman.wysq.ui.personal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,7 +20,6 @@ import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.net.MyStringCallback;
 import com.base.baselibs.util.LogUtils;
 import com.tbl.okhttputils.OkHttpUtils;
-import com.tbl.okhttputils.utils.L;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,20 +32,24 @@ import okhttp3.Response;
  * 邮箱 bltang@atman.com
  * 电话 18578909061
  */
-public class RechargeActivity extends MyBaseActivity implements AdapterInterface,PayDialog.payItemCallback,PayDialog.payResultCallback {
+public class RechargeActivity extends MyBaseActivity implements AdapterInterface, PayDialog.payItemCallback
+        , PayDialog.payResultCallback {
 
-    @Bind(R.id.recharge_top_iv)
-    ImageView rechargeTopIv;
-    @Bind(R.id.recharge_surpluscoin_tx)
-    TextView rechargeSurpluscoinTx;
     @Bind(R.id.recharge_listview)
     ListView rechargeListview;
+    @Bind(R.id.recharge_totalcoin_tv)
+    TextView rechargeTotalcoinTv;
+    @Bind(R.id.recharge_canoutcoin_tv)
+    TextView rechargeCanoutcoinTv;
 
     private Context mContext = RechargeActivity.this;
     private int whatPay = 0;
 
     private RechargeListAdapter mAdapter;
     private PayDialog mPayDialog;
+
+    private int goldCoin = 0;
+    private int convertCoin = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +58,24 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
         ButterKnife.bind(this);
     }
 
+    public static Intent buildIntent(Context context, int goldCoin, int convertCoin) {
+        Intent intent = new Intent(context, RechargeActivity.class);
+        intent.putExtra("goldCoin", goldCoin);
+        intent.putExtra("convertCoin", convertCoin);
+        return intent;
+    }
+
     @Override
     public void initWidget(View... v) {
         super.initWidget(v);
 
-        setBarTitleTx("充值");
+        setBarTitleTx("我的金币");
+        goldCoin = getIntent().getIntExtra("goldCoin", 0);
+        convertCoin = getIntent().getIntExtra("convertCoin", 0);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getmWidth(),
-                getmWidth() * 259 / 640);
-        rechargeTopIv.setLayoutParams(params);
-        rechargeSurpluscoinTx.setText("剩余金币："+MyBaseApplication.mUserCion);
+        rechargeTotalcoinTv.setText(""+goldCoin);
+        rechargeCanoutcoinTv.setText(""+convertCoin);
+
         initListView();
     }
 
@@ -87,7 +97,7 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (whatPay==1) {
+        if (whatPay == 1) {
             MyBaseApplication.getApp().setFilterLock(false);
         }
     }
@@ -97,13 +107,13 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
         super.onStringResponse(data, response, id);
         if (id == Common.NET_RECHARGE_ADD_ORDER) {
             RechargeAddOrderModel mRechargeAddOrderModel = mGson.fromJson(data, RechargeAddOrderModel.class);
-            LogUtils.e("mRechargeAddOrderModel.getBody().getOrder_id():"+ mRechargeAddOrderModel.getBody().getOrder_id());
-            mPayDialog = new PayDialog(mContext, mRechargeAddOrderModel.getBody().getOrder_id()+"" ,this);
+            LogUtils.e("mRechargeAddOrderModel.getBody().getOrder_id():" + mRechargeAddOrderModel.getBody().getOrder_id());
+            mPayDialog = new PayDialog(mContext, mRechargeAddOrderModel.getBody().getOrder_id() + "", this);
             mPayDialog.show();
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_ALIPAY) {
             MyBaseApplication.getApp().setFilterLock(true);
             AliPayResponseModel mAliPayResponseOneModel = mGson.fromJson(data, AliPayResponseModel.class);
-            String parms = mAliPayResponseOneModel.getBody().getParam().replace("\\\"","\"");
+            String parms = mAliPayResponseOneModel.getBody().getParam().replace("\\\"", "\"");
             int start = parms.indexOf("&sign");
             mPayDialog.aliPay(RechargeActivity.this, parms.substring(0, start));
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_WEIXIN) {
@@ -126,8 +136,8 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
         switch (view.getId()) {
             case R.id.item_reharge_bt:
                 OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order)
-                        .content("{\"golden_coin\":\""+mAdapter.getItem(position).getName()+"\"}")
-                        .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .content("{\"golden_coin\":\"" + mAdapter.getItem(position).getName() + "\"}")
+                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
                         .id(Common.NET_RECHARGE_ADD_ORDER).tag(Common.NET_RECHARGE_ADD_ORDER)
                         .build().execute(new MyStringCallback(mContext, this, true));
                 break;
@@ -136,16 +146,16 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
 
     @Override
     public void itemPay(int num, String orderId) {
-        if (num==1) {
+        if (num == 1) {
             whatPay = 0;
             OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_Alipay + orderId).content("{}")
-                    .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                    .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
                     .id(Common.NET_RECHARGE_ADD_ORDER_ALIPAY).tag(Common.NET_RECHARGE_ADD_ORDER_ALIPAY)
                     .build().execute(new MyStringCallback(mContext, this, true));
         } else {
             whatPay = 1;
-            OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_WeiXin).content("{\"order_id\":\""+orderId+"\"}")
-                    .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+            OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_WeiXin).content("{\"order_id\":\"" + orderId + "\"}")
+                    .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
                     .id(Common.NET_RECHARGE_ADD_ORDER_WEIXIN).tag(Common.NET_RECHARGE_ADD_ORDER_WEIXIN)
                     .build().execute(new MyStringCallback(mContext, this, true));
         }

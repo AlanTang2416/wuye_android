@@ -8,9 +8,9 @@
     <string name="tab_personal">我的</string>
 
     <!--我的-->
-    <string name="personal_recharge_str">充值</string>
+    <string name="personal_recharge_str">我的金币</string>
     <string name="personal_myorder_str">我的订单</string>
-    <string name="personal_task_str">任务</string>
+    <string name="personal_task_str">每日任务</string>
     <string name="personal_maillist_str">通讯录邀请</string>
     <string name="personal_service_str">联系客服</string>
     <string name="personal_service_phone_str">400-820-5310</string>

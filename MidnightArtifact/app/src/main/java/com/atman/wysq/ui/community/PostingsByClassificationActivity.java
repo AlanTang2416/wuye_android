@@ -144,50 +144,50 @@ public class PostingsByClassificationActivity extends MyBaseActivity {
         boolean isCan = false;
         if (canPost.equals("111")) {//所有用户都可以
             isCan = true;
-        } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("100")) {//男性用户才可以
-            if (MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("M")) {
+        } else if (MyBaseApplication.mGetUserIndexModel != null && canPost.equals("100")) {//男性用户才可以
+            if (MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("M")) {
                 isCan = true;
             } else {
                 showToast("只有男性用户才可以发帖");
             }
-        } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("010")) {//女性用户才可以
-            if (MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")) {
+        } else if (MyBaseApplication.mGetUserIndexModel != null && canPost.equals("010")) {//女性用户才可以
+            if (MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("F")) {
                 isCan = true;
             } else {
                 showToast("只有女性用户才可以发帖");
             }
-        } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("001")) {//认证女性用户才可以
-            if (MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")
-                    && MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getVerify_status() == 1) {
+        } else if (MyBaseApplication.mGetUserIndexModel != null && canPost.equals("001")) {//认证女性用户才可以
+            if (MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("F")
+                    && MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status() == 1) {
                 isCan = true;
             } else {
                 showToast("已认证女性用户才可以发帖");
             }
-        } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("101")) {//男用户和认证女性用户才可以
-            if ((MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")
-                    && MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getVerify_status() == 1)
-                    || MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("M")) {
+        } else if (MyBaseApplication.mGetUserIndexModel != null && canPost.equals("101")) {//男用户和认证女性用户才可以
+            if ((MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("F")
+                    && MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status() == 1)
+                    || MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("M")) {
                 isCan = true;
             } else {
                 showToast("男性用户和已认证女性用户才可以发帖");
             }
-        } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("110")) {//男性用户和女性用户才可以发帖
-            if (MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")
-                    || MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("M")) {
+        } else if (MyBaseApplication.mGetUserIndexModel != null && canPost.equals("110")) {//男性用户和女性用户才可以发帖
+            if (MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("F")
+                    || MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("M")) {
                 isCan = true;
             } else {
                 showToast("男性用户和女性用户才可以发帖");
             }
-        } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("011")) {//女性用户和女性用户才可以发帖
-            if ((MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")
-                    && MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getVerify_status() == 1)
-                    || MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getSex().equals("F")) {
+        } else if (MyBaseApplication.mGetUserIndexModel != null && canPost.equals("011")) {//女性用户和女性用户才可以发帖
+            if ((MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("F")
+                    && MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status() == 1)
+                    || MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("F")) {
                 isCan = true;
             } else {
                 showToast("女性用户和已认证女性用户才可以发帖");
             }
-        } else if (MyBaseApplication.mGetUserInfoModel != null && canPost.equals("000")) {//管理员才可以发帖
-            if (MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getType() == 2) {
+        } else if (MyBaseApplication.mGetUserIndexModel != null && canPost.equals("000")) {//管理员才可以发帖
+            if (MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getType() == 2) {
                 isCan = true;
             } else {
                 showToast("只有管理员用户才可以发帖");

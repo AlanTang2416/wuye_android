@@ -49,7 +49,7 @@ public class GetFansModel {
         private String sortLetters;  //显示数据拼音的首字母
         private long id;
         private long user_id;
-        private int follow_user_id;
+        private long follow_user_id;
         private long create_time;
         private int online_status;
         private String prologue;
@@ -120,11 +120,11 @@ public class GetFansModel {
             this.user_id = user_id;
         }
 
-        public int getFollow_user_id() {
+        public long getFollow_user_id() {
             return follow_user_id;
         }
 
-        public void setFollow_user_id(int follow_user_id) {
+        public void setFollow_user_id(long follow_user_id) {
             this.follow_user_id = follow_user_id;
         }
 

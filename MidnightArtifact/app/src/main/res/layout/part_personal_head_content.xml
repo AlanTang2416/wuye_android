@@ -4,6 +4,188 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/personal_visitor_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_50"
+        android:background="@drawable/white_hollow_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_dp_15"
+        android:paddingRight="@dimen/dimen_dp_15">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_dp_30"
+            android:layout_height="@dimen/dimen_dp_30"
+            android:src="@mipmap/personal_vititis_ic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_dp_15"
+            android:text="访    客"
+            android:textColor="@color/personal_item_tx"
+            android:textSize="@dimen/dimen_sp_16" />
+
+        <TextView
+            android:id="@+id/personal_visitor_num_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_dp_30"
+            android:text=""
+            android:textColor="@color/personal_item_tx"
+            android:textSize="@dimen/dimen_sp_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal">
+
+            <com.base.baselibs.widget.RoundImageView
+                android:id="@+id/personal_visitor_one_iv"
+                android:layout_width="@dimen/dimen_dp_30"
+                android:layout_height="@dimen/dimen_dp_30"
+                android:src="@mipmap/ic_launcher"
+                android:visibility="gone" />
+
+            <com.base.baselibs.widget.RoundImageView
+                android:id="@+id/personal_visitor_two_iv"
+                android:layout_width="@dimen/dimen_dp_30"
+                android:layout_height="@dimen/dimen_dp_30"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:src="@mipmap/ic_launcher"
+                android:visibility="gone" />
+
+            <com.base.baselibs.widget.RoundImageView
+                android:id="@+id/personal_visitor_three_iv"
+                android:layout_width="@dimen/dimen_dp_30"
+                android:layout_height="@dimen/dimen_dp_30"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:src="@mipmap/ic_launcher"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/dimen_dp_15"
+            android:background="@color/color_line" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/personal_friends_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_50"
+        android:background="@drawable/white_hollow_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_dp_15"
+        android:paddingRight="@dimen/dimen_dp_15">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_dp_30"
+            android:layout_height="@dimen/dimen_dp_30"
+            android:src="@mipmap/personal_guard_ic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_dp_15"
+            android:text="守护者"
+            android:textColor="@color/personal_item_tx"
+            android:textSize="@dimen/dimen_sp_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/personal_guardian_one_rl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/personal_guardian_top_one_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/other_guard_one" />
+
+                <com.base.baselibs.widget.RoundImageView
+                    android:id="@+id/personal_guardian_one_iv"
+                    android:layout_width="@dimen/dimen_dp_30"
+                    android:layout_height="@dimen/dimen_dp_30"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_launcher" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/personal_guardian_two_rl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/personal_guardian_top_two_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/other_guard_one" />
+
+                <com.base.baselibs.widget.RoundImageView
+                    android:id="@+id/personal_guardian_two_iv"
+                    android:layout_width="@dimen/dimen_dp_30"
+                    android:layout_height="@dimen/dimen_dp_30"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_launcher" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/personal_guardian_three_rl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/personal_guardian_top_three_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/other_guard_one" />
+
+                <com.base.baselibs.widget.RoundImageView
+                    android:id="@+id/personal_guardian_three_iv"
+                    android:layout_width="@dimen/dimen_dp_30"
+                    android:layout_height="@dimen/dimen_dp_30"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_launcher" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/color_line" />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1px"
@@ -35,8 +217,18 @@
             android:textColor="@color/personal_item_tx"
             android:textSize="@dimen/dimen_sp_16" />
 
+        <TextView
+            android:id="@+id/personal_mycoin_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_dp_15"
+            android:text=""
+            android:textColor="#fe939e"
+            android:textSize="@dimen/dimen_sp_13" />
+
         <ImageView
             android:layout_width="wrap_content"
+            android:visibility="gone"
             android:layout_height="@dimen/dimen_dp_15"
             android:src="@mipmap/right_arrow" />
     </LinearLayout>
@@ -80,6 +272,7 @@
 
         <ImageView
             android:layout_width="wrap_content"
+            android:visibility="gone"
             android:layout_height="@dimen/dimen_dp_15"
             android:src="@mipmap/right_arrow" />
     </LinearLayout>
@@ -134,8 +327,17 @@
             android:textColor="@color/personal_item_tx"
             android:textSize="@dimen/dimen_sp_16" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_dp_15"
+            android:text="去完成任务"
+            android:textColor="#fe939e"
+            android:textSize="@dimen/dimen_sp_13" />
+
         <ImageView
             android:layout_width="wrap_content"
+            android:visibility="gone"
             android:layout_height="@dimen/dimen_dp_15"
             android:src="@mipmap/right_arrow" />
     </LinearLayout>

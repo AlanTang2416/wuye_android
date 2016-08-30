@@ -386,14 +386,14 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     showWraning("VIP.1以上用户才有权限查看");
                     return;
                 }
-                startActivity(HisVisitorActivity.buildIntent(mContext, id));
+                startActivity(HisVisitorActivity.buildIntent(mContext, id, "TA的访客"));
                 break;
             case R.id.otherpersonal_friends_ll:
                 if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<2) {
                     showWraning("VIP.2以上用户才有权限查看");
                     return;
                 }
-                startActivity(HisGuardianActivity.buildIntent(mContext, id));
+                startActivity(HisGuardianActivity.buildIntent(mContext, id, "TA的守护者"));
                 break;
             case R.id.otherpersonal_dynamic_ll:
                 startActivity(HisDynamicsActivity.buildIntent(mContext, id));
@@ -420,7 +420,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                 if (which == 0) {//举报
                     startActivity(ReportActivity.buildIntent(mContext, id));
                 } else if (which == 1) {//把TA加入黑名单
-                    if (MyBaseApplication.mGetUserInfoModel.getBody().getUserExt().getUser_id() == id) {
+                    if (MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id() == id) {
                         showToast("不能将自己加入黑名单");
                         return;
                     }
