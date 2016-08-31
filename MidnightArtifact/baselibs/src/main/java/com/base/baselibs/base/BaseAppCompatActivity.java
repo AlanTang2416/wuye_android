@@ -106,27 +106,27 @@ public class BaseAppCompatActivity extends SwipeBackActivity
      *
      * @return
      */
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            if (isFastDoubleClick()) {
-                return true;
-            }
-        }
-        return super.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+//            if (isFastDoubleClick()) {
+//                return true;
+//            }
+//        }
+//        return super.dispatchTouchEvent(ev);
+//    }
 
     /**
      * 防止快速点击,启动多个同样的界面
      *
      * @return
      */
-    public static boolean isFastDoubleClick() {
-        long now = System.currentTimeMillis();
-        long timeD = now - lastClickTime;
-        lastClickTime = now;
-        return timeD <= 500;
-    }
+//    public static boolean isFastDoubleClick() {
+//        long now = System.currentTimeMillis();
+//        long timeD = now - lastClickTime;
+//        lastClickTime = now;
+//        return timeD <= 500;
+//    }
 
     /**
      * 开启加载Loading

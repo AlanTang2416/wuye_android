@@ -6,13 +6,5 @@
     {
         "merged": "/Users/tangbingliang/Desktop/wuye_android/MidnightArtifact/handmark_pull_library/build/intermediates/res/merged/debug/drawable/indicator_bg_bottom.xml",
         "source": "/Users/tangbingliang/Desktop/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/drawable/indicator_bg_bottom.xml"
-    },
-    {
-        "merged": "/Users/tangbingliang/Desktop/gitTestProjects/AndroidDevelope/MidnightArtifact/handmark_pull_library/build/intermediates/res/merged/debug/drawable/indicator_bg_bottom.xml",
-        "source": "/Users/tangbingliang/Desktop/gitTestProjects/AndroidDevelope/MidnightArtifact/handmark_pull_library/src/main/res/drawable/indicator_bg_bottom.xml"
-    },
-    {
-        "merged": "/Users/tangbingliang/Desktop/gitTestProjects/AndroidDevelope/MidnightArtifact/handmark_pull_library/build/intermediates/res/merged/debug/drawable/indicator_bg_top.xml",
-        "source": "/Users/tangbingliang/Desktop/gitTestProjects/AndroidDevelope/MidnightArtifact/handmark_pull_library/src/main/res/drawable/indicator_bg_top.xml"
     }
 ]

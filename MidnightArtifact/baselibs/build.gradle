@@ -24,6 +24,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.+'
     compile 'com.android.support:design:22.+'
     compile "com.android.support:support-v4:22.1.1"
+    compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile project(':swipeback_libs')
     compile project(':handmark_pull_library')
