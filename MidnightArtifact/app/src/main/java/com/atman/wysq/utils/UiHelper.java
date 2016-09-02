@@ -154,7 +154,7 @@ public class UiHelper {
         return path;
     }
 
-    private static Intent getAppDetailSettingIntent(Context context) {
+    public static Intent getAppDetailSettingIntent(Context context) {
         Intent localIntent = new Intent();
         localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT >= 9) {

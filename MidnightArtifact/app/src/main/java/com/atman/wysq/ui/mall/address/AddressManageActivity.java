@@ -104,7 +104,7 @@ public class AddressManageActivity extends MyBaseActivity implements AdapterInte
     @Override
     public void doInitBaseHttp() {
         super.doInitBaseHttp();
-        OkHttpUtils.get().url(Common.Url_Get_Address_List).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+        OkHttpUtils.get().url(Common.Url_Get_Address_List).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_ADDRESS_LIST).id(Common.NET_GET_ADDRESS_LIST).build()
                 .execute(new MyStringCallback(mContext, this, true));
     }
@@ -169,7 +169,7 @@ public class AddressManageActivity extends MyBaseActivity implements AdapterInte
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 OkHttpUtils.delete().url(Common.Url_Delete_Address+mGetAddressListResponseModel.getBody().get(position).getAddress_id())
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .id(Common.NET_DELETE_ADDRESS).tag(Common.NET_DELETE_ADDRESS)
                         .build().execute(new MyStringCallback(mContext, AddressManageActivity.this, true));
             }

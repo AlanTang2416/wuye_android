@@ -122,7 +122,7 @@ public class MainActivity extends MyBaseActivity {
         }
 
         OkHttpUtils.get().url(Common.Url_Get_Version+"?version="+MyBaseApplication.mVersionName.replace("v",""))
-                .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                 .id(Common.NET_GET_VERSION).tag(Common.NET_GET_VERSION).build().execute(new MyStringCallback(mContext, this, false));
         EventBus.getDefault().register(this);
     }

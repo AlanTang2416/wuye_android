@@ -195,10 +195,10 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && getActivity() != null && isError) {
             isError = false;
-            OkHttpUtils.get().url(Common.Url_AdList + 4).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+            OkHttpUtils.get().url(Common.Url_AdList + 4).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_AD_LIST).id(Common.NET_AD_LIST).build()
                     .execute(new MyStringCallback(getActivity(), this, true));
-            OkHttpUtils.get().url(Common.Url_Get_BlogBoard).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+            OkHttpUtils.get().url(Common.Url_Get_BlogBoard).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_BLOGBOARD).id(Common.NET_GET_BLOGBOARD).build()
                     .execute(new MyStringCallback(getActivity(), this, true));
         }
@@ -233,7 +233,7 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
         // 设置循环，在调用setData方法前调用
         if (cycleViewPager==null) {
             if (getUserVisibleHint()) {
-                OkHttpUtils.get().url(Common.Url_AdList + 4).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                OkHttpUtils.get().url(Common.Url_AdList + 4).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_AD_LIST).id(Common.NET_AD_LIST).build()
                         .execute(new MyStringCallback(getActivity(), this, true));
             }

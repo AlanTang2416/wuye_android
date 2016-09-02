@@ -186,10 +186,10 @@ public class MallFragment extends MyBaseFragment implements MallCategoryListAdap
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && getActivity() != null && isError) {
             isError = false;
-            OkHttpUtils.get().url(Common.Url_AdList + 2).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+            OkHttpUtils.get().url(Common.Url_AdList + 2).addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_AD_LIST).id(Common.NET_AD_LIST).build()
                     .execute(new MyStringCallback(getActivity(), this, true));
-            OkHttpUtils.get().url(Common.Url_Category_List).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+            OkHttpUtils.get().url(Common.Url_Category_List).addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_CATEGORY_LIST).id(Common.NET_CATEGORY_LIST).build()
                     .execute(new MyStringCallback(getActivity(), this, true));
         }
@@ -211,7 +211,7 @@ public class MallFragment extends MyBaseFragment implements MallCategoryListAdap
             mAdapter.clearTwoCategory();
             for (int i = 0; i < mMallGetCategoryResponseModel.getBody().size(); i++) {
                 OkHttpUtils.get().url(Common.Url_Two_Category_List + mMallGetCategoryResponseModel.getBody().get(i).getGoods_category_id())
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_TWO_CATEGORY_LIST).id(Common.NET_TWO_CATEGORY_LIST).build()
                         .execute(new MyStringCallback(getActivity(), this, true));
             }

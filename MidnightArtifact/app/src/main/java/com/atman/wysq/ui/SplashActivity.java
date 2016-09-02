@@ -107,7 +107,7 @@ public class SplashActivity extends MyBaseActivity implements TimeCountInterface
         timeCount.start();
 
         OkHttpUtils.get().url(Common.Url_Get_GoldenRole)
-                .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_GOLDENROLE).id(Common.NET_GET_GOLDENROLE).build()
                 .execute(new MyStringCallback(mContext, this, false));
     }

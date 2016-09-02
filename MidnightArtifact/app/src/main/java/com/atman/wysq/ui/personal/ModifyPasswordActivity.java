@@ -73,7 +73,7 @@ public class ModifyPasswordActivity extends MyBaseActivity implements EditCheckB
     public void onStringResponse(String data, Response response, int id) {
         super.onStringResponse(data, response, id);
         if (id == Common.NET_RESET_PW) {
-            MyBaseApplication.getApp().cleanLoginData();
+            MyBaseApplication.getApplication().cleanLoginData();
             showToast("密码修改成功，请重新登录");
             Intent mIntent = new Intent();
             setResult(RESULT_OK,mIntent);
@@ -98,7 +98,7 @@ public class ModifyPasswordActivity extends MyBaseActivity implements EditCheckB
         }
         ReSetPWRequestModel mReSetPWRequestModel = new ReSetPWRequestModel(MD5Util.getMD5(reNewPassWord)
                 , MD5Util.getMD5(oldPassWord));
-        OkHttpUtils.postString().url(Common.Url_Reset_PW).tag(Common.NET_RESET_PW).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+        OkHttpUtils.postString().url(Common.Url_Reset_PW).tag(Common.NET_RESET_PW).addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                 .id(Common.NET_RESET_PW).content(mGson.toJson(mReSetPWRequestModel)).mediaType(Common.JSON).build()
                 .execute(new MyStringCallback(mContext, this, true));
     }

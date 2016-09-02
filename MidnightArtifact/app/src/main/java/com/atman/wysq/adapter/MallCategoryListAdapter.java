@@ -124,7 +124,7 @@ public class MallCategoryListAdapter extends BaseAdapter {
                         }
                         ImageLoader.getInstance().displayImage(
                                 Common.ImageUrl+twoCategory.get(i).getBody().get(n).getLeafCategorieList().get(m).getAd_club_pic()
-                                , iv[j], MyBaseApplication.getApp().getOptionsNot());
+                                , iv[j], MyBaseApplication.getApplication().getOptionsNot());
                     }
                 }
                 break;

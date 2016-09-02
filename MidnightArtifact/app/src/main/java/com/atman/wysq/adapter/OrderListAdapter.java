@@ -111,7 +111,7 @@ public class OrderListAdapter extends BaseAdapter {
                 holder.itemOrderlistHeadIv.setImageResource(R.mipmap.jinbin);
             } else {
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getItems().get(0).getGoods_pic()
-                        , holder.itemOrderlistHeadIv, MyBaseApplication.getApp().getOptionsNot());
+                        , holder.itemOrderlistHeadIv, MyBaseApplication.getApplication().getOptionsNot());
             }
             holder.itemOrderlistNameTx.setText(shop.get(position).getItems().get(0).getGoods_title());
             holder.itemOrderlistNumTx.setText("数量：" + shop.get(position).getItems().get(0).getAmount());

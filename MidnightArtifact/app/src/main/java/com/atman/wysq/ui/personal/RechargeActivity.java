@@ -98,7 +98,7 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
     protected void onPostResume() {
         super.onPostResume();
         if (whatPay == 1) {
-            MyBaseApplication.getApp().setFilterLock(false);
+            MyBaseApplication.getApplication().setFilterLock(false);
         }
     }
 
@@ -111,13 +111,13 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
             mPayDialog = new PayDialog(mContext, mRechargeAddOrderModel.getBody().getOrder_id() + "", this);
             mPayDialog.show();
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_ALIPAY) {
-            MyBaseApplication.getApp().setFilterLock(true);
+            MyBaseApplication.getApplication().setFilterLock(true);
             AliPayResponseModel mAliPayResponseOneModel = mGson.fromJson(data, AliPayResponseModel.class);
             String parms = mAliPayResponseOneModel.getBody().getParam().replace("\\\"", "\"");
             int start = parms.indexOf("&sign");
             mPayDialog.aliPay(RechargeActivity.this, parms.substring(0, start));
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_WEIXIN) {
-            MyBaseApplication.getApp().setFilterLock(true);
+            MyBaseApplication.getApplication().setFilterLock(true);
             WeiXinPayResponseModel WeiXinPayResponseModelm = mGson.fromJson(data, WeiXinPayResponseModel.class);
             mPayDialog.weixinPay(WeiXinPayResponseModelm);
         }
@@ -137,7 +137,7 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
             case R.id.item_reharge_bt:
                 OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order)
                         .content("{\"golden_coin\":\"" + mAdapter.getItem(position).getName() + "\"}")
-                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .id(Common.NET_RECHARGE_ADD_ORDER).tag(Common.NET_RECHARGE_ADD_ORDER)
                         .build().execute(new MyStringCallback(mContext, this, true));
                 break;
@@ -149,13 +149,13 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
         if (num == 1) {
             whatPay = 0;
             OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_Alipay + orderId).content("{}")
-                    .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .id(Common.NET_RECHARGE_ADD_ORDER_ALIPAY).tag(Common.NET_RECHARGE_ADD_ORDER_ALIPAY)
                     .build().execute(new MyStringCallback(mContext, this, true));
         } else {
             whatPay = 1;
             OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_WeiXin).content("{\"order_id\":\"" + orderId + "\"}")
-                    .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .id(Common.NET_RECHARGE_ADD_ORDER_WEIXIN).tag(Common.NET_RECHARGE_ADD_ORDER_WEIXIN)
                     .build().execute(new MyStringCallback(mContext, this, true));
         }
@@ -163,6 +163,6 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
 
     @Override
     public void payResult(String str) {
-        MyBaseApplication.getApp().setFilterLock(false);
+        MyBaseApplication.getApplication().setFilterLock(false);
     }
 }

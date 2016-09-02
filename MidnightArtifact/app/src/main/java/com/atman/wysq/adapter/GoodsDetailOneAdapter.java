@@ -74,7 +74,7 @@ public class GoodsDetailOneAdapter extends BaseAdapter {
         }
 
         ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon(),
-                holder.itemGoodsdetailHeadIv, MyBaseApplication.getApp().getOptionsNot());
+                holder.itemGoodsdetailHeadIv, MyBaseApplication.getApplication().getOptionsNot());
         holder.itemGoodsdetailNameTv.setText(shop.get(position).getUser_name());
         holder.itemGoodsdetailLevelTx.setText("Lv."+shop.get(position).getUserLevel());
         if (shop.get(position).getSex().equals("M")) {

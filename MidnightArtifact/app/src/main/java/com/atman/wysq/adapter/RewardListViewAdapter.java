@@ -67,7 +67,7 @@ public class RewardListViewAdapter extends BaseAdapter {
         }
 
         ImageLoader.getInstance().displayImage(Common.ImageUrl+shop.get(position).getIcon()
-                , holder.itemRewardlistviewHeadImg, MyBaseApplication.getApp().getOptionsNot());
+                , holder.itemRewardlistviewHeadImg, MyBaseApplication.getApplication().getOptionsNot());
         holder.itemRewardlistviewNameTv.setText(shop.get(position).getNick_name());
         holder.itemRewardlistviewLevelTx.setText("Lv "+shop.get(position).getUserLevel());
         holder.itemRewardlistviewTimeTv.setText(MyTools.convertTimeS(shop.get(position).getCreate_time()));

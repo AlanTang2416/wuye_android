@@ -142,7 +142,7 @@ public class PostingListAdapter extends BaseAdapter {
             imgUrl = "/"+imgUrl;
         }
         ImageLoader.getInstance().displayImage(Common.ImageUrl + imgUrl, holder.itemBloglistHeadImg
-                , MyBaseApplication.getApp().getOptionsNot());
+                , MyBaseApplication.getApplication().getOptionsNot());
 
         if (mBodyEntity.getGoods_id() > 0) {
             holder.itemBloglistTopRl.setVisibility(View.GONE);
@@ -196,7 +196,7 @@ public class PostingListAdapter extends BaseAdapter {
                 holder.itemBloglistContentTx.setVisibility(View.GONE);
                 holder.itemBloglistHaveimgRl.setVisibility(View.VISIBLE);
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + img
-                        , holder.itemBloglistImgIv, MyBaseApplication.getApp().getOptionsNot());
+                        , holder.itemBloglistImgIv, MyBaseApplication.getApplication().getOptionsNot());
                 holder.itemBloglistHaveimgRl.setLayoutParams(params);
             }
         } else {

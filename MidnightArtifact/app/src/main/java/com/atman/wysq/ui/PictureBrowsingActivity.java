@@ -119,7 +119,7 @@ public class PictureBrowsingActivity extends MyBaseActivity implements TimeCount
             photoView.post(new Runnable(){
                 @Override
                 public void run(){
-                    ImageLoader.getInstance().displayImage(imagePath.get(position), photoView, MyBaseApplication.getApp().getOptionsNot());
+                    ImageLoader.getInstance().displayImage(imagePath.get(position), photoView, MyBaseApplication.getApplication().getOptionsNot());
                 }
             });
 

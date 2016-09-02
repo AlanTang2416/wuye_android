@@ -177,7 +177,7 @@ public class MySecretListActivity extends MyBaseActivity implements AdapterInter
     private void doHttp(boolean b) {
         if (MyBaseApplication.mGetUserIndexModel!=null) {
             OkHttpUtils.get().url(Common.Url_Get_My_Sceret + MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserId() + "/"  + mStateId + "/" + mPage)
-                    .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_MYSECRET).id(Common.NET_GET_MYSECRET).build()
                     .execute(new MyStringCallback(mContext, this, b));
         }
@@ -238,7 +238,7 @@ public class MySecretListActivity extends MyBaseActivity implements AdapterInter
                 blogId = mAdapter.getItem(position).getBlog_id();
                 OkHttpUtils.postString().url(Common.Url_Add_Browse+blogId).mediaType(Common.JSON)
                         .content("{}")
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .id(Common.NET_ADD_BROWSE).tag(Common.NET_ADD_BROWSE)
                         .build().execute(new MyStringCallback(mContext, MySecretListActivity.this, false));
                 break;
@@ -251,13 +251,13 @@ public class MySecretListActivity extends MyBaseActivity implements AdapterInter
                 if (mAdapter.getItem(position).getFavorite_id()>0) {//已收藏，点击取消收藏
                     OkHttpUtils.delete().url(Common.Url_Get_BlogCollection_Not + mAdapter.getItem(position).getBlog_id())
                             .id(Common.NET_GET_BLOGCOLLECTION_NOT)
-                            .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_GET_BLOGCOLLECTION_NOT).build()
                             .execute(new MyStringCallback(mContext, MySecretListActivity.this, true));
                 } else {//未收藏，点击收藏
                     OkHttpUtils.postString().url(Common.Url_Get_BlogCollection + mAdapter.getItem(position).getBlog_id())
                             .id(Common.NET_GET_BLOGCOLLECTION).content("{}").mediaType(Common.JSON)
-                            .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_GET_BLOGCOLLECTION).build()
                             .execute(new MyStringCallback(mContext, MySecretListActivity.this, true));
                 }

@@ -94,7 +94,7 @@ public class SortGroupFriendsAdapter extends BaseAdapter implements SectionIndex
         viewHolder.itemFriendsNameTv.setText(mContent.getUserExt().getNick_name());
         viewHolder.itemFriendsLevelTx.setText("Lv." + mContent.getUserExt().getUserLevel());
         ImageLoader.getInstance().displayImage(Common.ImageUrl + mContent.getUserExt().getIcon(),
-                viewHolder.itemFriendsHeadIv, MyBaseApplication.getApp().getOptionsNot());
+                viewHolder.itemFriendsHeadIv, MyBaseApplication.getApplication().getOptionsNot());
         if (mContent.getUserExt().getSex().equals("M")) {
             viewHolder.itemFriendsGenderIv.setImageResource(R.mipmap.personal_man_ic);
         } else {

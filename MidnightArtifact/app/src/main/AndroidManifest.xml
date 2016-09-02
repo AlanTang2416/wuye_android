@@ -59,6 +59,7 @@
         <activity android:name=".ui.yunxinfriend.HisDynamicsActivity"/>
         <activity android:name=".ui.yunxinfriend.HisVisitorActivity"/>
         <activity android:name=".ui.yunxinfriend.HisGuardianActivity"/>
+        <activity android:name=".ui.yunxinfriend.P2PChatActivity"/>
 
         <activity android:name="com.choicepicture_library.ImageGridActivity"/>
 

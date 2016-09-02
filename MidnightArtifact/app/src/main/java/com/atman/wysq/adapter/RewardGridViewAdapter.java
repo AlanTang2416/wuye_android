@@ -76,14 +76,14 @@ public class RewardGridViewAdapter extends BaseAdapter {
                 holder.itemRewardlistHeadImg.setVisibility(View.VISIBLE);
                 holder.itemRewardlistMoreImg.setVisibility(View.GONE);
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon()
-                        , holder.itemRewardlistHeadImg, MyBaseApplication.getApp().getOptionsNot());
+                        , holder.itemRewardlistHeadImg, MyBaseApplication.getApplication().getOptionsNot());
             }
         } else {
             if (position < 6) {
                 holder.itemRewardlistMoreImg.setVisibility(View.GONE);
                 holder.itemRewardlistHeadImg.setVisibility(View.VISIBLE);
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon()
-                        , holder.itemRewardlistHeadImg, MyBaseApplication.getApp().getOptionsNot());
+                        , holder.itemRewardlistHeadImg, MyBaseApplication.getApplication().getOptionsNot());
             } else {
                 holder.itemRewardlistMoreImg.setVisibility(View.VISIBLE);
                 holder.itemRewardlistHeadImg.setVisibility(View.GONE);

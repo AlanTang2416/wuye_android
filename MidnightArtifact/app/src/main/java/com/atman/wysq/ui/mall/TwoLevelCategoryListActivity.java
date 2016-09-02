@@ -146,7 +146,7 @@ public class TwoLevelCategoryListActivity extends MyBaseActivity implements Adap
             str = Common.Url_Get_Category_List + mCategoryId + "/" + page;
         }
         OkHttpUtils.get().url(str)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_CATEGORY_LIST).id(Common.NET_GET_CATEGORY_LIST).build()
                 .execute(new MyStringCallback(mContext, this, b));
     }

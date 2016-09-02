@@ -103,7 +103,7 @@ public class GetHisVisitorAdapter extends BaseAdapter {
         }
 
         ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getIcon(),
-                holder.itemBrowseHeadIv, MyBaseApplication.getApp().getOptionsNot());
+                holder.itemBrowseHeadIv, MyBaseApplication.getApplication().getOptionsNot());
 
         holder.itemBrowseNameTx.setText(mBodyEntity.getNick_name());
         holder.itemBrowseLevelTx.setText("LV." + mBodyEntity.getUserLevel());

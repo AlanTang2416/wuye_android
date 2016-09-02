@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin:'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 22
@@ -74,6 +75,12 @@ android {
         tasks.withType(JavaCompile) {
             compileTask -> compileTask.dependsOn(nativeLibsToJar)
         }
+
+        greendao{
+            schemaVersion 1
+            daoPackage 'com.atman.wysq.model.greendao.gen'
+            targetGenDir 'src/main/java'
+        }
     }
 }
 
@@ -92,4 +99,6 @@ dependencies {
     compile files('libs/nim-lucene-2.7.0.jar')
     compile files('libs/nim-rts-2.7.0.jar')
     compile files('libs/nrtc-sdk.jar')
+    compile'org.greenrobot:greendao:3.1.0'
+    compile'org.greenrobot:greendao-generator:3.1.0'
 }

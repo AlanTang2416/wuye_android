@@ -85,7 +85,7 @@ public class BaseGestureLockActivity extends MyBaseActivity implements
         updateView();
 
         ImageLoader.getInstance().displayImage(Common.ImageUrl + MyBaseApplication.mHEAD_URL
-                , baseGesturelockHeadIv, MyBaseApplication.getApp().getOptions());
+                , baseGesturelockHeadIv, MyBaseApplication.getApplication().getOptions());
     }
 
     private void updateView() {
@@ -132,7 +132,7 @@ public class BaseGestureLockActivity extends MyBaseActivity implements
         choosePattern = new ArrayList<LockPatternView.Cell>(pattern);
         if (LockPatternView.patternToString(choosePattern).equals(mGestureStr)) {
             PreferenceUtil.saveIntPreference(mContext, PreferenceUtil.PARM_GESTURE_ERROR, 4);
-            MyBaseApplication.getApp().setLock(false);
+            MyBaseApplication.getApplication().setLock(false);
             finish();
         } else {
             baseGesturelockLpv.setDisplayMode(LockPatternView.DisplayMode.Wrong);
@@ -150,8 +150,8 @@ public class BaseGestureLockActivity extends MyBaseActivity implements
     private void overGesture() {
         clearData();
         PreferenceUtil.savePreference(mContext, PreferenceUtil.PARM_GESTURE_PW, "");
-        MyBaseApplication.getApp().setLock(false);
-        MyBaseApplication.getApp().setError(true);
+        MyBaseApplication.getApplication().setLock(false);
+        MyBaseApplication.getApplication().setError(true);
         startActivity(LoginActivity.createIntent(this, getIntent()));
         finish();
     }

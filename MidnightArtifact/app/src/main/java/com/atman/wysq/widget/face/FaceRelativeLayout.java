@@ -73,6 +73,7 @@ public class FaceRelativeLayout extends RelativeLayout implements
      * 表情区域
      */
     private View view;
+    private View view2;
 
     /**
      * 输入框
@@ -150,11 +151,17 @@ public class FaceRelativeLayout extends RelativeLayout implements
                 } else {
                     view.setVisibility(View.VISIBLE);
                 }
+                if (view2!=null) {
+                    view2.setVisibility(View.GONE);
+                }
                 break;
             case R.id.blogdetail_addcomment_et:
                 // 隐藏表情选择框
                 if (view.getVisibility() == View.VISIBLE) {
                     view.setVisibility(View.GONE);
+                }
+                if (view2!=null) {
+                    view2.setVisibility(View.GONE);
                 }
                 break;
 
@@ -187,6 +194,7 @@ public class FaceRelativeLayout extends RelativeLayout implements
         layout_point = (LinearLayout) findViewById(R.id.iv_image);
         et_sendmessage.setOnClickListener(this);
         view = findViewById(R.id.ll_facechoose);
+        view2 = findViewById(R.id.p2pchat_add_ll);
         blogdetail_addemol_iv = (ImageView) findViewById(R.id.blogdetail_addemol_iv);
         blogdetail_addemol_iv.setOnClickListener(this);
     }

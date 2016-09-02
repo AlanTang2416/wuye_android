@@ -157,7 +157,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
         childrencommentHostTx = (TextView) headView.findViewById(R.id.childrencomment_host_tx);
         childrencommentCommentTx = (TextView) headView.findViewById(R.id.blogdetail_comment_tx);
 
-        ImageLoader.getInstance().displayImage(Common.ImageUrl+headUrl, childrencommentHeadImg, MyBaseApplication.getApp().getOptionsNot());
+        ImageLoader.getInstance().displayImage(Common.ImageUrl+headUrl, childrencommentHeadImg, MyBaseApplication.getApplication().getOptionsNot());
         if (verifyState == 1) {
             childrencommentVerifyImg.setVisibility(View.VISIBLE);
             childrencommentGenderImg.setVisibility(View.GONE);
@@ -184,16 +184,16 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
                 childrencommentVerifyImg.setVisibility(View.GONE);
                 childrencommentNameTx.setText("匿名用户");
                 ImageLoader.getInstance().displayImage(anonymityImg, childrencommentHeadImg
-                        , MyBaseApplication.getApp().getOptionsNot());
+                        , MyBaseApplication.getApplication().getOptionsNot());
             } else {
                 childrencommentNameTx.setText(name);
                 ImageLoader.getInstance().displayImage(Common.ImageUrl+headUrl, childrencommentHeadImg
-                        , MyBaseApplication.getApp().getOptionsNot());
+                        , MyBaseApplication.getApplication().getOptionsNot());
             }
             childrencommentHostTx.setVisibility(View.VISIBLE);
         } else {
             ImageLoader.getInstance().displayImage(Common.ImageUrl+headUrl, childrencommentHeadImg
-                    , MyBaseApplication.getApp().getOptionsNot());
+                    , MyBaseApplication.getApplication().getOptionsNot());
             childrencommentHostTx.setVisibility(View.INVISIBLE);
         }
 
@@ -213,7 +213,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
         if (!str.isEmpty()) {
             OkHttpUtils.postString().url(Common.Url_Add_Comment).mediaType(Common.JSON)
                     .content("{\"blog_id\":\""+blog_id+"\",\"content\":\""+str+"\",\"comment_id\":\""+id+"\"}")
-                    .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .id(Common.NET_ADD_COMMENT).tag(Common.NET_ADD_COMMENT)
                     .build().execute(new MyStringCallback(mContext, CommentChildrenListActivity.this, true));
         }
@@ -264,7 +264,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
 
     private void doHttp(boolean b) {
         OkHttpUtils.get().url(Common.Url_SubComment_List + id + "/" + page)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .id(Common.NET_SUBCOMMENT_LIST).tag(Common.NET_SUBCOMMENT_LIST).build()
                 .execute(new MyStringCallback(mContext, this, b));
     }

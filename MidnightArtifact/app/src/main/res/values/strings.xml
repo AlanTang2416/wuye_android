@@ -15,4 +15,7 @@
     <string name="personal_service_str">联系客服</string>
     <string name="personal_service_phone_str">400-820-5310</string>
 
+    <string name="start_session_record">我发起了白板演示</string>
+    <string name="session_end_record">白板演示已结束</string>
+
 </resources>

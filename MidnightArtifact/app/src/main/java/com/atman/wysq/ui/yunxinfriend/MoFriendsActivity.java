@@ -116,7 +116,7 @@ public class MoFriendsActivity extends MyBaseActivity implements AdapterInterfac
     protected void onResume() {
         super.onResume();
         OkHttpUtils.get().url(Common.Url_Get_Fans)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_FANS).id(Common.NET_GET_FANS).build()
                 .execute(new MyStringCallback(mContext, this, true));
     }

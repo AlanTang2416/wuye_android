@@ -126,7 +126,7 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
         confirmationorderGoodspeiceTv.setText("¥ " + MyTools.formatfloat(Float.parseFloat(GoodsPrice)));
         confirmationorderOrderpriceTx.setText("¥ " + MyTools.formatfloat(Float.parseFloat(GoodsPrice)));
         ImageLoader.getInstance().displayImage(Common.ImageUrl + goodsUrl, confirmationorderGoodsIv
-                , MyBaseApplication.getApp().getOptionsNot());
+                , MyBaseApplication.getApplication().getOptionsNot());
 
         confirmationorderAddrRl.setOnTouchListener(this);
         confirmationorderEmptyTx.setOnTouchListener(this);
@@ -152,7 +152,7 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
     }
 
     private void doHttp() {
-        OkHttpUtils.get().url(Common.Url_Get_Address_List).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+        OkHttpUtils.get().url(Common.Url_Get_Address_List).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_ADDRESS_LIST).id(Common.NET_GET_ADDRESS_LIST).build()
                 .execute(new MyStringCallback(mContext, this, true));
     }
@@ -166,7 +166,7 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
     protected void onPostResume() {
         super.onPostResume();
         if (whatPay == 1) {
-            MyBaseApplication.getApp().setFilterLock(false);
+            MyBaseApplication.getApplication().setFilterLock(false);
         }
     }
 
@@ -193,18 +193,18 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
             mAddOrderResponseModel = mGson.fromJson(data, AddOrderResponseModel.class);
             if (confirmationorderAlipayIv.getVisibility() == View.VISIBLE) {
                 OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_Alipay + mAddOrderResponseModel.getBody().getOrder_id()).content("{}")
-                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .id(Common.NET_RECHARGE_ADD_ORDER_ALIPAY).tag(Common.NET_RECHARGE_ADD_ORDER_ALIPAY)
                         .build().execute(new MyStringCallback(mContext, this, true));
             } else {
                 OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_WeiXin).content("{\"order_id\":\"" + mAddOrderResponseModel.getBody().getOrder_id() + "\"}")
-                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .id(Common.NET_RECHARGE_ADD_ORDER_WEIXIN).tag(Common.NET_RECHARGE_ADD_ORDER_WEIXIN)
                         .build().execute(new MyStringCallback(mContext, this, true));
             }
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_ALIPAY) {
             whatPay = 0;
-            MyBaseApplication.getApp().setFilterLock(true);
+            MyBaseApplication.getApplication().setFilterLock(true);
             AliPayResponseModel mAliPayResponseOneModel = mGson.fromJson(data, AliPayResponseModel.class);
             String parms = mAliPayResponseOneModel.getBody().getParam().replace("\\\"", "\"");
             int start = parms.indexOf("&sign");
@@ -212,7 +212,7 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
             mPayDialog.aliPay(mContext, parms.substring(0, start));
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_WEIXIN) {
             whatPay = 1;
-            MyBaseApplication.getApp().setFilterLock(true);
+            MyBaseApplication.getApplication().setFilterLock(true);
             WeiXinPayResponseModel WeiXinPayResponseModelm = mGson.fromJson(data, WeiXinPayResponseModel.class);
             mPayDialog.weixinPay(WeiXinPayResponseModelm);
         }
@@ -260,7 +260,7 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
                 AddOrderRequestModel mAddOrderRequestModel = new AddOrderRequestModel(mAddreId, list, 1);
 
                 OkHttpUtils.postString().url(Common.Url_Add_Order)
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie()).mediaType(Common.JSON)
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie()).mediaType(Common.JSON)
                         .content(mGson.toJson(mAddOrderRequestModel)).tag(Common.NET_ADD_ORDER).id(Common.NET_ADD_ORDER)
                         .build().execute(new MyStringCallback(mContext, this, true));
                 break;
@@ -306,6 +306,6 @@ public class ConfirmationOrderActivity extends MyBaseActivity implements PayDial
 
     @Override
     public void payResult(String str) {
-        MyBaseApplication.getApp().setFilterLock(false);
+        MyBaseApplication.getApplication().setFilterLock(false);
     }
 }

@@ -169,7 +169,7 @@ public class MySecretListAdapter extends BaseAdapter {
             }
             holder.itemBloglistContentimgTx.setText(SmileUtils.getEmotionContent(context, holder.itemBloglistContentimgTx, str));
             ImageLoader.getInstance().displayImage(Common.ImageUrl + img
-                    , holder.itemBloglistImgIv, MyBaseApplication.getApp().getOptionsNot());
+                    , holder.itemBloglistImgIv, MyBaseApplication.getApplication().getOptionsNot());
             holder.itemBloglistHaveimgRl.setLayoutParams(params);
         } else {
             holder.itemBloglistImgIv.setImageResource(R.mipmap.ic_launcher);
@@ -205,7 +205,7 @@ public class MySecretListAdapter extends BaseAdapter {
 
         if (mBodyEntity.getAnonymityUser() != null) {//匿名用户
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getAnonymityUser().getIcon()
-                    , holder.itemBloglistHeadImg, MyBaseApplication.getApp().getOptionsNot());
+                    , holder.itemBloglistHeadImg, MyBaseApplication.getApplication().getOptionsNot());
             holder.itemBloglistNameTx.setText(mBodyEntity.getAnonymityUser().getNick_name());
             holder.itemBloglistLevelTx.setVisibility(View.GONE);
             holder.itemBloglistGenderImg.setVisibility(View.GONE);
@@ -222,7 +222,7 @@ public class MySecretListAdapter extends BaseAdapter {
             holder.itemBloglistNameTx.setText(mBodyEntity.getUser_name());
             holder.itemBloglistLevelTx.setText("Lv " + mBodyEntity.getUserLevel());
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getIcon()
-                    , holder.itemBloglistHeadImg, MyBaseApplication.getApp().getOptionsNot());
+                    , holder.itemBloglistHeadImg, MyBaseApplication.getApplication().getOptionsNot());
         }
 
         return convertView;

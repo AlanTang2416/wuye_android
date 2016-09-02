@@ -163,14 +163,14 @@ public class PostingsDetailsCommentAdapter extends BaseAdapter {
             if (shop.get(position).getUser_id() == blogUserId) {
                 if (isAnonymity) {
                     ImageLoader.getInstance().displayImage(anonymityImg,
-                            holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApp().getOptionsNot());
+                            holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
                     holder.itemPostingsdetailCommentLevelTx.setVisibility(View.GONE);
                     holder.itemPostingsdetailCommentNameTv.setText("匿名用户");
                     holder.itemPostingsdetailCommentGenderIv.setVisibility(View.GONE);
                     holder.itemPostingsdetailCommentVerifyImg.setVisibility(View.GONE);
                 } else {
                     ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon(),
-                            holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApp().getOptionsNot());
+                            holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
                     holder.itemPostingsdetailCommentLevelTx.setVisibility(View.VISIBLE);
                     holder.itemPostingsdetailCommentNameTv.setText(shop.get(position).getUser_name());
                     if (shop.get(position).getVerify_status() == 1) {
@@ -184,7 +184,7 @@ public class PostingsDetailsCommentAdapter extends BaseAdapter {
                 holder.itemPostingsdetailHostTx.setVisibility(View.VISIBLE);
             } else {
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon(),
-                        holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApp().getOptionsNot());
+                        holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
                 holder.itemPostingsdetailHostTx.setVisibility(View.INVISIBLE);
             }
 

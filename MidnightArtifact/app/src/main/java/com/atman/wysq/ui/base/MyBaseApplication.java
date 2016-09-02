@@ -3,6 +3,7 @@ package com.atman.wysq.ui.base;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
@@ -10,6 +11,8 @@ import android.text.TextUtils;
 
 import com.atman.wysq.R;
 import com.atman.wysq.model.event.YunXinAuthOutEvent;
+import com.atman.wysq.model.greendao.gen.DaoMaster;
+import com.atman.wysq.model.greendao.gen.DaoSession;
 import com.atman.wysq.model.response.ConfigModel;
 import com.atman.wysq.model.response.GetGoldenRoleModel;
 import com.atman.wysq.model.response.GetUserIndexModel;
@@ -57,7 +60,6 @@ import java.util.List;
  */
 public class MyBaseApplication extends BaseApplication {
 
-    private static Context mContext = null;
     private static MyBaseApplication mInstance;
     private String mUserName = "";
     private String mPassWord = "";
@@ -88,12 +90,16 @@ public class MyBaseApplication extends BaseApplication {
 
     private DisplayImageOptions options,optionsHead, optionsNot;
 
+    private DaoMaster.DevOpenHelper mHelper;
+    private SQLiteDatabase db;
+    private DaoMaster mDaoMaster;
+    private DaoSession mDaoSession;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        mContext = getApplicationContext();
-        getApp();
+        mInstance = this;
 
         initPhoneInfo();
         initLoginData();
@@ -104,6 +110,36 @@ public class MyBaseApplication extends BaseApplication {
 
         UMmengInit();
         YunXinInit();
+
+        setDatabase();
+    }
+
+    public static MyBaseApplication getApplication() {
+        return mInstance;
+    }
+
+    /**     * 设置greenDao     */
+    private void setDatabase() {
+
+        // 通过DaoMaster 的内部类 DevOpenHelper，你可以得到一个便利的SQLiteOpenHelper 对象。
+        // 可能你已经注意到了，你并不需要去编写「CREATE TABLE」这样的 SQL 语句，因为greenDAO 已经帮你做了。
+        // 注意：默认的DaoMaster.DevOpenHelper 会在数据库升级时，删除所有的表，意味着这将导致数据的丢失。
+        // 所以，在正式的项目中，你还应该做一层封装，来实现数据库的安全升级。
+        mHelper = new DaoMaster.DevOpenHelper(this,"atmandb", null);
+        db =mHelper.getWritableDatabase();
+        // 注意：该数据库连接属于DaoMaster，所以多个 Session 指的是相同的数据库连接。
+        mDaoMaster = new DaoMaster(db);
+        mDaoSession = mDaoMaster.newSession();
+    }
+
+
+    public DaoSession getDaoSession() {
+        return mDaoSession;
+    }
+
+
+    public SQLiteDatabase getDb() {
+        return db;
     }
 
     private void YunXinInit() {
@@ -190,8 +226,8 @@ public class MyBaseApplication extends BaseApplication {
     // 如果已经存在用户登录信息，返回LoginInfo，否则返回null即可
     private LoginInfo loginInfo() {
         // 从本地读取上次登录成功时保存的用户登录信息
-        String account = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_USERID);
-        String token = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_YUNXIN_TOKEN);
+        String account = PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID);
+        String token = PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_YUNXIN_TOKEN);
 
         if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(token)) {
             DemoCache.setAccount(account.toLowerCase());
@@ -235,9 +271,9 @@ public class MyBaseApplication extends BaseApplication {
     }
 
     private void initPhoneInfo() {
-        PhoneInfo mPhoneInfo = new PhoneInfo(mContext);
+        PhoneInfo mPhoneInfo = new PhoneInfo(getApplicationContext());
         mVersionName = "v" + getAppInfo().split("-")[0];
-        mChannel = getAppMetaData(mContext, "UMENG_CHANNEL");
+        mChannel = getAppMetaData(getApplicationContext(), "UMENG_CHANNEL");
         mPhoneModel = android.os.Build.MODEL;
         mPhoneMac = mPhoneInfo.getMac();
         mPhoneDeviceId = mPhoneInfo.getIMEI();
@@ -250,40 +286,33 @@ public class MyBaseApplication extends BaseApplication {
     }
 
     private void initLoginData() {
-        mUserName = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_US);
-        mPassWord = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_PW);
-        mUserKey = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_USER_KEY);
-        mUserToken = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_USER_TOKEN);
-        mUserId = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_USERID);
-        mDeviceToken = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_USER_TOKEN);
+        mUserName = PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_US);
+        mPassWord = PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_PW);
+        mUserKey = PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USER_KEY);
+        mUserToken = PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USER_TOKEN);
+        mUserId = PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID);
+        mDeviceToken = PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USER_TOKEN);
 //        LogUtils.e("mUserName:"+mUserName+",mPassWord:"+mPassWord+",mUserKey:"+mUserKey+",mUserToken:"+mUserToken+",mUserId:"+mUserId);
     }
 
     public void cleanLoginData() {
-        PreferenceUtil.savePreference(mContext, PreferenceUtil.PARM_PW, "");
-        PreferenceUtil.savePreference(mContext, PreferenceUtil.PARM_USER_KEY, "");
-        PreferenceUtil.savePreference(mContext, PreferenceUtil.PARM_USER_TOKEN, "");
-        PreferenceUtil.savePreference(mContext, PreferenceUtil.PARM_USERID, "");
-        PreferenceUtil.savePreference(mContext, PreferenceUtil.PARM_YUNXIN_TOKEN, "");
+        PreferenceUtil.savePreference(getApplicationContext(), PreferenceUtil.PARM_PW, "");
+        PreferenceUtil.savePreference(getApplicationContext(), PreferenceUtil.PARM_USER_KEY, "");
+        PreferenceUtil.savePreference(getApplicationContext(), PreferenceUtil.PARM_USER_TOKEN, "");
+        PreferenceUtil.savePreference(getApplicationContext(), PreferenceUtil.PARM_USERID, "");
+        PreferenceUtil.savePreference(getApplicationContext(), PreferenceUtil.PARM_YUNXIN_TOKEN, "");
     }
 
     public String getmUserId() {
         return mUserId;
     }
 
-    public static MyBaseApplication getApp(){
-        if (mInstance == null) {
-            mInstance = new MyBaseApplication();
-        }
-        return mInstance;
-    }
-
     public String getCookie() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("USER_KEY=");
-        stringBuilder.append(PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_USER_KEY));
+        stringBuilder.append(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USER_KEY));
         stringBuilder.append(";USER_TOKEN=");
-        stringBuilder.append(PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_USER_TOKEN));
+        stringBuilder.append(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USER_TOKEN));
         return stringBuilder.toString();
     }
 
@@ -326,7 +355,7 @@ public class MyBaseApplication extends BaseApplication {
 
     private void InitDownImageConfig() {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
-                .Builder(mContext)
+                .Builder(getApplicationContext())
                 .memoryCacheExtraOptions(480, 800) // max width, max height，即保存的每个缓存文件的最大长宽
 //                .discCacheExtraOptions(480, 800, Bitmap.CompressFormat.JPEG, 75, null) // Can slow ImageLoader, use it carefully (Better don't use it)/设置缓存的详细信息，最好不要设置这个
                 .threadPoolSize(3)//线程池内加载的数量
@@ -340,7 +369,7 @@ public class MyBaseApplication extends BaseApplication {
                 .discCacheFileCount(100) //缓存的文件数量
 //                .discCache(new UnlimitedDiscCache(cacheDir))//自定义缓存路径
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-                .imageDownloader(new BaseImageDownloader(mContext, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
+                .imageDownloader(new BaseImageDownloader(getApplicationContext(), 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
                 .writeDebugLogs() // Remove for release app
                 .build();//开始构建
         // Initialize ImageLoader with configuration.

@@ -150,7 +150,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     public void doInitBaseHttp() {
         super.doInitBaseHttp();
         OkHttpUtils.get().url(Common.Url_Get_UserIndex + "/" + id)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_USERINDEX).id(Common.NET_GET_USERINDEX).build()
                 .execute(new MyStringCallback(mContext, this, true));
     }
@@ -208,7 +208,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             otherpersonalHeadVerifyImg.setVisibility(View.GONE);
         }
         ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
-                ,otherpersonalHeadIv,MyBaseApplication.getApp().getOptionsNot());
+                ,otherpersonalHeadIv,MyBaseApplication.getApplication().getOptionsNot());
 
         otherpersonalDynamicNumberTx.setText(""+mGetUserIndexModel.getBody().getBlogImageMap().getDataSize());
         initDynamicIV();
@@ -237,30 +237,30 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             otherpersonalGuardianThreeRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_one);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
-                    ,otherpersonalGuardianThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalGuardianThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==2) {
             otherpersonalGuardianOneRl.setVisibility(View.GONE);
             otherpersonalGuardianTwoRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianThreeRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianTopTwoIv.setImageResource(R.mipmap.other_guard_one);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
-                    ,otherpersonalGuardianTwoIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalGuardianTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             otherpersonalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_two);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(1).getIcon()
-                    ,otherpersonalGuardianThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalGuardianThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num>=3) {
             otherpersonalGuardianOneRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianTwoRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianThreeRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianTopOneIv.setImageResource(R.mipmap.other_guard_one);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
-                    ,otherpersonalGuardianOneIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalGuardianOneIv,MyBaseApplication.getApplication().getOptionsNot());
             otherpersonalGuardianTopTwoIv.setImageResource(R.mipmap.other_guard_two);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(1).getIcon()
-                    ,otherpersonalGuardianTwoIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalGuardianTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             otherpersonalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_three);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(2).getIcon()
-                    ,otherpersonalGuardianThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalGuardianThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         }
     }
 
@@ -271,25 +271,25 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             otherpersonalVisitorTwoIv.setVisibility(View.GONE);
             otherpersonalVisitorThreeIv.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
-                    ,otherpersonalVisitorThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==2) {
             otherpersonalVisitorOneIv.setVisibility(View.GONE);
             otherpersonalVisitorTwoIv.setVisibility(View.VISIBLE);
             otherpersonalVisitorThreeIv.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
-                    ,otherpersonalVisitorTwoIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalVisitorTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(1).getIcon()
-                    ,otherpersonalVisitorThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num>=3) {
             otherpersonalVisitorOneIv.setVisibility(View.VISIBLE);
             otherpersonalVisitorTwoIv.setVisibility(View.VISIBLE);
             otherpersonalVisitorThreeIv.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
-                    ,otherpersonalVisitorOneIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalVisitorOneIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(1).getIcon()
-                    ,otherpersonalVisitorTwoIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalVisitorTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(2).getIcon()
-                    ,otherpersonalVisitorThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         }
     }
 
@@ -301,40 +301,40 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             otherpersonalDynmicThreeIv.setVisibility(View.GONE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
-                    ,otherpersonalDynmicFourIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==2) {
             otherpersonalDynmicOneIv.setVisibility(View.GONE);
             otherpersonalDynmicTwoIv.setVisibility(View.GONE);
             otherpersonalDynmicThreeIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
-                    ,otherpersonalDynmicThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
-                    ,otherpersonalDynmicFourIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==3) {
             otherpersonalDynmicOneIv.setVisibility(View.GONE);
             otherpersonalDynmicTwoIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicThreeIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
-                    ,otherpersonalDynmicTwoIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalDynmicTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
-                    ,otherpersonalDynmicThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(2)
-                    ,otherpersonalDynmicFourIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num>=4) {
             otherpersonalDynmicOneIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicTwoIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicThreeIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
-                    ,otherpersonalDynmicOneIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalDynmicOneIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
-                    ,otherpersonalDynmicTwoIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalDynmicTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(2)
-                    ,otherpersonalDynmicThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(3)
-                    ,otherpersonalDynmicFourIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         }
     }
 
@@ -365,7 +365,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             OkHttpUtils.delete().url(Common.Url_Delete_Friends+id)
-                                    .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                                     .tag(Common.NET_DLELTE_FRIEND).id(Common.NET_DLELTE_FRIEND).build()
                                     .execute(new MyStringCallback(mContext, OtherPersonalActivity.this, true));
                         }
@@ -373,7 +373,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     builder.show();
                 } else {
                     OkHttpUtils.postString().url(Common.Url_Add_Friends+id).content("").mediaType(Common.JSON)
-                            .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_ADD_FRIEND).id(Common.NET_ADD_FRIEND).build()
                             .execute(new MyStringCallback(mContext, this, true));
                 }
@@ -402,6 +402,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                 showBottomImg();
                 break;
             case R.id.otherpersonal_chat_iv:
+                startActivity(P2PChatActivity.buildIntent(mContext, String.valueOf(id), mGetUserIndexModel.getBody().getUserDetailBean().getNickName()));
                 break;
         }
     }
@@ -425,7 +426,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                         return;
                     }
                     OkHttpUtils.postString().url(Common.Url_Add_BlackList)
-                            .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .content("{\"black_user_id\":" + id + "}")
                             .mediaType(Common.JSON).id(Common.NET_ADD_BLACKLIST).tag(Common.NET_ADD_BLACKLIST)
                             .build().execute(new MyStringCallback(mContext, OtherPersonalActivity.this, true));

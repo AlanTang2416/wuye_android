@@ -85,7 +85,7 @@ public class TwoLevelCategoryListAdapter extends BaseAdapter {
         holder.twoCategoryIv.setLayoutParams(params);
         holder.twoCategoryIv.setImageResource(R.color.color_white);
         mImageLoader.displayImage(Common.ImageUrl + body.get(position).getPic_img(),
-                holder.twoCategoryIv, MyBaseApplication.getApp().getOptionsNot());
+                holder.twoCategoryIv, MyBaseApplication.getApplication().getOptionsNot());
         holder.twoCategoryNameTx.setText(body.get(position).getTitle());
         holder.twoCategoryPriceTx.setText("¥ " + body.get(position).getDiscount_price());
         holder.twoCategorySalesvolumeTx.setText("月销量：" + body.get(position).getSales());

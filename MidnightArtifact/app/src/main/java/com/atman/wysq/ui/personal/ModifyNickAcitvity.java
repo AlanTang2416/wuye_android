@@ -114,7 +114,7 @@ public class ModifyNickAcitvity extends MyBaseActivity implements EditCheckBack 
             public void onClick(DialogInterface dialog, int which) {
                 String str = modifynickNewEt.getText().toString().trim();
                 OkHttpUtils.postString().url(Common.Url_Reset_Nick+str).tag(Common.NET_RESET_NICK).content("{nick}")
-                        .mediaType(Common.JSON).id(Common.NET_RESET_NICK).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .mediaType(Common.JSON).id(Common.NET_RESET_NICK).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .build().execute(new MyStringCallback(mContext, ModifyNickAcitvity.this, true));
                 dialog.dismiss();
             }

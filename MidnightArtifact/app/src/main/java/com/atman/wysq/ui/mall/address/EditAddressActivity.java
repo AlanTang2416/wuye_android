@@ -162,7 +162,7 @@ public class EditAddressActivity extends MyBaseActivity implements SelectItemPop
                 }
 
                 OkHttpUtils.postString().url(Common.Url_Add_Address).content(parmStr)
-                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .id(Common.NET_ADD_ADDRESS).tag(Common.NET_ADD_ADDRESS).build()
                         .execute(new MyStringCallback(mContext, EditAddressActivity.this, true));
             }
@@ -210,7 +210,7 @@ public class EditAddressActivity extends MyBaseActivity implements SelectItemPop
     protected void onResume() {
         super.onResume();
         OkHttpUtils.get().url(Common.Url_Get_Province)
-                .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_PROVINCE).id(Common.NET_GET_PROVINCE).build()
                 .execute(new MyStringCallback(mContext, this, true));
     }
@@ -227,7 +227,7 @@ public class EditAddressActivity extends MyBaseActivity implements SelectItemPop
                     LogUtils.e("oneArea:"+oneArea+",mGetProvince.getBody().get(i).getCity_name():"+mGetProvince.getBody().get(i).getCity_name());
                     mCityTempId = mGetProvince.getBody().get(i).getCity_id();
                     OkHttpUtils.get().url(Common.Url_Get_City+mCityTempId)
-                            .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_GET_CITY).id(Common.NET_GET_CITY).build()
                             .execute(new MyStringCallback(mContext, this, true));
                 }
@@ -240,7 +240,7 @@ public class EditAddressActivity extends MyBaseActivity implements SelectItemPop
                 if (mGetCity.getBody().get(i).getCity_name().equals(twoArea)) {
                     mCountyTempId = mGetCity.getBody().get(i).getCity_id();
                     OkHttpUtils.get().url(Common.Url_Get_District+mCountyTempId)
-                            .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_GET_DISTRICT).id(Common.NET_GET_DISTRICT).build()
                             .execute(new MyStringCallback(mContext, this, true));
                 }
@@ -285,7 +285,7 @@ public class EditAddressActivity extends MyBaseActivity implements SelectItemPop
         switch (view.getId()) {
             case R.id.addaddress_province_et:
 //                OkHttpUtils.get().url(Common.Url_Get_Province)
-//                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+//                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
 //                        .tag(Common.NET_GET_PROVINCE).id(Common.NET_GET_PROVINCE).build()
 //                        .execute(new MyStringCallback(mContext, this, true));
                 if (provinceList!=null && provinceList.size()>0) {
@@ -300,7 +300,7 @@ public class EditAddressActivity extends MyBaseActivity implements SelectItemPop
                 }
                 if (addaddressCityEt.getText().toString().isEmpty()) {
                     OkHttpUtils.get().url(Common.Url_Get_City+mCityTempId)
-                            .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_GET_CITY).id(Common.NET_GET_CITY).build()
                             .execute(new MyStringCallback(mContext, this, true));
                 } else {
@@ -317,7 +317,7 @@ public class EditAddressActivity extends MyBaseActivity implements SelectItemPop
                 }
                 if (addaddressCountyEt.getText().toString().isEmpty()) {
                     OkHttpUtils.get().url(Common.Url_Get_District+mCountyTempId)
-                            .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_GET_DISTRICT).id(Common.NET_GET_DISTRICT).build()
                             .execute(new MyStringCallback(mContext, this, true));
                 } else {

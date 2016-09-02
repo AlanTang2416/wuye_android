@@ -98,8 +98,8 @@ public class MyInformationActivity extends MyBaseActivity {
             myinfoGesturelockTx.setText("关闭");
         }
         if (isLogin()) {
-            OkHttpUtils.get().url(Common.Url_GetUserInfo + MyBaseApplication.getApp().getmUserId())
-                    .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+            OkHttpUtils.get().url(Common.Url_GetUserInfo + MyBaseApplication.getApplication().getmUserId())
+                    .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GETUSERINFO).id(Common.NET_GETUSERINFO).build()
                     .execute(new MyStringCallback(mContext, this, true));
         }
@@ -151,14 +151,14 @@ public class MyInformationActivity extends MyBaseActivity {
                     mHeadImgUrl = mHeadImgSuccessModel.getFiles().get(0).getUrl();
                     OkHttpUtils.postString().url(Common.Url_Modify_Head).id(Common.NET_MODIFY_HEAD)
                             .content("{\"icon\":\""+ mHeadImgUrl +"\"}")
-                            .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_MODIFY_HEAD).build().execute(new MyStringCallback(mContext, this, true));
                 }
             }
         } else if (id == Common.NET_MODIFY_HEAD) {
             showToast("头像修改成功");
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mHeadImgUrl
-                    , myinfoHeadIv, MyBaseApplication.getApp().getOptions());
+                    , myinfoHeadIv, MyBaseApplication.getApplication().getOptions());
         } else if (id == Common.NET_LOGOUT) {
             NIMClient.getService(AuthService.class).logout();
             showToast("已退出登录");
@@ -204,7 +204,7 @@ public class MyInformationActivity extends MyBaseActivity {
         myinfoUsernameTx.setText(mGetUserInfoModel.getBody().getUserExt().getMobile());
         myinfoNickTx.setText(mGetUserInfoModel.getBody().getUserExt().getNick_name());
         ImageLoader.getInstance().displayImage(Common.ImageUrl + mGetUserInfoModel.getBody().getUserExt().getIcon()
-                , myinfoHeadIv, MyBaseApplication.getApp().getOptions());
+                , myinfoHeadIv, MyBaseApplication.getApplication().getOptions());
         if (mGetUserInfoModel.getBody().getUserExt().getSex().equals("M")) {
             myinfoGenderTx.setText("男");
         } else {
@@ -262,7 +262,7 @@ public class MyInformationActivity extends MyBaseActivity {
             case R.id.myinfo_version_ll:
                 showToast("检查更新版本...");
                 OkHttpUtils.get().url(Common.Url_Get_Version+"?version="+MyBaseApplication.mVersionName.replace("v",""))
-                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .id(Common.NET_GET_VERSION).tag(Common.NET_GET_VERSION).build().execute(new MyStringCallback(mContext, this, false));
                 break;
             case R.id.myinfo_logout_bt:
@@ -280,7 +280,7 @@ public class MyInformationActivity extends MyBaseActivity {
                 dialog.dismiss();
                 OkHttpUtils.postString().url(Common.Url_Logout).tag(Common.NET_LOGOUT).id(Common.NET_LOGOUT)
                         .content("{logout}").mediaType(Common.JSON)
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .build().execute(new MyStringCallback(mContext, MyInformationActivity.this, true));
             }
         });
@@ -335,7 +335,7 @@ public class MyInformationActivity extends MyBaseActivity {
                     getAlbum.setType("image/*");
                     startActivityForResult(getAlbum, CHOOSE_BIG_PICTURE);
                 }
-                MyBaseApplication.getApp().setFilterLock(true);
+                MyBaseApplication.getApplication().setFilterLock(true);
             }
         });
         builder.setNeutralButton("取消", new DialogInterface.OnClickListener() {
@@ -350,7 +350,7 @@ public class MyInformationActivity extends MyBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        MyBaseApplication.getApp().setFilterLock(false);
+        MyBaseApplication.getApplication().setFilterLock(false);
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
@@ -365,7 +365,7 @@ public class MyInformationActivity extends MyBaseActivity {
         } else if (requestCode == CROP_BIG_PICTURE) {
             if (imageUri != null) {
                 OkHttpUtils.post().url(Common.Url_Reset_Head)
-                        .addParams("uploadType", "img").addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addParams("uploadType", "img").addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .addFile("files0_name", StringUtils.getFileName(imageUri.getPath()),
                         new File(imageUri.getPath())).id(Common.NET_RESET_HEAD)
                         .tag(Common.NET_RESET_HEAD).build().execute(new MyStringCallback(mContext, this, true));
@@ -378,7 +378,7 @@ public class MyInformationActivity extends MyBaseActivity {
         if (uri == null) {
             return;
         }
-        MyBaseApplication.getApp().setFilterLock(true);
+        MyBaseApplication.getApplication().setFilterLock(true);
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
         intent.putExtra("crop", "true");

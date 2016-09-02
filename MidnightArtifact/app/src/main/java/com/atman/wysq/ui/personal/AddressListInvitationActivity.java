@@ -100,7 +100,7 @@ public class AddressListInvitationActivity extends MyBaseActivity implements Ada
     @Override
     protected void onResume() {
         super.onResume();
-        MyBaseApplication.getApp().setFilterLock(false);
+        MyBaseApplication.getApplication().setFilterLock(false);
     }
 
     /**
@@ -322,7 +322,7 @@ public class AddressListInvitationActivity extends MyBaseActivity implements Ada
     }
 
     private void sendSMS(String phoneNumbeer) {
-        MyBaseApplication.getApp().setFilterLock(true);
+        MyBaseApplication.getApplication().setFilterLock(true);
         Uri smsToUri = Uri.parse("smsto:"+phoneNumbeer);
         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
         intent.putExtra("sms_body", "发现一个挺好玩的APP，快来看看吧！"+MyBaseApplication.mDownLoad_URL);

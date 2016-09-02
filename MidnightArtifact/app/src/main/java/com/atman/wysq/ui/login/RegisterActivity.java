@@ -158,7 +158,7 @@ public class RegisterActivity extends MyBaseActivity implements EditCheckBack {
                     return;
                 }
                 OkHttpUtils.post().url(Common.Url_SeedCode+mPhoneNumber+"/1")
-                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_SMS_ID).id(Common.NET_SMS_ID).build()
                         .execute(new MyStringCallback(mContext, this, true));
                 break;
@@ -172,7 +172,7 @@ public class RegisterActivity extends MyBaseActivity implements EditCheckBack {
                         MyBaseApplication.mPhoneMac, MyBaseApplication.mPhoneDeviceId,
                         MyBaseApplication.mPhoneDeviceId, MyBaseApplication.mVersionName);
                 OkHttpUtils.postString().url(Common.Url_Register).content(mGson.toJson(mRegisterRequestModel)).mediaType(Common.JSON)
-                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_REGISTER_ID).id(Common.NET_REGISTER_ID)
                         .build().connTimeOut(Common.timeOut).readTimeOut(Common.timeOut).writeTimeOut(Common.timeOut)
                         .execute(new MyStringCallback(mContext, this, true));

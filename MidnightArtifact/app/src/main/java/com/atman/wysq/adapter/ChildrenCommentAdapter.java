@@ -113,15 +113,15 @@ public class ChildrenCommentAdapter extends BaseAdapter {
                 holder.itemChildrenCommentVerifyImg.setVisibility(View.GONE);
                 holder.itemChildrenCommentLevelTx.setVisibility(View.GONE);
                 ImageLoader.getInstance().displayImage(anonymityImg,
-                        holder.itemChildrenCommentHeadIv, MyBaseApplication.getApp().getOptionsNot());
+                        holder.itemChildrenCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
             } else {
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon(),
-                        holder.itemChildrenCommentHeadIv, MyBaseApplication.getApp().getOptionsNot());
+                        holder.itemChildrenCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
             }
             holder.itemChildrenHostTx.setVisibility(View.VISIBLE);
         } else {
             ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon(),
-                    holder.itemChildrenCommentHeadIv, MyBaseApplication.getApp().getOptionsNot());
+                    holder.itemChildrenCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
             holder.itemChildrenHostTx.setVisibility(View.INVISIBLE);
         }
 

@@ -143,7 +143,7 @@ public class HisDynamicsActivity extends MyBaseActivity implements AdapterInterf
 
     private void dohttp(boolean b) {
         OkHttpUtils.get().url(Common.Url_Get_My_Sceret + id + "/" + mPage).id(Common.NET_GET_MYSECRET)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_MYSECRET).build().execute(new MyStringCallback(mContext, this, b));
     }
 
@@ -202,7 +202,7 @@ public class HisDynamicsActivity extends MyBaseActivity implements AdapterInterf
                 blogId = mAdapter.getItem(position).getBlog_id();
                 OkHttpUtils.postString().url(Common.Url_Add_Browse + blogId).mediaType(Common.JSON)
                         .content("{}")
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .id(Common.NET_ADD_BROWSE).tag(Common.NET_ADD_BROWSE)
                         .build().execute(new MyStringCallback(mContext, HisDynamicsActivity.this, false));
                 break;
@@ -215,13 +215,13 @@ public class HisDynamicsActivity extends MyBaseActivity implements AdapterInterf
                 if (mAdapter.getItem(position).getFavorite_id() > 0) {//已收藏，点击取消收藏
                     OkHttpUtils.delete().url(Common.Url_Get_BlogCollection_Not + mAdapter.getItem(position).getBlog_id())
                             .id(Common.NET_GET_BLOGCOLLECTION_NOT)
-                            .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_GET_BLOGCOLLECTION_NOT).build()
                             .execute(new MyStringCallback(mContext, HisDynamicsActivity.this, true));
                 } else {//未收藏，点击收藏
                     OkHttpUtils.postString().url(Common.Url_Get_BlogCollection + mAdapter.getItem(position).getBlog_id())
                             .id(Common.NET_GET_BLOGCOLLECTION).content("{}").mediaType(Common.JSON)
-                            .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_GET_BLOGCOLLECTION).build()
                             .execute(new MyStringCallback(mContext, HisDynamicsActivity.this, true));
                 }

@@ -226,7 +226,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             AddCommentModel mAddCommentModel = new AddCommentModel(bolgId, str);
             OkHttpUtils.postString().url(Common.Url_Add_Comment).mediaType(Common.JSON)
                     .content(mGson.toJson(mAddCommentModel))
-                    .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .id(Common.NET_ADD_COMMENT).tag(Common.NET_ADD_COMMENT)
                     .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
         }
@@ -236,14 +236,14 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
     public void doInitBaseHttp() {
         super.doInitBaseHttp();
         OkHttpUtils.get().url(Common.Url_Get_BlogDetail + bolgId).id(Common.NET_GET_BLOGDETAIL)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_BLOGDETAIL).build().execute(new MyStringCallback(mContext, this, true));
         doHttp(true);
     }
 
     private void doHttp(boolean b) {
         OkHttpUtils.get().url(Common.Url_Get_BlogDetail_CommentList + bolgId + "/" + page).id(Common.NET_GET_BLOGDETAIL_COMMENTLIST)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_BLOGDETAIL_COMMENTLIST).build().execute(new MyStringCallback(mContext, this, b));
     }
 
@@ -267,7 +267,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                 blogdetailTopRl.setVisibility(View.GONE);
                 blogdetailFlowerLl.setVisibility(View.GONE);
                 OkHttpUtils.get().url(Common.Url_Get_Category_Detail + mGetBlogDetailModel.getBody().get(0).getGoods_id())
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_GET_CATEGORY_DETAIL).id(Common.NET_GET_CATEGORY_DETAIL).build()
                         .execute(new MyStringCallback(mContext, this, true));
             } else {
@@ -276,7 +276,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                 blogdetailTopRl.setVisibility(View.VISIBLE);
                 blogdetailFlowerLl.setVisibility(View.VISIBLE);
                 OkHttpUtils.get().url(Common.Url_Get_Award_List + mGetBlogDetailModel.getBody().get(0).getBlog_id()).id(Common.NET_GET_AWARDLIST)
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_GET_AWARDLIST).build().execute(new MyStringCallback(mContext, this, true));
             }
         } else if (id == Common.NET_GET_BLOGDETAIL_COMMENTLIST) {
@@ -308,7 +308,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             blogdetailGoodsNameIv.setText(mGoodsDetailsResponseModel.getBody().getTitle());
             blogdetailGoodsPriceIv.setText("¥ " + mGoodsDetailsResponseModel.getBody().getDiscount_price());
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mGoodsDetailsResponseModel.getBody().getPic_img()
-                    , blogdetailGoodsIv, MyBaseApplication.getApp().getOptionsNot());
+                    , blogdetailGoodsIv, MyBaseApplication.getApplication().getOptionsNot());
         } else if (id == Common.NET_ADD_COMMENT) {
             if (isLast) {
                 AddCommentResultModel mAddCommentResultModel = mGson.fromJson(data, AddCommentResultModel.class);
@@ -339,7 +339,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             AddRewardModel AddRewardModelm = mGson.fromJson(data, AddRewardModel.class);
             showToast("打赏成功");
             OkHttpUtils.get().url(Common.Url_Get_Award_List + mGetBlogDetailModel.getBody().get(0).getBlog_id()).id(Common.NET_GET_AWARDLIST)
-                    .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_AWARDLIST).build().execute(new MyStringCallback(mContext, this, true));
         } else if (id == Common.NET_GET_AWARDLIST) {
             GetRewardListModel mGetRewardListModel = mGson.fromJson(data, GetRewardListModel.class);
@@ -450,7 +450,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 OkHttpUtils.postString().url(Common.Url_Add_Award)
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .content("{\"oid\":" + bolgId + "}").mediaType(Common.JSON).id(Common.NET_ADD_AWARD).tag(Common.NET_ADD_AWARD)
                         .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
             }
@@ -493,7 +493,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             isAnonymity = true;
             anonymityImg = Common.ImageUrl + mBodyEntity.getAnonymityUser().getIcon();
             ImageLoader.getInstance().displayImage(anonymityImg
-                    , blogdetailHeadImg, MyBaseApplication.getApp().getOptionsNot());
+                    , blogdetailHeadImg, MyBaseApplication.getApplication().getOptionsNot());
             blogdetailNameTx.setText(mBodyEntity.getAnonymityUser().getNick_name());
             blogdetailLevelTx.setVisibility(View.GONE);
             blogdetailGenderImg.setVisibility(View.GONE);
@@ -511,7 +511,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             blogdetailNameTx.setText(mBodyEntity.getUser_name());
             blogdetailLevelTx.setText("Lv " + mBodyEntity.getUserLevel());
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getIcon()
-                    , blogdetailHeadImg, MyBaseApplication.getApp().getOptionsNot());
+                    , blogdetailHeadImg, MyBaseApplication.getApplication().getOptionsNot());
         }
 
         bloglistTimeTx.setText(MyTools.convertTime(mBodyEntity.getCreate_time(), "yyyy.MM.dd HH:mm"));
@@ -642,7 +642,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                                 Tools.copy("午夜神器" + "\n"
                                         + MyBaseApplication.mDownLoad_URL, mContext);
                             }
-                            MyBaseApplication.getApp().setFilterLock(true);
+                            MyBaseApplication.getApplication().setFilterLock(true);
                             ShareHelper.share(PostingsDetailActivity.this, Platform
                                     , MyBaseApplication.mDownLoad_URL, PostingsDetailActivity.this);
                         }
@@ -655,13 +655,13 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                     if (favoriteId > 0) {//已收藏，点击取消收藏
                         OkHttpUtils.delete().url(Common.Url_Get_BlogCollection_Not + bolgId)
                                 .id(Common.NET_GET_BLOGCOLLECTION_NOT)
-                                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                                 .tag(Common.NET_GET_BLOGCOLLECTION_NOT).build()
                                 .execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
                     } else {//未收藏，点击收藏
                         OkHttpUtils.postString().url(Common.Url_Get_BlogCollection + bolgId)
                                 .id(Common.NET_GET_BLOGCOLLECTION).content("{}").mediaType(Common.JSON)
-                                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                                 .tag(Common.NET_GET_BLOGCOLLECTION).build()
                                 .execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
                     }
@@ -683,7 +683,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                         return;
                     }
                     OkHttpUtils.postString().url(Common.Url_Add_BlackList)
-                            .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .content("{\"black_user_id\":" + mGetBlogDetailModel.getBody().get(0).getUser_id() + "}")
                             .mediaType(Common.JSON).id(Common.NET_ADD_BLACKLIST).tag(Common.NET_ADD_BLACKLIST)
                             .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
@@ -694,7 +694,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                     }
                     OkHttpUtils.postString().url(Common.Url_Delete_Post + bolgId).mediaType(Common.JSON)
                             .content("{}")
-                            .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .id(Common.NET_DELETE_POST).tag(Common.NET_DELETE_POST)
                             .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
                 }
@@ -781,7 +781,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                     return;
                 }
                 OkHttpUtils.postString().url(Common.Url_Add_Like + "1/" + mAdapter.getItem(position).getBlog_comment_id())
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .content("{}").mediaType(Common.JSON).id(Common.NET_ADD_LIKE).tag(Common.NET_ADD_LIKE)
                         .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
                 break;

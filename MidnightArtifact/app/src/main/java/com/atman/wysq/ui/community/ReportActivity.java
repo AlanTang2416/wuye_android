@@ -108,7 +108,7 @@ public class ReportActivity extends MyBaseActivity {
         ReportModel mReportModel = new ReportModel(str, 1, id);
         OkHttpUtils.postString().url(Common.Url_RePort).mediaType(Common.JSON)
                 .content(mGson.toJson(mReportModel))
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .id(Common.NET_REPORT).tag(Common.NET_REPORT).build()
                 .execute(new MyStringCallback(mContext, this, true));
     }

@@ -75,7 +75,7 @@ public class MyTaskAllAdapter extends BaseAdapter {
             convertView.setTag(holder);
 
             mImageLoader.displayImage(Common.ImageUrl + "/" + mBodyEntity.getPic(),
-                    holder.itemTaskImg, MyBaseApplication.getApp().getOptions());
+                    holder.itemTaskImg, MyBaseApplication.getApplication().getOptions());
         } else {
             holder = (ViewHolder) convertView.getTag();
         }

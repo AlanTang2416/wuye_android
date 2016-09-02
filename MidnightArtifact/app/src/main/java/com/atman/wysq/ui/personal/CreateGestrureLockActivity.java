@@ -106,7 +106,7 @@ public class CreateGestrureLockActivity extends MyBaseActivity implements
                     PreferenceUtil.savePreference(mContext, PreferenceUtil.PARM_GESTURE_PW, LockPatternView.patternToString(choosePattern));
                     PreferenceUtil.saveBoolPreference(mContext, PreferenceUtil.PARM_ISOPEN_GESTURE, true);
                     PreferenceUtil.saveIntPreference(mContext, PreferenceUtil.PARM_GESTURE_ERROR, 4);
-                    MyBaseApplication.getApp().setLock(false);
+                    MyBaseApplication.getApplication().setLock(false);
                     Intent mIntent = new Intent();
                     mIntent.putExtra("isOk", true);
                     setResult(RESULT_OK,mIntent);

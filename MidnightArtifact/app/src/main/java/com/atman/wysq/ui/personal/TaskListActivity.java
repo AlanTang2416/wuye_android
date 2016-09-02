@@ -69,7 +69,7 @@ public class TaskListActivity extends MyBaseActivity implements AdapterInterface
     public void doInitBaseHttp() {
         super.doInitBaseHttp();
         OkHttpUtils.get().url(Common.Url_Get_Task)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_RASK).id(Common.NET_GET_RASK).build()
                 .execute(new MyStringCallback(mContext, this, true));
     }
@@ -77,7 +77,7 @@ public class TaskListActivity extends MyBaseActivity implements AdapterInterface
     @Override
     protected void onResume() {
         super.onResume();
-        MyBaseApplication.getApp().setFilterLock(false);
+        MyBaseApplication.getApplication().setFilterLock(false);
     }
 
     @Override
@@ -128,14 +128,14 @@ public class TaskListActivity extends MyBaseActivity implements AdapterInterface
                         } else if (mBodyEntity.getShare_type() == 3) {//分享新浪微博
                             Platform = SHARE_MEDIA.SINA;
                         }
-                        MyBaseApplication.getApp().setFilterLock(true);
+                        MyBaseApplication.getApplication().setFilterLock(true);
                         ShareHelper.share(TaskListActivity.this, Platform, MyBaseApplication.mDownLoad_URL ,TaskListActivity.this);
                     } else if (mBodyEntity.getTask_type() == 4) {//安装
                     }
                 } else {
                     if (mBodyEntity.getRewarded() == 0) {//未领取
                         OkHttpUtils.postString().url(Common.Url_Rewarded).content("{\"task_id\":"+id+"}")
-                                .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                                .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                                 .id(Common.NET_REWARDED).tag(Common.NET_REWARDED).build()
                                 .execute(new MyStringCallback(mContext, TaskListActivity.this, true));
                     }
@@ -154,7 +154,7 @@ public class TaskListActivity extends MyBaseActivity implements AdapterInterface
     public void onResult(SHARE_MEDIA share_media) {
         showToast("分享成功");
         OkHttpUtils.postString().url(Common.Url_Finish_Task).content("{\"task_id\":"+id+"}")
-                .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                 .id(Common.NET_FINISH_TASK).tag(Common.NET_FINISH_TASK).build()
                 .execute(new MyStringCallback(mContext, TaskListActivity.this, true));
     }

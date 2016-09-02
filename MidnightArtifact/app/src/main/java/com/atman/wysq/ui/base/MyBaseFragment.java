@@ -47,7 +47,7 @@ public class MyBaseFragment extends BaseFragment {
     @Override
     public void clearData() {
         super.clearData();
-        MyBaseApplication.getApp().cleanLoginData();
+        MyBaseApplication.getApplication().cleanLoginData();
     }
 
     public void toPhone(Context mContext, String phonenumber){

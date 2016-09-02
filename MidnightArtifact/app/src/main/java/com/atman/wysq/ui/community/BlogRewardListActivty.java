@@ -60,7 +60,7 @@ public class BlogRewardListActivty extends MyBaseActivity {
     public void doInitBaseHttp() {
         super.doInitBaseHttp();
         OkHttpUtils.get().url(Common.Url_Get_Award_List + blogId).id(Common.NET_GET_AWARDLIST)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_AWARDLIST).build().execute(new MyStringCallback(mContext, this, true));
     }
 

@@ -29,6 +29,7 @@ import com.atman.wysq.ui.community.PostActivity;
 import com.atman.wysq.ui.community.PostingsDetailActivity;
 import com.atman.wysq.ui.login.LoginActivity;
 import com.atman.wysq.ui.mall.order.ConfirmationOrderActivity;
+import com.atman.wysq.ui.yunxinfriend.P2PChatActivity;
 import com.atman.wysq.utils.ScreenObserver;
 import com.base.baselibs.base.BaseAppCompatActivity;
 import com.base.baselibs.util.LogUtils;
@@ -98,8 +99,8 @@ public class MyBaseActivity extends BaseAppCompatActivity {
 
             @Override
             public void onScreenOff() {
-                if (!MyBaseApplication.getApp().isFilterLock()) {
-                    MyBaseApplication.getApp().setLock(true);
+                if (!MyBaseApplication.getApplication().isFilterLock()) {
+                    MyBaseApplication.getApplication().setLock(true);
                 }
             }
         });
@@ -290,7 +291,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
 
         if (mShouldLogin) {
             if (!isLogin()) {
-                if (MyBaseApplication.getApp().isError) {
+                if (MyBaseApplication.getApplication().isError) {
                     mAty.finish();
                 } else {
                     //需要登陆状态，跳转到登陆界面
@@ -301,7 +302,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
         }
         boolean isOpen = PreferenceUtil.getBoolPreferences(this, PreferenceUtil.PARM_ISOPEN_GESTURE);
         if (!(mAty instanceof BaseGestureLockActivity) && !(mAty instanceof SplashActivity)
-                && MyBaseApplication.getApp().isLock() && isOpen && isLogin()) {
+                && MyBaseApplication.getApplication().isLock() && isOpen && isLogin()) {
             startActivity(new Intent(this, BaseGestureLockActivity.class));
         }
     }
@@ -321,7 +322,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
     @Override
     public void clearData() {
         super.clearData();
-        MyBaseApplication.getApp().cleanLoginData();
+        MyBaseApplication.getApplication().cleanLoginData();
         Intent mIntent = new Intent();
         setResult(RESULT_OK,mIntent);
         mAty.finish();
@@ -340,7 +341,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
      * @return
      */
     public boolean isLogin() {
-        return MyBaseApplication.getApp().isLogined();
+        return MyBaseApplication.getApplication().isLogined();
     }
 
     /**
@@ -355,6 +356,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
                     && !(mAty instanceof CommentChildrenListActivity)
                     && !(mAty instanceof PostActivity)
                     && !(mAty instanceof PostingsDetailActivity)
+                    && !(mAty instanceof P2PChatActivity)
                     && isFastDoubleClick()) {
                 return true;
             }
@@ -386,8 +388,8 @@ public class MyBaseActivity extends BaseAppCompatActivity {
 
     @Override
     protected void onStop() {
-        if (!isAppOnFreground() && !MyBaseApplication.getApp().isFilterLock()) {
-            MyBaseApplication.getApp().setLock(true);
+        if (!isAppOnFreground() && !MyBaseApplication.getApplication().isFilterLock()) {
+            MyBaseApplication.getApplication().setLock(true);
         }
         super.onStop();
     }

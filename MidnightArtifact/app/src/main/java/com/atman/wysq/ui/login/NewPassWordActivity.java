@@ -125,7 +125,7 @@ public class NewPassWordActivity extends MyBaseActivity implements EditCheckBack
         switch (view.getId()) {
             case R.id.newpassword_code_bt:
                 OkHttpUtils.post().url(Common.Url_SeedCode+mPhoneNumber+"/2")
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_SMS_ID).id(Common.NET_SMS_ID).build()
                         .execute(new MyStringCallback(mContext, this, true));
                 break;
@@ -133,7 +133,7 @@ public class NewPassWordActivity extends MyBaseActivity implements EditCheckBack
                 OkHttpUtils.postString().url(Common.Url_NewPW)
                         .content(mGson.toJson(new NewPassWordRequestModel(mPhoneNumber, MD5Util.getMD5(mPassWord), mCode)))
                         .mediaType(Common.JSON).tag(Common.NET_NEWPW).id(Common.NET_NEWPW)
-                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .build().connTimeOut(Common.timeOut).readTimeOut(Common.timeOut).writeTimeOut(Common.timeOut)
                         .execute(new MyStringCallback(mContext, this, true));
                 break;

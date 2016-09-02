@@ -99,7 +99,7 @@ public class MyOrderListActivity extends MyBaseActivity implements AdapterInterf
     protected void onPostResume() {
         super.onPostResume();
         if (whatPay ==1) {
-            MyBaseApplication.getApp().setFilterLock(false);
+            MyBaseApplication.getApplication().setFilterLock(false);
         }
     }
 
@@ -119,13 +119,13 @@ public class MyOrderListActivity extends MyBaseActivity implements AdapterInterf
                 mAdapter.addBody(mGetOrderListModel.getBody());
             }
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_ALIPAY) {
-            MyBaseApplication.getApp().setFilterLock(true);
+            MyBaseApplication.getApplication().setFilterLock(true);
             AliPayResponseModel mAliPayResponseOneModel = mGson.fromJson(data, AliPayResponseModel.class);
             String parms = mAliPayResponseOneModel.getBody().getParam().replace("\\\"","\"");
             int start = parms.indexOf("&sign");
             mPayDialog.aliPay(MyOrderListActivity.this, parms.substring(0, start));
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_WEIXIN) {
-            MyBaseApplication.getApp().setFilterLock(true);
+            MyBaseApplication.getApplication().setFilterLock(true);
             WeiXinPayResponseModel WeiXinPayResponseModelm = mGson.fromJson(data, WeiXinPayResponseModel.class);
             mPayDialog.weixinPay(WeiXinPayResponseModelm);
         }
@@ -155,7 +155,7 @@ public class MyOrderListActivity extends MyBaseActivity implements AdapterInterf
 
     private void dohttp(boolean b) {
         OkHttpUtils.get().url(Common.Url_Get_OrderList+mPage).id(Common.NET_GET_ORDERLIST)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_ORDERLIST).build().execute(new MyStringCallback(mContext, this, b));
     }
 
@@ -191,7 +191,7 @@ public class MyOrderListActivity extends MyBaseActivity implements AdapterInterf
                     mPayDialog = new PayDialog(mContext, mAdapter.getItem(position).getOrder_id()+"" ,this);
                     mPayDialog.show();
                 } else {
-                    MyBaseApplication.getApp().setFilterLock(true);
+                    MyBaseApplication.getApplication().setFilterLock(true);
                     toPhone(mContext, getResources().getString(R.string.personal_service_phone_str));
                 }
                 break;
@@ -203,13 +203,13 @@ public class MyOrderListActivity extends MyBaseActivity implements AdapterInterf
         if (num==1) {
             whatPay = 0;
             OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_Alipay + orderId).content("{}")
-                    .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                    .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                     .id(Common.NET_RECHARGE_ADD_ORDER_ALIPAY).tag(Common.NET_RECHARGE_ADD_ORDER_ALIPAY)
                     .build().execute(new MyStringCallback(mContext, this, true));
         } else {
             whatPay = 1;
             OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_WeiXin).content("{\"order_id\":\""+orderId+"\"}")
-                    .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                    .mediaType(Common.JSON).addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                     .id(Common.NET_RECHARGE_ADD_ORDER_WEIXIN).tag(Common.NET_RECHARGE_ADD_ORDER_WEIXIN)
                     .build().execute(new MyStringCallback(mContext, this, true));
         }
@@ -217,6 +217,6 @@ public class MyOrderListActivity extends MyBaseActivity implements AdapterInterf
 
     @Override
     public void payResult(String str) {
-        MyBaseApplication.getApp().setFilterLock(false);
+        MyBaseApplication.getApplication().setFilterLock(false);
     }
 }

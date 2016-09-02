@@ -208,7 +208,7 @@ public class PostActivity extends MyBaseActivity implements AdapterInterface,Vie
             if (mHeadImgResultModel!=null && mHeadImgResultModel.getFiles().size()>0 ) {
                 if (!mHeadImgResultModel.getFiles().get(0).isSuccessful()) {
                     showToast("上传失败");
-                    MyBaseApplication.getApp().setFilterLock(false);
+                    MyBaseApplication.getApplication().setFilterLock(false);
                 } else {
                     HeadImgSuccessModel mHeadImgSuccessModel = mGson.fromJson(data, HeadImgSuccessModel.class);
                     LogUtils.e("inUrl:"+inUrl+",setNetUrl:"+mHeadImgSuccessModel.getFiles().get(0).getUrl());
@@ -237,7 +237,7 @@ public class PostActivity extends MyBaseActivity implements AdapterInterface,Vie
             }
             AddPostModel addPostModel = new AddPostModel(blogBoardId, str, postTitleEt.getText().toString().trim(), mAnonymity);
             mAddPostModelList.add(addPostModel);
-            OkHttpUtils.postString().url(Common.Url_Add_Post).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+            OkHttpUtils.postString().url(Common.Url_Add_Post).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .mediaType(Common.JSON).content(mGson.toJson(mAddPostModelList))
                     .id(Common.NET_ADD_POST).tag(Common.NET_ADD_POST).build().execute(new MyStringCallback(mContext, this, true));
             return;
@@ -252,7 +252,7 @@ public class PostActivity extends MyBaseActivity implements AdapterInterface,Vie
             try {
                 String path = Tools.revitionImage(imageUri.getPath());
                 OkHttpUtils.post().url(Common.Url_Reset_Head)
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .addParams("uploadType", "img")
                         .addFile("files0_name", StringUtils.getFileName(path),
                                 new File(path)).id(Common.NET_RESET_HEAD)
@@ -300,7 +300,7 @@ public class PostActivity extends MyBaseActivity implements AdapterInterface,Vie
                     showToast("最多创建10条内容");
                     return;
                 }
-                MyBaseApplication.getApp().setFilterLock(true);
+                MyBaseApplication.getApplication().setFilterLock(true);
                 isBottom = true;
                 path = UiHelper.photo(mContext, path, TAKE_BIG_PICTURE);
                 break;
@@ -350,7 +350,7 @@ public class PostActivity extends MyBaseActivity implements AdapterInterface,Vie
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                MyBaseApplication.getApp().setFilterLock(true);
+                MyBaseApplication.getApplication().setFilterLock(true);
                 isBottom = false;
                 if (which == 0) {//拍照
                     path = UiHelper.photo(mContext, path, TAKE_BIG_PICTURE);
@@ -417,7 +417,7 @@ public class PostActivity extends MyBaseActivity implements AdapterInterface,Vie
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        MyBaseApplication.getApp().setFilterLock(false);
+        MyBaseApplication.getApplication().setFilterLock(false);
         if (resultCode != Activity.RESULT_OK) {
             return;
         }

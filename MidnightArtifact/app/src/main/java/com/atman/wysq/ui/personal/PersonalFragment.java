@@ -187,7 +187,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             hitSetring();
         } else {
             OkHttpUtils.get().url(Common.Url_Get_UserIndex + "/" + PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID))
-                    .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_USERINDEX).id(Common.NET_GET_USERINDEX).build()
                     .execute(new MyStringCallback(getActivity(), this, true));
         }
@@ -209,7 +209,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         doHttp();
         LogUtils.e("onResume()");
         if (!isHead) {
-            MyBaseApplication.getApp().setFilterLock(false);
+            MyBaseApplication.getApplication().setFilterLock(false);
         }
     }
 
@@ -226,7 +226,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             MyBaseApplication.mGetUserIndexModel = mGetUserIndexModel;
             UpDateUI();
             OkHttpUtils.get().url(Common.Url_Get_Task)
-                    .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_RASK).id(Common.NET_GET_RASK).build()
                     .execute(new MyStringCallback(getActivity(), this, true));
         } else if (id == Common.NET_RESET_HEAD) {
@@ -235,13 +235,13 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
                 if (!mHeadImgResultModel.getFiles().get(0).isSuccessful()) {
                     showToast("头像修改失败");
                     isHead = false;
-                    MyBaseApplication.getApp().setFilterLock(false);
+                    MyBaseApplication.getApplication().setFilterLock(false);
                 } else {
                     HeadImgSuccessModel mHeadImgSuccessModel = mGson.fromJson(data, HeadImgSuccessModel.class);
                     mHeadImgUrl = mHeadImgSuccessModel.getFiles().get(0).getUrl();
                     OkHttpUtils.postString().url(Common.Url_Modify_Head).id(Common.NET_MODIFY_HEAD)
                             .content("{\"icon\":\""+ mHeadImgUrl +"\"}")
-                            .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_MODIFY_HEAD).build().execute(new MyStringCallback(getActivity(), this, true));
                 }
             }
@@ -251,22 +251,22 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
                 if (!mHeadImgResultModel.getFiles().get(0).isSuccessful()) {
                     showToast("照片上传失败");
                     isHead = false;
-                    MyBaseApplication.getApp().setFilterLock(false);
+                    MyBaseApplication.getApplication().setFilterLock(false);
                 } else {
                     HeadImgSuccessModel mHeadImgSuccessModel = mGson.fromJson(data, HeadImgSuccessModel.class);
                     mHeadImgUrl = mHeadImgSuccessModel.getFiles().get(0).getUrl();
                     OkHttpUtils.postString().url(Common.Url_Verify).id(Common.NET_VERIFY)
                             .content("{\"verify_pic\":\""+ mHeadImgUrl +"\"}")
-                            .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                            .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                             .tag(Common.NET_VERIFY).build().execute(new MyStringCallback(getActivity(), this, true));
                 }
             }
         } else if (id == Common.NET_MODIFY_HEAD) {
             isHead = false;
-            MyBaseApplication.getApp().setFilterLock(false);
+            MyBaseApplication.getApplication().setFilterLock(false);
             showToast("头像修改成功");
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mHeadImgUrl
-                    , personalHeadIv, MyBaseApplication.getApp().getOptions());
+                    , personalHeadIv, MyBaseApplication.getApplication().getOptions());
         } else if (id == Common.NET_VERIFY) {
             showToast("提交成功，请等待审核！");
         } else if (id == Common.NET_GET_RASK) {
@@ -287,7 +287,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     public void onError(Call call, Exception e, int code, int id) {
         super.onError(call, e, code, id);
         isHead = false;
-        MyBaseApplication.getApp().setFilterLock(false);
+        MyBaseApplication.getApplication().setFilterLock(false);
     }
 
     private void UpDateUI() {
@@ -316,7 +316,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             personalHeadVerifyImg.setVisibility(View.GONE);
         }
         ImageLoader.getInstance().displayImage(Common.ImageUrl + mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
-                , personalHeadIv, MyBaseApplication.getApp().getOptions());
+                , personalHeadIv, MyBaseApplication.getApplication().getOptions());
 
         personalVisitorNumTx.setText(""+mGetUserIndexModel.getBody().getVisitorMap().getVisitorSize());
         initVisitorIV();
@@ -334,30 +334,30 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             personalGuardianThreeRl.setVisibility(View.VISIBLE);
             personalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_one);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
-                    ,personalGuardianThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalGuardianThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==2) {
             personalGuardianOneRl.setVisibility(View.GONE);
             personalGuardianTwoRl.setVisibility(View.VISIBLE);
             personalGuardianThreeRl.setVisibility(View.VISIBLE);
             personalGuardianTopTwoIv.setImageResource(R.mipmap.other_guard_one);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
-                    ,personalGuardianTwoIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalGuardianTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             personalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_two);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(1).getIcon()
-                    ,personalGuardianThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalGuardianThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num>=3) {
             personalGuardianOneRl.setVisibility(View.VISIBLE);
             personalGuardianTwoRl.setVisibility(View.VISIBLE);
             personalGuardianThreeRl.setVisibility(View.VISIBLE);
             personalGuardianTopOneIv.setImageResource(R.mipmap.other_guard_one);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
-                    ,personalGuardianOneIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalGuardianOneIv,MyBaseApplication.getApplication().getOptionsNot());
             personalGuardianTopTwoIv.setImageResource(R.mipmap.other_guard_two);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(1).getIcon()
-                    ,personalGuardianTwoIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalGuardianTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             personalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_three);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(2).getIcon()
-                    ,personalGuardianThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalGuardianThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         }
     }
 
@@ -368,25 +368,25 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             personalVisitorTwoIv.setVisibility(View.GONE);
             personalVisitorThreeIv.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
-                    ,personalVisitorThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==2) {
             personalVisitorOneIv.setVisibility(View.GONE);
             personalVisitorTwoIv.setVisibility(View.VISIBLE);
             personalVisitorThreeIv.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
-                    ,personalVisitorTwoIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalVisitorTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(1).getIcon()
-                    ,personalVisitorThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num>=3) {
             personalVisitorOneIv.setVisibility(View.VISIBLE);
             personalVisitorTwoIv.setVisibility(View.VISIBLE);
             personalVisitorThreeIv.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
-                    ,personalVisitorOneIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalVisitorOneIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(1).getIcon()
-                    ,personalVisitorTwoIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalVisitorTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(2).getIcon()
-                    ,personalVisitorThreeIv,MyBaseApplication.getApp().getOptionsNot());
+                    ,personalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         }
     }
 
@@ -422,7 +422,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
                 }
                 break;
             case R.id.personal_gendercertification_tv:
-                MyBaseApplication.getApp().setFilterLock(true);
+                MyBaseApplication.getApplication().setFilterLock(true);
                 path = UiHelper.photoBefor(getActivity(), path, PICK_FROM_CAMERA);
                 break;
             case R.id.personal_setting_iv:
@@ -490,7 +490,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                MyBaseApplication.getApp().setFilterLock(true);
+                MyBaseApplication.getApplication().setFilterLock(true);
                 toPhone(getActivity(), str);
             }
         });
@@ -521,7 +521,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
                     getAlbum.setType("image/*");
                     startActivityForResult(getAlbum, CHOOSE_BIG_PICTURE);
                 }
-                MyBaseApplication.getApp().setFilterLock(true);
+                MyBaseApplication.getApplication().setFilterLock(true);
             }
         });
         builder.setNeutralButton("取消", new DialogInterface.OnClickListener() {
@@ -537,7 +537,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        MyBaseApplication.getApp().setFilterLock(false);
+//        MyBaseApplication.getApplication().setFilterLock(false);
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
@@ -558,7 +558,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         } else if (requestCode == CROP_BIG_PICTURE) {
             if (imageUri != null) {
                 OkHttpUtils.post().url(Common.Url_Reset_Head)
-                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .addParams("uploadType", "img")
                         .addFile("files0_name", StringUtils.getFileName(imageUri.getPath()),
                                 new File(imageUri.getPath())).id(Common.NET_RESET_HEAD)
@@ -569,7 +569,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             LogUtils.e("imageUri:"+imageUri);
             if (imageUri != null) {
                 OkHttpUtils.post().url(Common.Url_Reset_Head)
-                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .addParams("uploadType", "img")
                         .addFile("files0_name", StringUtils.getFileName(imageUri.getPath()),
                                 new File(imageUri.getPath())).id(Common.NET_RESET_HEAD_TWO)
@@ -584,7 +584,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             return;
         }
         isHead = true;
-        MyBaseApplication.getApp().setFilterLock(true);
+        MyBaseApplication.getApplication().setFilterLock(true);
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
         intent.putExtra("crop", "true");

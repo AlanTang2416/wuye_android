@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/item_p2pchat_text_time_tx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dimen_dp_5"
+        android:layout_marginBottom="@dimen/dimen_dp_5"
+        android:textSize="@dimen/dimen_sp_10"
+        android:textColor="#a8a8a8"
+        android:text="2016-2-3 11:11"/>
+
+    <com.base.baselibs.widget.CustomImageView
+        android:id="@+id/item_p2pchat_text_headleft_iv"
+        android:layout_below="@+id/item_p2pchat_text_time_tx"
+        android:layout_marginLeft="@dimen/dimen_dp_10"
+        android:layout_alignParentLeft="true"
+        android:layout_width="@dimen/dimen_dp_40"
+        android:layout_height="@dimen/dimen_dp_40"
+        android:src="@mipmap/ic_launcher"/>
+
+    <com.base.baselibs.widget.CustomImageView
+        android:id="@+id/item_p2pchat_text_headright_iv"
+        android:layout_below="@+id/item_p2pchat_text_time_tx"
+        android:layout_marginRight="@dimen/dimen_dp_10"
+        android:layout_alignParentRight="true"
+        android:layout_width="@dimen/dimen_dp_40"
+        android:layout_height="@dimen/dimen_dp_40"
+        android:src="@mipmap/ic_launcher"/>
+
+    <RelativeLayout
+        android:layout_below="@+id/item_p2pchat_text_time_tx"
+        android:layout_toRightOf="@+id/item_p2pchat_text_headleft_iv"
+        android:layout_toLeftOf="@+id/item_p2pchat_text_headright_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent" >
+            <TextView
+                android:id="@+id/item_p2pchat_text_left_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sadcasc"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/item_p2pchat_right_progress"
+                android:layout_width="20dip"
+                android:layout_height="20dip"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/nim_progress_small_white"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/item_p2pchat_right_alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:src="@mipmap/nim_ic_failed"
+                android:visibility="gone" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent" >
+                <TextView
+                    android:id="@+id/item_p2pchat_text_right_tx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="sadcasc"/>
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

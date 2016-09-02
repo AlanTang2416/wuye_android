@@ -148,7 +148,7 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
 
     private void dohttp(boolean b) {
         OkHttpUtils.get().url(Common.Url_Get_Browse + id + "/" + mPage).id(Common.NET_GET_BROWSE)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_BROWSE).build().execute(new MyStringCallback(mContext, this, b));
     }
 

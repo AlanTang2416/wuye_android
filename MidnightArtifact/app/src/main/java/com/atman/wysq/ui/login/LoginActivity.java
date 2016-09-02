@@ -130,7 +130,7 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
             OkHttpUtils.postString()
                     .url(Common.Url_Login).tag(LoginActivity.this).id(Common.NET_LOGIN_ID)
                     .content(mGson.toJson(mLoginRequestModel))
-                    .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                    .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                     .build().connTimeOut(Common.timeOut).readTimeOut(Common.timeOut).writeTimeOut(Common.timeOut)
                     .execute(new MyStringCallback(mContext, this, true));
         }
@@ -143,7 +143,7 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
             mLoginResultModel = mGson.fromJson(data, LoginResultModel.class);
 
             OkHttpUtils.get().url(Common.Url_Get_ChatToken)
-                    .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_CHATTOKEN).id(Common.NET_GET_CHATTOKEN).build()
                     .execute(new MyStringCallback(mContext, this, true));
         } else if (id == Common.NET_GET_USERINDEX) {
@@ -161,13 +161,13 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
 
 //            PreferenceUtil.savePreference(mContext,PreferenceUtil.PARM_PW,MD5Util.getMD5(passWord));
 //            PreferenceUtil.savePreference(mContext,PreferenceUtil.PARM_USERID,mLoginResultModel.getBody()+"");
-//            MyBaseApplication.getApp().setLock(false);
+//            MyBaseApplication.getApplication().setLock(false);
 //            if (PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_GESTURE_PW).isEmpty()
 //                    && PreferenceUtil.getBoolPreferences(LoginActivity.this, PreferenceUtil.PARM_ISOPEN_GESTURE)) {
 //                startActivityForResult(new Intent(mContext, CreateGestrureLockActivity.class), Common.toLoginCreateGesrure);
 //            } else {
 //                OkHttpUtils.get().url(Common.Url_GetUserInfo+ mLoginResultModel.getBody())
-//                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+//                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
 //                        .tag(Common.NET_GETUSERINFO).id(Common.NET_GETUSERINFO).build()
 //                        .execute(new MyStringCallback(mContext, LoginActivity.this, true));
 //            }
@@ -178,17 +178,17 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                 @Override
                 public void onSuccess(LoginInfo param) {
                     cancelLoading();
-                    MyBaseApplication.getApp().setAuthServiceObserver();
+                    MyBaseApplication.getApplication().setAuthServiceObserver();
 
                     PreferenceUtil.savePreference(mContext,PreferenceUtil.PARM_PW,MD5Util.getMD5(passWord));
                     PreferenceUtil.savePreference(mContext,PreferenceUtil.PARM_USERID,mLoginResultModel.getBody()+"");
-                    MyBaseApplication.getApp().setLock(false);
+                    MyBaseApplication.getApplication().setLock(false);
                     if (PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_GESTURE_PW).isEmpty()
                             && PreferenceUtil.getBoolPreferences(LoginActivity.this, PreferenceUtil.PARM_ISOPEN_GESTURE)) {
                         startActivityForResult(new Intent(mContext, CreateGestrureLockActivity.class), Common.toLoginCreateGesrure);
                     } else {
                         OkHttpUtils.get().url(Common.Url_Get_UserIndex +"/"+ mLoginResultModel.getBody())
-                                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                                 .tag(Common.NET_GET_USERINDEX).id(Common.NET_GET_USERINDEX).build()
                                 .execute(new MyStringCallback(mContext, LoginActivity.this, true));
                     }
@@ -202,7 +202,7 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                     } else {
                         showToast("登录失败" + code);
                     }
-                    MyBaseApplication.getApp().cleanLoginData();
+                    MyBaseApplication.getApplication().cleanLoginData();
                     EventBus.getDefault().post(new YunXinAuthOutEvent());
                 }
 
@@ -239,7 +239,7 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                 OkHttpUtils.postString()
                         .url(Common.Url_Login).tag(LoginActivity.this).id(Common.NET_LOGIN_ID)
                         .content(mGson.toJson(mLoginRequestModel))
-                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .build().connTimeOut(Common.timeOut).readTimeOut(Common.timeOut).writeTimeOut(Common.timeOut)
                         .execute(new MyStringCallback(mContext, this, true));
                 break;

@@ -129,7 +129,7 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
         super.doInitBaseHttp();
 
         OkHttpUtils.get().url(Common.Url_Get_OrderDetail + orderId).id(Common.NET_GET_ORDERDETAIL)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_ORDERDETAIL).build().execute(new MyStringCallback(mContext, this, true));
     }
 
@@ -142,7 +142,7 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
     protected void onPostResume() {
         super.onPostResume();
         if (whatPay == 1) {
-            MyBaseApplication.getApp().setFilterLock(false);
+            MyBaseApplication.getApplication().setFilterLock(false);
         }
     }
 
@@ -152,20 +152,20 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
         if (id == Common.NET_GET_ORDERDETAIL) {
             mGetOrderDetailModel = mGson.fromJson(data, GetOrderDetailModel.class);
             OkHttpUtils.get().url(Common.Url_Get_Address_ByOrderId + orderId)
-                    .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_ADDRESS_LIST).id(Common.NET_GET_ADDRESS_LIST).build()
                     .execute(new MyStringCallback(mContext, this, false));
         } else if (id == Common.NET_GET_ADDRESS_LIST) {
             mGetAddressByOrderIdModel = mGson.fromJson(data, GetAddressByOrderIdModel.class);
             updateUI();
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_ALIPAY) {
-            MyBaseApplication.getApp().setFilterLock(true);
+            MyBaseApplication.getApplication().setFilterLock(true);
             AliPayResponseModel mAliPayResponseOneModel = mGson.fromJson(data, AliPayResponseModel.class);
             String parms = mAliPayResponseOneModel.getBody().getParam().replace("\\\"", "\"");
             int start = parms.indexOf("&sign");
             mPayDialog.aliPay(OrderDetailActivity.this, parms.substring(0, start));
         } else if (id == Common.NET_RECHARGE_ADD_ORDER_WEIXIN) {
-            MyBaseApplication.getApp().setFilterLock(true);
+            MyBaseApplication.getApplication().setFilterLock(true);
             WeiXinPayResponseModel WeiXinPayResponseModelm = mGson.fromJson(data, WeiXinPayResponseModel.class);
             mPayDialog.weixinPay(WeiXinPayResponseModelm);
         } else if(id == Common.NET_GET_LOGISTICS) {
@@ -224,7 +224,7 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
             orderDetailPhoneTx.setText(mGetAddressByOrderIdModel.getBody().getReceiver_phone());
             orderDetailAddressTx.setText(mGetAddressByOrderIdModel.getBody().getReceiver_area_name()
                     + mGetAddressByOrderIdModel.getBody().getReceiver_address());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl + pic, orderDetailHeadIv, MyBaseApplication.getApp().getOptionsNot());
+            ImageLoader.getInstance().displayImage(Common.ImageUrl + pic, orderDetailHeadIv, MyBaseApplication.getApplication().getOptionsNot());
         } else {
             twoLl.setVisibility(View.GONE);
             orderDetailHeadIv.setImageResource(R.mipmap.jinbin);
@@ -254,7 +254,7 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
         switch (v.getId()) {
             case R.id.four_rl:
                 OkHttpUtils.get().url(Common.Url_Get_Logistics + orderId)
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_GET_LOGISTICS).id(Common.NET_GET_LOGISTICS).build()
                         .execute(new MyStringCallback(mContext, this, true));
                 break;
@@ -263,7 +263,7 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
                     mPayDialog = new PayDialog(mContext, orderId + "", this);
                     mPayDialog.show();
                 } else {
-                    MyBaseApplication.getApp().setFilterLock(true);
+                    MyBaseApplication.getApplication().setFilterLock(true);
                     toPhone(mContext, getResources().getString(R.string.personal_service_phone_str));
                 }
                 break;
@@ -280,13 +280,13 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
         if (num == 1) {
             whatPay = 0;
             OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_Alipay + orderId).content("{}")
-                    .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .id(Common.NET_RECHARGE_ADD_ORDER_ALIPAY).tag(Common.NET_RECHARGE_ADD_ORDER_ALIPAY)
                     .build().execute(new MyStringCallback(mContext, this, true));
         } else {
             whatPay = 1;
             OkHttpUtils.postString().url(Common.Url_Recharge_Add_Order_WeiXin).content("{\"order_id\":\"" + orderId + "\"}")
-                    .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                    .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .id(Common.NET_RECHARGE_ADD_ORDER_WEIXIN).tag(Common.NET_RECHARGE_ADD_ORDER_WEIXIN)
                     .build().execute(new MyStringCallback(mContext, this, true));
         }
@@ -294,7 +294,7 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
 
     @Override
     public void payResult(String str) {
-        MyBaseApplication.getApp().setFilterLock(false);
+        MyBaseApplication.getApplication().setFilterLock(false);
     }
 
 }

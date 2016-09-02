@@ -143,14 +143,14 @@ public class GoodsDetailActivity extends MyBaseActivity implements ScrollViewLis
     public void doInitBaseHttp() {
         super.doInitBaseHttp();
         OkHttpUtils.get().url(Common.Url_Get_Category_Detail + goodsId)
-                .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_CATEGORY_DETAIL).id(Common.NET_GET_CATEGORY_DETAIL).build()
                 .execute(new MyStringCallback(mContext, this, true));
     }
 
     private void dohttp(boolean b) {
         OkHttpUtils.get().url(Common.Url_Get_Goods_comment + goodsId + "/" + page)
-                .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_GOODS_COMMENT).id(Common.NET_GET_GOODS_COMMENT).build()
                 .execute(new MyStringCallback(mContext, this, b));
     }
@@ -205,7 +205,7 @@ public class GoodsDetailActivity extends MyBaseActivity implements ScrollViewLis
 
     private void updateUI() {
         ImageLoader.getInstance().displayImage(Common.ImageUrl + mGoodsDetailsResponseModel.getBody().getPic_img()
-                , partGoodsdetailTopBgIv, MyBaseApplication.getApp().getOptionsNot());
+                , partGoodsdetailTopBgIv, MyBaseApplication.getApplication().getOptionsNot());
         partGoodsdetailTopBfToolEmptyTx.setVisibility(View.GONE);
         partGoodsdetailTopBfToolIv.setVisibility(View.GONE);
 //        if (mGoodsDetailsResponseModel.getBody().getIcon() == null) {
@@ -215,7 +215,7 @@ public class GoodsDetailActivity extends MyBaseActivity implements ScrollViewLis
 //            partGoodsdetailTopBfToolEmptyTx.setVisibility(View.GONE);
 //            partGoodsdetailTopBfToolIv.setVisibility(View.VISIBLE);
 //            ImageLoader.getInstance().displayImage(Common.ImageUrl + mGoodsDetailsResponseModel.getBody().getIcon()
-//                    , partGoodsdetailTopBfToolIv, MyBaseApplication.getApp().getOptionsNot());
+//                    , partGoodsdetailTopBfToolIv, MyBaseApplication.getApplication().getOptionsNot());
 //        }
 //        if (mGoodsDetailsResponseModel.getBody().getPostage() > 0) {
             partGoodsdetailTopBfFreeTx.setVisibility(View.VISIBLE);
@@ -412,7 +412,7 @@ public class GoodsDetailActivity extends MyBaseActivity implements ScrollViewLis
                     return;
                 }
                 OkHttpUtils.postString().url(Common.Url_Add_Like+"2/"+mAdapter.getItem(position).getGoods_comment_id())
-                        .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .content("{}").mediaType(Common.JSON).id(Common.NET_ADD_LIKE).tag(Common.NET_ADD_LIKE)
                         .build().execute(new MyStringCallback(mContext, GoodsDetailActivity.this,true));
                 break;

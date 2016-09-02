@@ -69,7 +69,7 @@ public class CommunityBlogBoardAdapter extends BaseAdapter {
             convertView.setTag(holder);
 
             mImageLoader.displayImage(Common.ImageUrl + "/" + mBodyEntity.getPic_url(),
-                    holder.itemCommunityBlogboardImg, MyBaseApplication.getApp().getOptions());
+                    holder.itemCommunityBlogboardImg, MyBaseApplication.getApplication().getOptions());
         } else {
             holder = (ViewHolder) convertView.getTag();
         }

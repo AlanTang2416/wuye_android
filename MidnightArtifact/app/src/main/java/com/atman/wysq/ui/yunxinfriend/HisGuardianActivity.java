@@ -147,7 +147,7 @@ public class HisGuardianActivity extends MyBaseActivity implements AdapterInterf
 
     private void dohttp(boolean b) {
         OkHttpUtils.get().url(Common.Url_Get_Guard + id + "/" + mPage).id(Common.NET_GET_GUARD)
-                .addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_GUARD).build().execute(new MyStringCallback(mContext, this, b));
     }
 

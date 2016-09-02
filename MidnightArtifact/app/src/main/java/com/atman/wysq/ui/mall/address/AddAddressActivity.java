@@ -153,7 +153,7 @@ public class AddAddressActivity extends MyBaseActivity implements SelectItemPopw
                 }
 
                 OkHttpUtils.postString().url(Common.Url_Add_Address).content(parmStr)
-                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApp().getCookie())
+                        .mediaType(Common.JSON).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .id(Common.NET_ADD_ADDRESS).tag(Common.NET_ADD_ADDRESS).build()
                         .execute(new MyStringCallback(mContext, AddAddressActivity.this, true));
             }
@@ -252,7 +252,7 @@ public class AddAddressActivity extends MyBaseActivity implements SelectItemPopw
         switch (view.getId()) {
             case R.id.addaddress_province_et:
                 OkHttpUtils.get().url(Common.Url_Get_Province)
-                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_GET_PROVINCE).id(Common.NET_GET_PROVINCE).build()
                         .execute(new MyStringCallback(mContext, this, true));
                 break;
@@ -262,7 +262,7 @@ public class AddAddressActivity extends MyBaseActivity implements SelectItemPopw
                     return;
                 }
                 OkHttpUtils.get().url(Common.Url_Get_City+mCityTempId)
-                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_GET_CITY).id(Common.NET_GET_CITY).build()
                         .execute(new MyStringCallback(mContext, this, true));
                 break;
@@ -272,7 +272,7 @@ public class AddAddressActivity extends MyBaseActivity implements SelectItemPopw
                     return;
                 }
                 OkHttpUtils.get().url(Common.Url_Get_District+mCountyTempId)
-                        .addHeader("cookie",MyBaseApplication.getApp().getCookie())
+                        .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_GET_DISTRICT).id(Common.NET_GET_DISTRICT).build()
                         .execute(new MyStringCallback(mContext, this, true));
                 break;
