@@ -8,52 +8,61 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimen_dp_5"
         android:layout_marginBottom="@dimen/dimen_dp_5"
-        android:textSize="@dimen/dimen_sp_10"
+        android:layout_marginTop="@dimen/dimen_dp_5"
+        android:text="2016-2-3 11:11"
         android:textColor="#a8a8a8"
-        android:text="2016-2-3 11:11"/>
+        android:textSize="@dimen/dimen_sp_10" />
 
     <com.base.baselibs.widget.CustomImageView
         android:id="@+id/item_p2pchat_text_headleft_iv"
-        android:layout_below="@+id/item_p2pchat_text_time_tx"
-        android:layout_marginLeft="@dimen/dimen_dp_10"
-        android:layout_alignParentLeft="true"
         android:layout_width="@dimen/dimen_dp_40"
         android:layout_height="@dimen/dimen_dp_40"
-        android:src="@mipmap/ic_launcher"/>
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/item_p2pchat_text_time_tx"
+        android:layout_marginLeft="@dimen/dimen_dp_10"
+        android:src="@mipmap/ic_launcher"
+        android:visibility="gone" />
 
     <com.base.baselibs.widget.CustomImageView
         android:id="@+id/item_p2pchat_text_headright_iv"
-        android:layout_below="@+id/item_p2pchat_text_time_tx"
-        android:layout_marginRight="@dimen/dimen_dp_10"
-        android:layout_alignParentRight="true"
         android:layout_width="@dimen/dimen_dp_40"
         android:layout_height="@dimen/dimen_dp_40"
-        android:src="@mipmap/ic_launcher"/>
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/item_p2pchat_text_time_tx"
+        android:layout_marginRight="@dimen/dimen_dp_10"
+        android:src="@mipmap/ic_launcher"
+        android:visibility="gone" />
 
     <RelativeLayout
-        android:layout_below="@+id/item_p2pchat_text_time_tx"
-        android:layout_toRightOf="@+id/item_p2pchat_text_headleft_iv"
-        android:layout_toLeftOf="@+id/item_p2pchat_text_headright_iv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/item_p2pchat_text_time_tx"
+        android:layout_toLeftOf="@+id/item_p2pchat_text_headright_iv"
+        android:layout_toRightOf="@+id/item_p2pchat_text_headleft_iv">
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@android:color/transparent" >
+            android:background="@android:color/transparent">
+
             <TextView
                 android:id="@+id/item_p2pchat_text_left_tx"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="sadcasc"/>
+                android:background="@drawable/item_message_left_bg"
+                android:maxWidth="@dimen/dimen_dp_250"
+                android:text="sadcasc"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/dimen_sp_15"
+                android:visibility="gone" />
         </FrameLayout>
 
         <LinearLayout
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:background="@android:color/transparent"
             android:gravity="bottom"
             android:orientation="horizontal">
@@ -83,12 +92,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/transparent" >
+                android:background="@android:color/transparent">
+
                 <TextView
                     android:id="@+id/item_p2pchat_text_right_tx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="sadcasc"/>
+                    android:background="@drawable/item_message_right_bg"
+                    android:maxWidth="@dimen/dimen_dp_250"
+                    android:text="sadcasc"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/dimen_sp_15"
+                    android:visibility="gone" />
             </FrameLayout>
 
         </LinearLayout>

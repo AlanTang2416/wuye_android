@@ -404,6 +404,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 IMMessage message = MessageBuilder.createTextMessage(id, SessionTypeEnum.P2P
                         , blogdetailAddcommentEt.getText().toString());
                 seedMessage(message, ContentTypeInter.contentTypeText, "", "");
+                blogdetailAddcommentEt.setText("");
                 break;
             case R.id.p2pchat_add_picture_tv:
                 Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);

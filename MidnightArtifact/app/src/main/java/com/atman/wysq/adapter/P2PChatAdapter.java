@@ -113,10 +113,14 @@ public class P2PChatAdapter extends BaseAdapter {
                 if (temp.getIsSelfSend()) {
                     holderText.itemP2pchatTextLeftTx.setVisibility(View.GONE);
                     holderText.itemP2pchatTextRightTx.setVisibility(View.VISIBLE);
+                    holderText.itemP2pchatTextHeadrightIv.setVisibility(View.VISIBLE);
+                    holderText.itemP2pchatTextHeadleftIv.setVisibility(View.GONE);
                     holderText.itemP2pchatTextRightTx.setText(temp.getContent());
                 } else {
                     holderText.itemP2pchatTextLeftTx.setVisibility(View.VISIBLE);
                     holderText.itemP2pchatTextRightTx.setVisibility(View.GONE);
+                    holderText.itemP2pchatTextHeadrightIv.setVisibility(View.GONE);
+                    holderText.itemP2pchatTextHeadleftIv.setVisibility(View.VISIBLE);
                     holderText.itemP2pchatTextLeftTx.setText(temp.getContent());
                 }
                 break;
