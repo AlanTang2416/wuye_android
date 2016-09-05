@@ -2,6 +2,7 @@ package com.atman.wysq.ui.yunxinfriend;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import android.widget.TextView;
 import com.atman.wysq.R;
 import com.atman.wysq.adapter.P2PChatAdapter;
 import com.atman.wysq.model.bean.ImMessage;
+import com.atman.wysq.model.bean.ImSession;
 import com.atman.wysq.model.greendao.gen.ImMessageDao;
+import com.atman.wysq.model.greendao.gen.ImSessionDao;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.utils.UiHelper;
@@ -32,6 +35,7 @@ import com.base.baselibs.iimp.EditCheckBack;
 import com.base.baselibs.iimp.MyTextWatcherTwo;
 import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.MyCleanEditText;
+import com.base.baselibs.widget.PromptDialog;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.netease.nimlib.sdk.NIMClient;
@@ -42,6 +46,7 @@ import com.netease.nimlib.sdk.media.record.RecordType;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
@@ -104,6 +109,9 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     private Context mContext = P2PChatActivity.this;
     private String id;
     private String nick;
+    private String sex;
+    private String icon;
+    private int verify_status;
 
     private final int CHOOSE_BIG_PICTURE = 444;
     private final int TAKE_BIG_PICTURE = 555;
@@ -114,8 +122,12 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     private boolean started = false;
     private boolean cancelled = false;
 
+    private ImSessionDao mImSessionDao;
+    private ImSession mImSession;
     private ImMessageDao mImMessageDao;
     private List<ImMessage> mImMessage;
+    private List<ImMessage> mImMessageDelete;
+    private ImMessage mImMessageUpdata;
     private P2PChatAdapter mAdapter;
 
     @Override
@@ -126,10 +138,14 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
-    public static Intent buildIntent(Context context, String id, String nick) {
+    public static Intent buildIntent(Context context, String id, String nick, String sex
+            , String icon, int verify_status) {
         Intent intent = new Intent(context, P2PChatActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("nick", nick);
+        intent.putExtra("sex", sex);
+        intent.putExtra("icon", icon);
+        intent.putExtra("verify_status", verify_status);
         return intent;
     }
 
@@ -138,12 +154,34 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         super.initWidget(v);
         id = getIntent().getStringExtra("id");
         nick = getIntent().getStringExtra("nick");
+        sex = getIntent().getStringExtra("sex");
+        icon = getIntent().getStringExtra("icon");
+        verify_status = getIntent().getIntExtra("verify_status", 0);
 
         setBarTitleTx(nick);
         setBarRightTx("清空").setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("清空");
+                PromptDialog.Builder builder = new PromptDialog.Builder(mContext);
+                builder.setMessage("您确定要清空与该好友的聊天记录吗？");
+                builder.setPositiveButton("清空", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        mImMessageDelete = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(id)).build().list();
+                        for (ImMessage imMessageDelete : mImMessageDelete) {
+                            mImMessageDao.delete(imMessageDelete);
+                        }
+                        mAdapter.clearData();
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -174,8 +212,10 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         initListView();
 
         mImMessageDao = MyBaseApplication.getApplication().getDaoSession().getImMessageDao();
-        mImMessage = mImMessageDao.queryBuilder().build().list();
+        mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
+        mImMessage = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(id)).build().list();
         mAdapter.addImMessageDao(mImMessage);
+        p2pChatLv.getRefreshableView().setSelection(mAdapter.getCount()-1);
     }
 
     private void initListView() {
@@ -297,10 +337,20 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         @Override
         public void onEvent(List<IMMessage> messages) {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
-            if (messages.size() > 0) {
-                showToast("收到消息：" + "contentType"+messages.get(0).getRemoteExtension().get("contentType")
-                        +",content:"+messages.get(0).getContent());
+            for (int i=0;i<messages.size();i++) {
+                ImMessage temp = new ImMessage(messages.get(i).getUuid()
+                        , messages.get(i).getSessionId()
+                        , messages.get(i).getFromAccount()
+                        , messages.get(i).getRemoteExtension().get("nickName").toString()
+                        , messages.get(i).getRemoteExtension().get("icon").toString()
+                        , messages.get(i).getRemoteExtension().get("sex").toString()
+                        , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                        , false, System.currentTimeMillis()
+                        , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                        , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
+                mAdapter.addImMessageDao(temp);
             }
+            p2pChatLv.getRefreshableView().setSelection(mAdapter.getCount()-1);
         }
     };
 
@@ -313,8 +363,15 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(new Observer<IMMessage>() {
             @Override
             public void onEvent(IMMessage imMessage) {
-                LogUtils.e("imMessage.getAttachStatus():" + imMessage.getAttachStatus()
-                        + ",imMessage.getStatus():" + imMessage.getStatus());
+                mImMessageUpdata = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.Uuid.eq(imMessage.getUuid())).build().unique();
+                if (imMessage.getStatus()==MsgStatusEnum.success) {
+                    mImMessageUpdata.setIsSeedSuccess(1);
+                    mAdapter.setImMessageStatus(imMessage.getUuid(), 1);
+                } else {
+                    mImMessageUpdata.setIsSeedSuccess(2);
+                    mAdapter.setImMessageStatus(imMessage.getUuid(), 2);
+                }
+                mImMessageDao.update(mImMessageUpdata);
             }
         }, b);
     }
@@ -436,14 +493,28 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         message.setRemoteExtension(map);
         NIMClient.getService(MsgService.class).sendMessage(message, true);
 
-        ImMessage temp = new ImMessage(id, String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+        ImMessage temp = new ImMessage(message.getUuid(), id
+                , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
                 , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
                 , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
                 , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
                 , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
-                , true, System.currentTimeMillis(), contentType, message.getContent(), "", "", "", "", "", "", "", "", 0, 0, false);
+                , true, System.currentTimeMillis(), contentType, message.getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 0);
         mAdapter.addImMessageDao(temp);
         mImMessageDao.insert(temp);
+        p2pChatLv.getRefreshableView().setSelection(mAdapter.getCount()-1);
+
+        mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(id)).build().unique();
+        if (mImSession==null) {
+            ImSession mImSessionTemp = new ImSession(id, message.getContent(), nick, icon, sex, verify_status
+                    , System.currentTimeMillis(), 0);
+            mImSessionDao.insert(mImSessionTemp);
+        } else {
+            mImSession.setContent(message.getContent());
+            mImSession.setTime(System.currentTimeMillis());
+            mImSession.setUnreadNum(0);
+            mImSessionDao.update(mImSession);
+        }
     }
 
 

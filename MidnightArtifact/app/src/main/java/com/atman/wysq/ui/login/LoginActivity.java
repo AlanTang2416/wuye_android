@@ -179,6 +179,7 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                 public void onSuccess(LoginInfo param) {
                     cancelLoading();
                     MyBaseApplication.getApplication().setAuthServiceObserver();
+                    MyBaseApplication.getApplication().ReceiveMessageObserver(true);
 
                     PreferenceUtil.savePreference(mContext,PreferenceUtil.PARM_PW,MD5Util.getMD5(passWord));
                     PreferenceUtil.savePreference(mContext,PreferenceUtil.PARM_USERID,mLoginResultModel.getBody()+"");

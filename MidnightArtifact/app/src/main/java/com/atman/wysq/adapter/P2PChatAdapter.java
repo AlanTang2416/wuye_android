@@ -11,8 +11,14 @@ import android.widget.TextView;
 
 import com.atman.wysq.R;
 import com.atman.wysq.model.bean.ImMessage;
+import com.atman.wysq.ui.base.MyBaseApplication;
+import com.atman.wysq.utils.Common;
+import com.atman.wysq.utils.MyTools;
+import com.atman.wysq.widget.face.SmileUtils;
 import com.atman.wysq.yunxin.model.ContentTypeInter;
+import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.CustomImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +40,8 @@ public class P2PChatAdapter extends BaseAdapter {
     private Context context;
     protected LayoutInflater layoutInflater;
     private viewHolderText holderText = null;
+    private long time = 0;
+    private boolean isShowTime = false;
 
     public P2PChatAdapter(Context context) {
         this.context = context;
@@ -41,8 +49,22 @@ public class P2PChatAdapter extends BaseAdapter {
         layoutInflater = LayoutInflater.from(context);
     }
 
+    public void clearData(){
+        this.mImMessage.clear();
+        notifyDataSetChanged();
+    }
+
     public void addImMessageDao(List<ImMessage> mImMessageDao) {
         this.mImMessage.addAll(mImMessageDao);
+        notifyDataSetChanged();
+    }
+
+    public void setImMessageStatus(String id, int status) {
+        for (int i=0;i<mImMessage.size();i++) {
+            if (mImMessage.get(i).getUuid().equals(id)) {
+                mImMessage.get(i).setIsSeedSuccess(status);
+            }
+        }
         notifyDataSetChanged();
     }
 
@@ -108,6 +130,13 @@ public class P2PChatAdapter extends BaseAdapter {
 
         ImMessage temp = mImMessage.get(position);
 
+        if (position==0 || (MyTools.getGapCountM(time, temp.getTime())>=5)) {
+            time = temp.getTime();
+            isShowTime = true;
+        } else {
+            isShowTime = false;
+        }
+
         switch (type) {
             case ContentTypeInter.contentTypeText:
                 if (temp.getIsSelfSend()) {
@@ -115,13 +144,35 @@ public class P2PChatAdapter extends BaseAdapter {
                     holderText.itemP2pchatTextRightTx.setVisibility(View.VISIBLE);
                     holderText.itemP2pchatTextHeadrightIv.setVisibility(View.VISIBLE);
                     holderText.itemP2pchatTextHeadleftIv.setVisibility(View.GONE);
-                    holderText.itemP2pchatTextRightTx.setText(temp.getContent());
+                    holderText.itemP2pchatTextRightTx.setText(SmileUtils.getEmotionContent(context
+                            , holderText.itemP2pchatTextRightTx, temp.getContent()));
+                    ImageLoader.getInstance().displayImage(Common.ImageUrl+temp.getIcon()
+                            , holderText.itemP2pchatTextHeadrightIv, MyBaseApplication.getApplication().getOptionsNot());
                 } else {
                     holderText.itemP2pchatTextLeftTx.setVisibility(View.VISIBLE);
                     holderText.itemP2pchatTextRightTx.setVisibility(View.GONE);
                     holderText.itemP2pchatTextHeadrightIv.setVisibility(View.GONE);
                     holderText.itemP2pchatTextHeadleftIv.setVisibility(View.VISIBLE);
-                    holderText.itemP2pchatTextLeftTx.setText(temp.getContent());
+                    holderText.itemP2pchatTextLeftTx.setText(SmileUtils.getEmotionContent(context
+                            , holderText.itemP2pchatTextRightTx, temp.getContent()));
+                    ImageLoader.getInstance().displayImage(Common.ImageUrl+temp.getIcon()
+                            , holderText.itemP2pchatTextHeadleftIv, MyBaseApplication.getApplication().getOptionsNot());
+                }
+                if (isShowTime) {
+                    holderText.itemP2pchatTextTimeTx.setVisibility(View.VISIBLE);
+                    holderText.itemP2pchatTextTimeTx.setText(MyTools.convertTimeS(temp.getTime()));
+                } else {
+                    holderText.itemP2pchatTextTimeTx.setVisibility(View.INVISIBLE);
+                }
+                if (temp.getIsSeedSuccess()==0) {
+                    holderText.itemP2pchatRightProgress.setVisibility(View.VISIBLE);
+                } else {
+                    holderText.itemP2pchatRightProgress.setVisibility(View.GONE);
+                    if (temp.getIsSeedSuccess()==2) {
+                        holderText.itemP2pchatRightAlert.setVisibility(View.VISIBLE);
+                    } else {
+                        holderText.itemP2pchatRightAlert.setVisibility(View.GONE);
+                    }
                 }
                 break;
             case ContentTypeInter.contentTypeImage:

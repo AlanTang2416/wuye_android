@@ -402,7 +402,11 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                 showBottomImg();
                 break;
             case R.id.otherpersonal_chat_iv:
-                startActivity(P2PChatActivity.buildIntent(mContext, String.valueOf(id), mGetUserIndexModel.getBody().getUserDetailBean().getNickName()));
+                startActivity(P2PChatActivity.buildIntent(mContext, String.valueOf(id)
+                        , mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
+                        , mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                        , mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                        , mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()));
                 break;
         }
     }

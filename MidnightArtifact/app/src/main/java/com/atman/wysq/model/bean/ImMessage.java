@@ -13,6 +13,8 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 @Entity
 public class ImMessage {
+    @Id
+    private String uuid;
     private String chatId;
     private String userId;
     private String nickName;
@@ -34,6 +36,13 @@ public class ImMessage {
     private long audioDuration;
     private int fingerValue;
     private boolean isGiftMessage;
+    private int isSeedSuccess; //0:发送中，1：成功，2:失败
+    public int getIsSeedSuccess() {
+        return this.isSeedSuccess;
+    }
+    public void setIsSeedSuccess(int isSeedSuccess) {
+        this.isSeedSuccess = isSeedSuccess;
+    }
     public boolean getIsGiftMessage() {
         return this.isGiftMessage;
     }
@@ -160,13 +169,21 @@ public class ImMessage {
     public void setChatId(String chatId) {
         this.chatId = chatId;
     }
-    @Generated(hash = 696740949)
-    public ImMessage(String chatId, String userId, String nickName, String icon,
-            String sex, int verify_status, boolean isSelfSend, long time,
-            int contentType, String content, String imageFilePath, String imageUrl,
-            String imageThumUrl, String imageSFilePath, String imageSUrl,
-            String imageSThumUrl, String audioFilePath, String audioUrl,
-            long audioDuration, int fingerValue, boolean isGiftMessage) {
+    public String getUuid() {
+        return this.uuid;
+    }
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+    @Generated(hash = 1503554263)
+    public ImMessage(String uuid, String chatId, String userId, String nickName,
+            String icon, String sex, int verify_status, boolean isSelfSend,
+            long time, int contentType, String content, String imageFilePath,
+            String imageUrl, String imageThumUrl, String imageSFilePath,
+            String imageSUrl, String imageSThumUrl, String audioFilePath,
+            String audioUrl, long audioDuration, int fingerValue,
+            boolean isGiftMessage, int isSeedSuccess) {
+        this.uuid = uuid;
         this.chatId = chatId;
         this.userId = userId;
         this.nickName = nickName;
@@ -188,6 +205,7 @@ public class ImMessage {
         this.audioDuration = audioDuration;
         this.fingerValue = fingerValue;
         this.isGiftMessage = isGiftMessage;
+        this.isSeedSuccess = isSeedSuccess;
     }
     @Generated(hash = 1511957917)
     public ImMessage() {

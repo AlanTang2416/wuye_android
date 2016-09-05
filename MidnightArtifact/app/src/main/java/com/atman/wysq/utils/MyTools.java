@@ -231,4 +231,12 @@ public class MyTools {
 
         return (int) ((toCalendar.getTime().getTime() - fromCalendar.getTime().getTime()) / (1000 * 60 * 60 * 24));
     }
+
+    /**
+     * 获取两个日期之间的间隔分钟
+     * @return
+     */
+    public static long getGapCountM(long startDate, long endDate) {
+        return (endDate - startDate) / (1000 * 60);
+    }
 }

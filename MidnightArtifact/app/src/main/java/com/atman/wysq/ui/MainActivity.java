@@ -15,10 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.atman.wysq.R;
 import com.atman.wysq.adapter.MyFragmentAdapter;
+import com.atman.wysq.model.bean.ImSession;
 import com.atman.wysq.model.event.YunXinAuthOutEvent;
+import com.atman.wysq.model.greendao.gen.ImSessionDao;
 import com.atman.wysq.model.response.CheckVersionModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
@@ -35,6 +38,7 @@ import com.atman.wysq.ui.personal.TaskListActivity;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.widget.face.FaceConversionUtil;
 import com.base.baselibs.net.MyStringCallback;
+import com.base.baselibs.util.DensityUtil;
 import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.NoSwipeViewPager;
 import com.base.baselibs.widget.PromptDialog;
@@ -45,6 +49,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -72,6 +77,8 @@ public class MainActivity extends MyBaseActivity {
     RelativeLayout contentview;
     @Bind(R.id.main_content)
     LinearLayout mainContent;
+    @Bind(R.id.tab_session_unread_tx)
+    TextView tabSessionUnreadTx;
 
     private Fragment fg;
     private MyFragmentAdapter adapter;
@@ -83,14 +90,19 @@ public class MainActivity extends MyBaseActivity {
 
     private Context mContext = MainActivity.this;
 
+    private List<ImSession> mImSession;
+    private ImSessionDao mImSessionDao;
+    private int rtWidth;
+    private RelativeLayout.LayoutParams params;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         disableLoginCheck();
         ButterKnife.bind(this);
-        if (getIntent().getBooleanExtra("isToWeb",false)) {
-            LogUtils.e("MyBaseApplication.mWEB_TYPE:"+MyBaseApplication.mWEB_TYPE);
+        if (getIntent().getBooleanExtra("isToWeb", false)) {
+            LogUtils.e("MyBaseApplication.mWEB_TYPE:" + MyBaseApplication.mWEB_TYPE);
             if (MyBaseApplication.mWEB_TYPE.equals("1")) {//URL
                 startActivity(WebPageActivity.buildIntent(MainActivity.this, MyBaseApplication.mWEB_URL, ""));
             } else if (MyBaseApplication.mWEB_TYPE.equals("2")) {//专辑
@@ -121,10 +133,27 @@ public class MainActivity extends MyBaseActivity {
             }
         }
 
-        OkHttpUtils.get().url(Common.Url_Get_Version+"?version="+MyBaseApplication.mVersionName.replace("v",""))
-                .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
+        OkHttpUtils.get().url(Common.Url_Get_Version + "?version=" + MyBaseApplication.mVersionName.replace("v", ""))
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .id(Common.NET_GET_VERSION).tag(Common.NET_GET_VERSION).build().execute(new MyStringCallback(mContext, this, false));
         EventBus.getDefault().register(this);
+    }
+
+    public void countUnReadNum() {
+        LogUtils.e("countUnReadNum>>>>");
+        mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
+        mImSession = mImSessionDao.queryBuilder().build().list();
+        int n = 0;
+        for (int i = 0; i < mImSession.size(); i++) {
+            n += mImSession.get(i).getUnreadNum();
+        }
+        if (n==0) {
+            tabSessionUnreadTx.setVisibility(View.GONE);
+        } else {
+            tabSessionUnreadTx.setVisibility(View.VISIBLE);
+            tabSessionUnreadTx.setText(""+n);
+        }
+        tabSessionUnreadTx.setLayoutParams(params);
     }
 
     //在注册了的Activity中,声明处理事件的方法
@@ -144,7 +173,7 @@ public class MainActivity extends MyBaseActivity {
     }
 
 
-    public static Intent buildIntent(Context context, boolean isToWeb){
+    public static Intent buildIntent(Context context, boolean isToWeb) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra("isToWeb", isToWeb);
         return intent;
@@ -163,6 +192,15 @@ public class MainActivity extends MyBaseActivity {
         initViewpager();
         initBottomBar();
         setSwipeBackEnable(false);
+        rtWidth = getmWidth()/8;
+        params = (RelativeLayout.LayoutParams)tabSessionUnreadTx.getLayoutParams();
+        params.setMargins(DensityUtil.dp2px(mContext,(rtWidth/2+DensityUtil.dp2px(mContext, 5))), DensityUtil.dp2px(mContext, 5), 0, 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        countUnReadNum();
     }
 
     private void initBottomBar() {
@@ -172,23 +210,23 @@ public class MainActivity extends MyBaseActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.tab_message:
-                        viewpager.setCurrentItem(0,false);
+                        viewpager.setCurrentItem(0, false);
                         fg = adapter.getItem(0);
                         break;
                     case R.id.tab_community:
-                        viewpager.setCurrentItem(1,false);
+                        viewpager.setCurrentItem(1, false);
                         fg = adapter.getItem(1);
                         break;
                     case R.id.tab_mall:
-                        viewpager.setCurrentItem(2,false);
+                        viewpager.setCurrentItem(2, false);
                         fg = adapter.getItem(2);
                         break;
                     case R.id.tab_discover:
-                        viewpager.setCurrentItem(3,false);
+                        viewpager.setCurrentItem(3, false);
                         fg = adapter.getItem(3);
                         break;
                     case R.id.tab_personal:
-                        viewpager.setCurrentItem(4,false);
+                        viewpager.setCurrentItem(4, false);
                         fg = adapter.getItem(4);
                         break;
                 }
@@ -196,12 +234,12 @@ public class MainActivity extends MyBaseActivity {
         });
 
         //挨着给每个RadioButton加入drawable限制边距以控制显示大小
-        RadioButton[] bt = {tabMessage, tabCommunity,tabMall,tabDiscover,tabPersonal};
-        for (int i=0;i<bt.length;i++) {
+        RadioButton[] bt = {tabMessage, tabCommunity, tabMall, tabDiscover, tabPersonal};
+        for (int i = 0; i < bt.length; i++) {
             Drawable[] drs = bt[i].getCompoundDrawables();
             Rect r = new Rect(0, 0, drs[1].getMinimumWidth() + 20, drs[1].getMinimumHeight() + 20);
             drs[1].setBounds(r);
-            bt[i].setCompoundDrawables(null,drs[1],null,null);
+            bt[i].setCompoundDrawables(null, drs[1], null, null);
         }
     }
 
@@ -245,7 +283,7 @@ public class MainActivity extends MyBaseActivity {
         super.onStringResponse(data, response, id);
         if (id == Common.NET_GET_VERSION) {
             final CheckVersionModel mCheckVersionModel = mGson.fromJson(data, CheckVersionModel.class);
-            if (mCheckVersionModel.getResult().equals("1") && mCheckVersionModel.getBody()!=null) {
+            if (mCheckVersionModel.getResult().equals("1") && mCheckVersionModel.getBody() != null) {
                 PromptDialog.Builder builder = new PromptDialog.Builder(MainActivity.this);
                 builder.setMessage(mCheckVersionModel.getBody().getWarn());
                 builder.setPositiveButton("升级", new DialogInterface.OnClickListener() {

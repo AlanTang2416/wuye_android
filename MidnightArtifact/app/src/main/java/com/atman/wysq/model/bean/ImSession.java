@@ -13,12 +13,13 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 @Entity
 public class ImSession {
-    private String content;
+    @Id
     private String userId;
+    private String content;
     private String nickName;
     private String icon;
     private String sex;
-    private String verify_status;
+    private int verify_status;
     private long time;
     private int unreadNum;
     public int getUnreadNum() {
@@ -33,10 +34,10 @@ public class ImSession {
     public void setTime(long time) {
         this.time = time;
     }
-    public String getVerify_status() {
+    public int getVerify_status() {
         return this.verify_status;
     }
-    public void setVerify_status(String verify_status) {
+    public void setVerify_status(int verify_status) {
         this.verify_status = verify_status;
     }
     public String getSex() {
@@ -57,23 +58,23 @@ public class ImSession {
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
-    public String getUserId() {
-        return this.userId;
-    }
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
     public String getContent() {
         return this.content;
     }
     public void setContent(String content) {
         this.content = content;
     }
-    @Generated(hash = 1805049135)
-    public ImSession(String content, String userId, String nickName, String icon,
-            String sex, String verify_status, long time, int unreadNum) {
-        this.content = content;
+    public String getUserId() {
+        return this.userId;
+    }
+    public void setUserId(String userId) {
         this.userId = userId;
+    }
+    @Generated(hash = 410044566)
+    public ImSession(String userId, String content, String nickName, String icon,
+            String sex, int verify_status, long time, int unreadNum) {
+        this.userId = userId;
+        this.content = content;
         this.nickName = nickName;
         this.icon = icon;
         this.sex = sex;

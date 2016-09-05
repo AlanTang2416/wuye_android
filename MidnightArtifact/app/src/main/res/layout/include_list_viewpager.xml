@@ -88,6 +88,18 @@
 
         </RadioGroup>
 
+        <TextView
+            android:id="@+id/tab_session_unread_tx"
+            android:minWidth="@dimen/dimen_dp_16"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_dp_16"
+            android:layout_marginTop="@dimen/dimen_dp_5"
+            android:layout_below="@+id/view_line"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/color_white"
+            android:background="@mipmap/dote_pressed"/>
+
         <View
             android:id="@+id/view_line"
             android:layout_width="fill_parent"

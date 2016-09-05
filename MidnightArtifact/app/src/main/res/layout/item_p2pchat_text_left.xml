@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:img="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/dimen_dp_5"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,9 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dimen_dp_5"
-        android:layout_marginTop="@dimen/dimen_dp_5"
-        android:text="2016-2-3 11:11"
+        android:visibility="invisible"
         android:textColor="#a8a8a8"
         android:textSize="@dimen/dimen_sp_10" />
 
@@ -22,7 +22,9 @@
         android:layout_below="@+id/item_p2pchat_text_time_tx"
         android:layout_marginLeft="@dimen/dimen_dp_10"
         android:src="@mipmap/ic_launcher"
-        android:visibility="gone" />
+        android:visibility="gone"
+        img:circle="false"
+        img:radius="@dimen/dimen_dp_5" />
 
     <com.base.baselibs.widget.CustomImageView
         android:id="@+id/item_p2pchat_text_headright_iv"
@@ -32,11 +34,15 @@
         android:layout_below="@+id/item_p2pchat_text_time_tx"
         android:layout_marginRight="@dimen/dimen_dp_10"
         android:src="@mipmap/ic_launcher"
-        android:visibility="gone" />
+        android:visibility="gone"
+        img:circle="false"
+        img:radius="@dimen/dimen_dp_5" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dimen_dp_5"
+        android:layout_marginTop="@dimen/dimen_dp_5"
         android:layout_below="@+id/item_p2pchat_text_time_tx"
         android:layout_toLeftOf="@+id/item_p2pchat_text_headright_iv"
         android:layout_toRightOf="@+id/item_p2pchat_text_headleft_iv">
@@ -54,7 +60,9 @@
                 android:background="@drawable/item_message_left_bg"
                 android:maxWidth="@dimen/dimen_dp_250"
                 android:text="sadcasc"
+                android:gravity="center"
                 android:textColor="@color/color_black"
+                android:layout_marginTop="@dimen/dimen_dp_5"
                 android:textSize="@dimen/dimen_sp_15"
                 android:visibility="gone" />
         </FrameLayout>
@@ -99,8 +107,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/item_message_right_bg"
+                    android:layout_marginTop="@dimen/dimen_dp_5"
                     android:maxWidth="@dimen/dimen_dp_250"
-                    android:text="sadcasc"
+                    android:gravity="center"
                     android:textColor="@color/color_black"
                     android:textSize="@dimen/dimen_sp_15"
                     android:visibility="gone" />

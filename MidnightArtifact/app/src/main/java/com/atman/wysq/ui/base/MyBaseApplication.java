@@ -10,9 +10,14 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.atman.wysq.R;
+import com.atman.wysq.model.bean.ImMessage;
+import com.atman.wysq.model.bean.ImSession;
 import com.atman.wysq.model.event.YunXinAuthOutEvent;
+import com.atman.wysq.model.event.YunXinMessageEvent;
 import com.atman.wysq.model.greendao.gen.DaoMaster;
 import com.atman.wysq.model.greendao.gen.DaoSession;
+import com.atman.wysq.model.greendao.gen.ImMessageDao;
+import com.atman.wysq.model.greendao.gen.ImSessionDao;
 import com.atman.wysq.model.response.ConfigModel;
 import com.atman.wysq.model.response.GetGoldenRoleModel;
 import com.atman.wysq.model.response.GetUserIndexModel;
@@ -30,7 +35,9 @@ import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
+import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -153,7 +160,58 @@ public class MyBaseApplication extends BaseApplication {
             // 1、UI相关初始化操作
             // 2、相关Service调用
             setAuthServiceObserver();//监听用户在线状态
+            ReceiveMessageObserver(true);
         }
+    }
+
+    Observer<List<IMMessage>> incomingMessageObserver = new Observer<List<IMMessage>>() {
+        @Override
+        public void onEvent(List<IMMessage> messages) {
+            // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
+            for (int i=0;i<messages.size();i++) {
+                LogUtils.e("messages.size():"+messages.size()+",messages.get(i).getUuid():"+messages.get(i).getUuid());
+                LogUtils.e("messages.get(i).getSessionId():"+messages.get(i).getSessionId());
+                LogUtils.e("messages.get(i).getFromAccount():"+messages.get(i).getFromAccount());
+                LogUtils.e("messages.get(i).getRemoteExtension().get(\"nickName\").toString():"+messages.get(i).getRemoteExtension().get("nickName").toString());
+                LogUtils.e("messages.get(i).getRemoteExtension().get(\"icon\").toString():"+messages.get(i).getRemoteExtension().get("icon").toString());
+                LogUtils.e("messages.get(i).getRemoteExtension().get(\"sex\").toString():"+messages.get(i).getRemoteExtension().get("sex").toString());
+                LogUtils.e("Integer.parseInt(messages.get(i).getRemoteExtension().get(\"verify_status\").toString()):"+Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString()));
+                LogUtils.e("Integer.parseInt(messages.get(i).getRemoteExtension().get(\"contentType\").toString()):"+Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString()));
+                LogUtils.e("messages.get(i).getContent():"+messages.get(i).getContent());
+                ImMessage temp = new ImMessage(messages.get(i).getUuid()
+                        , messages.get(i).getSessionId()
+                        , messages.get(i).getFromAccount()
+                        , messages.get(i).getRemoteExtension().get("nickName").toString()
+                        , messages.get(i).getRemoteExtension().get("icon").toString()
+                        , messages.get(i).getRemoteExtension().get("sex").toString()
+                        , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                        , false, System.currentTimeMillis()
+                        , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                        , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
+                mDaoSession.getImMessageDao().insert(temp);
+
+                ImSession mImSession = mDaoSession.getImSessionDao().queryBuilder().where(ImSessionDao.Properties.UserId.eq(messages.get(i).getFromAccount())).build().unique();
+                if (mImSession==null) {
+                    ImSession mImSessionTemp = new ImSession(messages.get(i).getFromAccount(), messages.get(i).getContent()
+                            , messages.get(i).getRemoteExtension().get("nickName").toString()
+                            , messages.get(i).getRemoteExtension().get("icon").toString()
+                            , messages.get(i).getRemoteExtension().get("sex").toString()
+                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                            , System.currentTimeMillis(), 0);
+                    mDaoSession.getImSessionDao().insert(mImSessionTemp);
+                } else {
+                    mImSession.setContent(messages.get(i).getContent());
+                    mImSession.setTime(System.currentTimeMillis());
+                    mImSession.setUnreadNum(mImSession.getUnreadNum()+1);
+                    mDaoSession.getImSessionDao().update(mImSession);
+                }
+            }
+            EventBus.getDefault().post(new YunXinMessageEvent());
+        }
+    };
+
+    public void ReceiveMessageObserver(boolean b) {
+        NIMClient.getService(MsgServiceObserve.class).observeReceiveMessage(incomingMessageObserver, b);
     }
 
     public boolean inMainProcess() {

@@ -201,13 +201,21 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalTaskIv.setVisibility(View.INVISIBLE);
         personalHeadVerifyImg.setVisibility(View.INVISIBLE);
         personalNameTx.setText("请点击登录");
+        personalGuardianOneRl.setVisibility(View.GONE);
+        personalGuardianTwoRl.setVisibility(View.GONE);
+        personalGuardianThreeRl.setVisibility(View.GONE);
+
+        personalVisitorOneIv.setVisibility(View.GONE);
+        personalVisitorTwoIv.setVisibility(View.GONE);
+        personalVisitorThreeIv.setVisibility(View.GONE);
+
+        personalMycoinTv.setVisibility(View.GONE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         doHttp();
-        LogUtils.e("onResume()");
         if (!isHead) {
             MyBaseApplication.getApplication().setFilterLock(false);
         }

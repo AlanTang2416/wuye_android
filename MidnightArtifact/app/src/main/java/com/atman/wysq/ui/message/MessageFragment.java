@@ -5,12 +5,29 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.atman.wysq.R;
+import com.atman.wysq.adapter.MessageSessionListAdapter;
+import com.atman.wysq.model.bean.ImSession;
+import com.atman.wysq.model.event.YunXinMessageEvent;
+import com.atman.wysq.model.greendao.gen.ImSessionDao;
+import com.atman.wysq.ui.MainActivity;
+import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.base.MyBaseFragment;
 import com.atman.wysq.ui.yunxinfriend.MoFriendsActivity;
+import com.atman.wysq.ui.yunxinfriend.P2PChatActivity;
+import com.base.baselibs.iimp.AdapterInterface;
+import com.base.baselibs.util.LogUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,7 +40,7 @@ import butterknife.OnClick;
  * 邮箱 bltang@atman.com
  * 电话 18578909061
  */
-public class MessageFragment extends MyBaseFragment {
+public class MessageFragment extends MyBaseFragment implements AdapterInterface{
 
     @Bind(R.id.fragment_bar_title_iv)
     ImageView fragmentBarTitleIv;
@@ -31,6 +48,13 @@ public class MessageFragment extends MyBaseFragment {
     ImageView fragmentBarRightIv;
     @Bind(R.id.fragment_bar_right_rl)
     RelativeLayout fragmentBarRightRl;
+    @Bind(R.id.message_listview)
+    ListView messageListview;
+
+    private List<ImSession> mImSession;
+    private ImSessionDao mImSessionDao;
+
+    private MessageSessionListAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,6 +66,7 @@ public class MessageFragment extends MyBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -50,6 +75,28 @@ public class MessageFragment extends MyBaseFragment {
         fragmentBarTitleIv.setImageResource(R.mipmap.top_message_ic);
         fragmentBarRightIv.setVisibility(View.VISIBLE);
         fragmentBarRightIv.setImageResource(R.mipmap.message_top_right_ic);
+
+        initListView();
+    }
+
+    private void initListView() {
+        mAdapter = new MessageSessionListAdapter(getActivity(), this);
+        messageListview.setAdapter(mAdapter);
+        messageListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ImSession mImSession = mImSessionDao.queryBuilder()
+                        .where(ImSessionDao.Properties.UserId.eq(mAdapter.getItem(position).getUserId())).build().unique();
+                if (mImSession!=null) {
+                    mImSession.setUnreadNum(0);
+                    mImSessionDao.update(mImSession);
+                    mAdapter.clearUnreadNum(position);
+                    startActivity(P2PChatActivity.buildIntent(getActivity(), mAdapter.getItem(position).getUserId()
+                            , mAdapter.getItem(position).getNickName(), mAdapter.getItem(position).getSex()
+                            , mAdapter.getItem(position).getIcon(), mAdapter.getItem(position).getVerify_status()));
+                }
+            }
+        });
     }
 
     @Override
@@ -65,6 +112,13 @@ public class MessageFragment extends MyBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        setUnreadMessageNum();
+    }
+
+    private void setUnreadMessageNum() {
+        mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
+        mImSession = mImSessionDao.queryBuilder().build().list();
+        mAdapter.addBody(mImSession);
     }
 
     @Override
@@ -72,9 +126,16 @@ public class MessageFragment extends MyBaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN) //第2步:注册一个在后台线程执行的方法,用于接收事件
+    public void onMessageEvent(YunXinMessageEvent event) {//参数必须是ClassEvent类型, 否则不会调用此方法
+        setUnreadMessageNum();
+        ((MainActivity)getActivity()).countUnReadNum();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -95,5 +156,10 @@ public class MessageFragment extends MyBaseFragment {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+
     }
 }

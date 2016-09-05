@@ -16,7 +16,8 @@
             android:layout_height="fill_parent"
             android:descendantFocusability="blocksDescendants"
             android:divider="@color/color_line"
-            android:dividerHeight="1px"
+            android:dividerHeight="0px"
+            android:listSelector="#00000000"
             ptr:ptrAnimationStyle="flip"
             ptr:ptrMode="both"
             ptr:ptrScrollingWhileRefreshingEnabled="true">
