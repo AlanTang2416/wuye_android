@@ -194,6 +194,8 @@ public class MainActivity extends MyBaseActivity {
         setSwipeBackEnable(false);
         rtWidth = getmWidth()/8;
         params = (RelativeLayout.LayoutParams)tabSessionUnreadTx.getLayoutParams();
+        LogUtils.e("density:"+getResources().getDisplayMetrics().density);
+        rtWidth = (int)(rtWidth/(getResources().getDisplayMetrics().density/2));
         params.setMargins(DensityUtil.dp2px(mContext,(rtWidth/2+DensityUtil.dp2px(mContext, 5))), DensityUtil.dp2px(mContext, 5), 0, 0);
     }
 

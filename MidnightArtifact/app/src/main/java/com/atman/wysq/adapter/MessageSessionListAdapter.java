@@ -113,8 +113,10 @@ public class MessageSessionListAdapter extends BaseAdapter {
             holder.itemSessionUnreadTx.setVisibility(View.INVISIBLE);
         }
 
-        holder.itemSessionContentTx.setText(SmileUtils.getEmotionContent(context
-                , holder.itemSessionContentTx, dataList.get(position).getContent()));
+        if (dataList.get(position).getContent()!=null) {
+            holder.itemSessionContentTx.setText(SmileUtils.getEmotionContent(context
+                    , holder.itemSessionContentTx, dataList.get(position).getContent()));
+        }
 
         return convertView;
     }

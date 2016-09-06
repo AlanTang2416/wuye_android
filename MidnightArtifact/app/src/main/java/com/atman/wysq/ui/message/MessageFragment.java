@@ -118,7 +118,9 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
     private void setUnreadMessageNum() {
         mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
         mImSession = mImSessionDao.queryBuilder().build().list();
-        mAdapter.addBody(mImSession);
+        if (mImSession!=null) {
+            mAdapter.addBody(mImSession);
+        }
     }
 
     @Override

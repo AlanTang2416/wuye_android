@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:img="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/dimen_dp_5"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/item_p2pchat_image_time_tx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+        android:textColor="#a8a8a8"
+        android:textSize="@dimen/dimen_sp_10" />
+
+    <com.base.baselibs.widget.CustomImageView
+        android:id="@+id/item_p2pchat_image_headleft_iv"
+        android:layout_width="@dimen/dimen_dp_40"
+        android:layout_height="@dimen/dimen_dp_40"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/item_p2pchat_image_time_tx"
+        android:layout_marginLeft="@dimen/dimen_dp_10"
+        android:src="@mipmap/ic_launcher"
+        android:visibility="gone"
+        img:circle="false"
+        img:radius="@dimen/dimen_dp_5" />
+
+    <com.base.baselibs.widget.CustomImageView
+        android:id="@+id/item_p2pchat_image_headright_iv"
+        android:layout_width="@dimen/dimen_dp_40"
+        android:layout_height="@dimen/dimen_dp_40"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/item_p2pchat_image_time_tx"
+        android:layout_marginRight="@dimen/dimen_dp_10"
+        android:src="@mipmap/ic_launcher"
+        android:visibility="gone"
+        img:circle="false"
+        img:radius="@dimen/dimen_dp_5" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dimen_dp_5"
+        android:layout_marginTop="@dimen/dimen_dp_5"
+        android:layout_below="@+id/item_p2pchat_image_time_tx"
+        android:layout_toLeftOf="@+id/item_p2pchat_image_headright_iv"
+        android:layout_toRightOf="@+id/item_p2pchat_image_headleft_iv">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent">
+
+            <ImageView
+                android:id="@+id/item_p2pchat_image_left_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_message_left_bg"
+                android:maxWidth="@dimen/dimen_dp_250"
+                android:text="sadcasc"
+                android:gravity="center"
+                android:textColor="@color/color_black"
+                android:layout_marginTop="@dimen/dimen_dp_5"
+                android:textSize="@dimen/dimen_sp_15"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/item_p2pchat_image_right_progress"
+                android:layout_width="20dip"
+                android:layout_height="20dip"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/nim_progress_small_white"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/item_p2pchat_image_right_alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:src="@mipmap/nim_ic_failed"
+                android:visibility="gone" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent">
+
+                <ImageView
+                    android:id="@+id/item_p2pchat_image_right_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/item_message_right_bg"
+                    android:layout_marginTop="@dimen/dimen_dp_5"
+                    android:maxWidth="@dimen/dimen_dp_250"
+                    android:gravity="center"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/dimen_sp_15"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

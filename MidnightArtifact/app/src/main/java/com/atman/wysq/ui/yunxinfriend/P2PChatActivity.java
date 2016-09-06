@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,19 +36,24 @@ import com.atman.wysq.yunxin.model.GuessAttachment;
 import com.base.baselibs.iimp.EditCheckBack;
 import com.base.baselibs.iimp.MyTextWatcherTwo;
 import com.base.baselibs.util.LogUtils;
+import com.base.baselibs.util.ThumbnailQuery;
 import com.base.baselibs.widget.MyCleanEditText;
 import com.base.baselibs.widget.PromptDialog;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.media.record.AudioRecorder;
 import com.netease.nimlib.sdk.media.record.IAudioRecordCallback;
 import com.netease.nimlib.sdk.media.record.RecordType;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
@@ -215,12 +222,12 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
         mImMessage = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(id)).build().list();
         mAdapter.addImMessageDao(mImMessage);
-        p2pChatLv.getRefreshableView().setSelection(mAdapter.getCount()-1);
+        p2pChatLv.getRefreshableView().smoothScrollToPosition(p2pChatLv.getRefreshableView().getBottom());
     }
 
     private void initListView() {
         initRefreshView(PullToRefreshBase.Mode.DISABLED, p2pChatLv);
-        mAdapter = new P2PChatAdapter(mContext);
+        mAdapter = new P2PChatAdapter(mContext, p2pChatLv);
         p2pChatLv.setAdapter(mAdapter);
     }
 
@@ -338,19 +345,45 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         public void onEvent(List<IMMessage> messages) {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
             for (int i=0;i<messages.size();i++) {
-                ImMessage temp = new ImMessage(messages.get(i).getUuid()
-                        , messages.get(i).getSessionId()
-                        , messages.get(i).getFromAccount()
-                        , messages.get(i).getRemoteExtension().get("nickName").toString()
-                        , messages.get(i).getRemoteExtension().get("icon").toString()
-                        , messages.get(i).getRemoteExtension().get("sex").toString()
-                        , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                        , false, System.currentTimeMillis()
-                        , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
-                        , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
+                ImMessage temp = null;
+                if (messages.get(i).getMsgType() == MsgTypeEnum.text) {
+                    temp = new ImMessage(messages.get(i).getUuid()
+                            , messages.get(i).getSessionId()
+                            , messages.get(i).getFromAccount()
+                            , messages.get(i).getRemoteExtension().get("nickName").toString()
+                            , messages.get(i).getRemoteExtension().get("icon").toString()
+                            , messages.get(i).getRemoteExtension().get("sex").toString()
+                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                            , false, System.currentTimeMillis()
+                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                            , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
+                } else if (messages.get(i).getMsgType() == MsgTypeEnum.image) {
+//                    LogUtils.e("get>>>>image>>>>getPath:"+((FileAttachment)messages.get(i).getAttachment()).getPath());
+//                    LogUtils.e("get>>>>image>>>>getPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getPathForSave());
+//                    LogUtils.e("get>>>>image>>>>getThumbPath:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPath());
+//                    LogUtils.e("get>>>>image>>>>getThumbPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave());
+//                    LogUtils.e("get>>>>image>>>>getUrl:"+((FileAttachment)messages.get(i).getAttachment()).getUrl());
+                    temp = new ImMessage(messages.get(i).getUuid()
+                            , messages.get(i).getSessionId()
+                            , messages.get(i).getFromAccount()
+                            , messages.get(i).getRemoteExtension().get("nickName").toString()
+                            , messages.get(i).getRemoteExtension().get("icon").toString()
+                            , messages.get(i).getRemoteExtension().get("sex").toString()
+                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                            , false, System.currentTimeMillis()
+                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                            , "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
+                            , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
+                            , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
+                    if (isOriginImageHasDownloaded(messages.get(i))) {
+                        AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
+                        future.setCallback(callback);
+                    }
+                }
                 mAdapter.addImMessageDao(temp);
+                setSession(messages.get(i));
             }
-            p2pChatLv.getRefreshableView().setSelection(mAdapter.getCount()-1);
+            p2pChatLv.getRefreshableView().smoothScrollToPosition(p2pChatLv.getRefreshableView().getBottom());
         }
     };
 
@@ -364,14 +397,16 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
             @Override
             public void onEvent(IMMessage imMessage) {
                 mImMessageUpdata = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.Uuid.eq(imMessage.getUuid())).build().unique();
-                if (imMessage.getStatus()==MsgStatusEnum.success) {
-                    mImMessageUpdata.setIsSeedSuccess(1);
-                    mAdapter.setImMessageStatus(imMessage.getUuid(), 1);
-                } else {
-                    mImMessageUpdata.setIsSeedSuccess(2);
-                    mAdapter.setImMessageStatus(imMessage.getUuid(), 2);
+                if (mImMessageUpdata!=null) {
+                    if (imMessage.getStatus()==MsgStatusEnum.success) {
+                        mImMessageUpdata.setIsSeedSuccess(1);
+                        mAdapter.setImMessageStatus(imMessage.getUuid(), 1);
+                    } else {
+                        mImMessageUpdata.setIsSeedSuccess(2);
+                        mAdapter.setImMessageStatus(imMessage.getUuid(), 2);
+                    }
+                    mImMessageDao.update(mImMessageUpdata);
                 }
-                mImMessageDao.update(mImMessageUpdata);
             }
         }, b);
     }
@@ -493,17 +528,41 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         message.setRemoteExtension(map);
         NIMClient.getService(MsgService.class).sendMessage(message, true);
 
-        ImMessage temp = new ImMessage(message.getUuid(), id
-                , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
-                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
-                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
-                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
-                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
-                , true, System.currentTimeMillis(), contentType, message.getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 0);
+        ImMessage temp = null;
+        if (contentType==ContentTypeInter.contentTypeText) {
+            temp= new ImMessage(message.getUuid(), id
+                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                    , true, System.currentTimeMillis(), contentType, message.getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 0);
+        } else if (contentType==ContentTypeInter.contentTypeImage) {
+//            LogUtils.e("p2p>>>>image>>>>getPath:"+((FileAttachment)message.getAttachment()).getPath());
+//            LogUtils.e("p2p>>>>image>>>>getPathForSave:"+((FileAttachment)message.getAttachment()).getPathForSave());
+//            LogUtils.e("p2p>>>>image>>>>getThumbPath:"+((FileAttachment)message.getAttachment()).getThumbPath());
+//            LogUtils.e("p2p>>>>image>>>>getThumbPathForSave:"+((FileAttachment)message.getAttachment()).getThumbPathForSave());
+//            LogUtils.e("p2p>>>>image>>>>getUrl:"+((FileAttachment)message.getAttachment()).getUrl());
+            temp = new ImMessage(message.getUuid()
+                    , message.getSessionId()
+                    , message.getFromAccount()
+                    , message.getRemoteExtension().get("nickName").toString()
+                    , message.getRemoteExtension().get("icon").toString()
+                    , message.getRemoteExtension().get("sex").toString()
+                    , Integer.parseInt(message.getRemoteExtension().get("verify_status").toString())
+                    , true, System.currentTimeMillis()
+                    , Integer.parseInt(message.getRemoteExtension().get("contentType").toString())
+                    , "［图片］", ((FileAttachment)message.getAttachment()).getPathForSave()
+                    , ((FileAttachment)message.getAttachment()).getUrl()
+                    , ((FileAttachment)message.getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
+        }
         mAdapter.addImMessageDao(temp);
         mImMessageDao.insert(temp);
-        p2pChatLv.getRefreshableView().setSelection(mAdapter.getCount()-1);
+        p2pChatLv.getRefreshableView().smoothScrollToPosition(p2pChatLv.getRefreshableView().getBottom());
+        setSession(message);
+    }
 
+    private void setSession(IMMessage message) {
         mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(id)).build().unique();
         if (mImSession==null) {
             ImSession mImSessionTemp = new ImSession(id, message.getContent(), nick, icon, sex, verify_status
@@ -541,10 +600,29 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
             imageUri = Uri.parse("file:///" + path);
         }
         if (imageUri != null) {
-            LogUtils.e("imageUri:" + imageUri);
+            IMMessage message = null;
+//            LogUtils.e("imageUri:" + imageUri);
+//            LogUtils.e("imageUri.toString():" + imageUri.toString());
+//            LogUtils.e("imageUri>>>>:" + imageUri.toString().contains("content:"));
+//            LogUtils.e("imageUri.getPath():" + imageUri.getPath());
+//            LogUtils.e("imageUri>>>>:" + imageUri.getPath().toString().contains("content:"));
             // 创建图片消息
-            IMMessage message = MessageBuilder.createImageMessage(id, SessionTypeEnum.P2P,
-                    new File(imageUri.getPath()), "");
+            if (imageUri.toString().contains("content:")){
+                String[] proj = {MediaStore.Images.Media.DATA};
+                Cursor cursor = managedQuery(imageUri, proj, null, null, null);
+                //按我个人理解 这个是获得用户选择的图片的索引值
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                //最后根据索引值获取图片路径
+                String path = cursor.getString(column_index);
+                LogUtils.e("path:"+path);
+                message = MessageBuilder.createImageMessage(id, SessionTypeEnum.P2P,
+                        new File(path), "");
+            } else {
+                LogUtils.e("path:"+path);
+                message = MessageBuilder.createImageMessage(id, SessionTypeEnum.P2P,
+                        new File(imageUri.getPath()), "");
+            }
             seedMessage(message, ContentTypeInter.contentTypeImage, "", "");
         }
     }
@@ -577,6 +655,35 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
 
     @Override
     public void onRecordReachedMaxTime(int i) {
+
+    }
+
+    private RequestCallback<List<IMMessage>> callback = new RequestCallback<List<IMMessage>>() {
+        @Override
+        public void onSuccess(List<IMMessage> imMessages) {
+            if (imMessages!=null) {
+                for (int i=0;i<imMessages.size();i++) {
+//                    LogUtils.e("p2p>>>>image>>>>getPath:"+((FileAttachment)imMessages.get(i).getAttachment()).getPath());
+//                    LogUtils.e("p2p>>>>image>>>>getPathForSave:"+((FileAttachment)imMessages.get(i).getAttachment()).getPathForSave());
+//                    LogUtils.e("p2p>>>>image>>>>getThumbPath:"+((FileAttachment)imMessages.get(i).getAttachment()).getThumbPath());
+//                    LogUtils.e("p2p>>>>image>>>>getThumbPathForSave:"+((FileAttachment)imMessages.get(i).getAttachment()).getThumbPathForSave());
+//                    LogUtils.e("p2p>>>>image>>>>getUrl:"+((FileAttachment)imMessages.get(i).getAttachment()).getUrl());
+                }
+            }
+        }
+
+        @Override
+        public void onFailed(int i) {
+
+        }
+
+        @Override
+        public void onException(Throwable throwable) {
+
+        }
+    };
+
+    private void selectLast(){
 
     }
 }

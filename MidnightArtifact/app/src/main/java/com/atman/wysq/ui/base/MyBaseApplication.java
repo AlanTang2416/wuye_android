@@ -28,14 +28,20 @@ import com.base.baselibs.base.BaseApplication;
 import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PhoneInfo;
 import com.base.baselibs.util.PreferenceUtil;
+import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.SDKOptions;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
+import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
+import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
@@ -169,44 +175,109 @@ public class MyBaseApplication extends BaseApplication {
         public void onEvent(List<IMMessage> messages) {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
             for (int i=0;i<messages.size();i++) {
-                LogUtils.e("messages.size():"+messages.size()+",messages.get(i).getUuid():"+messages.get(i).getUuid());
-                LogUtils.e("messages.get(i).getSessionId():"+messages.get(i).getSessionId());
-                LogUtils.e("messages.get(i).getFromAccount():"+messages.get(i).getFromAccount());
-                LogUtils.e("messages.get(i).getRemoteExtension().get(\"nickName\").toString():"+messages.get(i).getRemoteExtension().get("nickName").toString());
-                LogUtils.e("messages.get(i).getRemoteExtension().get(\"icon\").toString():"+messages.get(i).getRemoteExtension().get("icon").toString());
-                LogUtils.e("messages.get(i).getRemoteExtension().get(\"sex\").toString():"+messages.get(i).getRemoteExtension().get("sex").toString());
-                LogUtils.e("Integer.parseInt(messages.get(i).getRemoteExtension().get(\"verify_status\").toString()):"+Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString()));
-                LogUtils.e("Integer.parseInt(messages.get(i).getRemoteExtension().get(\"contentType\").toString()):"+Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString()));
-                LogUtils.e("messages.get(i).getContent():"+messages.get(i).getContent());
-                ImMessage temp = new ImMessage(messages.get(i).getUuid()
-                        , messages.get(i).getSessionId()
-                        , messages.get(i).getFromAccount()
-                        , messages.get(i).getRemoteExtension().get("nickName").toString()
-                        , messages.get(i).getRemoteExtension().get("icon").toString()
-                        , messages.get(i).getRemoteExtension().get("sex").toString()
-                        , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                        , false, System.currentTimeMillis()
-                        , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
-                        , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
-                mDaoSession.getImMessageDao().insert(temp);
+                if (messages.get(i).getRemoteExtension()!=null) {
 
-                ImSession mImSession = mDaoSession.getImSessionDao().queryBuilder().where(ImSessionDao.Properties.UserId.eq(messages.get(i).getFromAccount())).build().unique();
-                if (mImSession==null) {
-                    ImSession mImSessionTemp = new ImSession(messages.get(i).getFromAccount(), messages.get(i).getContent()
-                            , messages.get(i).getRemoteExtension().get("nickName").toString()
-                            , messages.get(i).getRemoteExtension().get("icon").toString()
-                            , messages.get(i).getRemoteExtension().get("sex").toString()
-                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                            , System.currentTimeMillis(), 0);
-                    mDaoSession.getImSessionDao().insert(mImSessionTemp);
-                } else {
-                    mImSession.setContent(messages.get(i).getContent());
-                    mImSession.setTime(System.currentTimeMillis());
-                    mImSession.setUnreadNum(mImSession.getUnreadNum()+1);
-                    mDaoSession.getImSessionDao().update(mImSession);
+//                    LogUtils.e("messages.size():"+messages.size()+",messages.get(i).getUuid():"+messages.get(i).getUuid());
+//                    LogUtils.e("messages.get(i).getSessionId():"+messages.get(i).getSessionId());
+//                    LogUtils.e("messages.get(i).getFromAccount():"+messages.get(i).getFromAccount());
+//                    LogUtils.e("messages.get(i).getRemoteExtension().get(\"nickName\").toString():"+messages.get(i).getRemoteExtension().get("nickName").toString());
+//                    LogUtils.e("messages.get(i).getRemoteExtension().get(\"icon\").toString():"+messages.get(i).getRemoteExtension().get("icon").toString());
+//                    LogUtils.e("messages.get(i).getRemoteExtension().get(\"sex\").toString():"+messages.get(i).getRemoteExtension().get("sex").toString());
+//                    LogUtils.e("Integer.parseInt(messages.get(i).getRemoteExtension().get(\"verify_status\").toString()):"+Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString()));
+//                    LogUtils.e("Integer.parseInt(messages.get(i).getRemoteExtension().get(\"contentType\").toString()):"+Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString()));
+//                    LogUtils.e("messages.get(i).getContent():"+messages.get(i).getContent());
+                    ImMessage temp = null;
+                    if (messages.get(i).getMsgType() == MsgTypeEnum.text) {
+                        temp = new ImMessage(messages.get(i).getUuid()
+                                , messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount()
+                                , messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString()
+                                , messages.get(i).getRemoteExtension().get("sex").toString()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , false, System.currentTimeMillis()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
+                    } else if (messages.get(i).getMsgType() == MsgTypeEnum.image) {
+//                        LogUtils.e("MsgTypeEnum.image:"+messages.get(i).getAttachment().toJson(true).toString());
+//                        LogUtils.e("application>>>>image>>>>getPath:"+((FileAttachment)messages.get(i).getAttachment()).getPath());
+//                        LogUtils.e("application>>>>image>>>>getPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getPathForSave());
+//                        LogUtils.e("application>>>>image>>>>getThumbPath:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPath());
+//                        LogUtils.e("application>>>>image>>>>getThumbPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave());
+//                        LogUtils.e("application>>>>image>>>>getUrl:"+((FileAttachment)messages.get(i).getAttachment()).getUrl());
+                        temp = new ImMessage(messages.get(i).getUuid()
+                                , messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount()
+                                , messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString()
+                                , messages.get(i).getRemoteExtension().get("sex").toString()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , false, System.currentTimeMillis()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
+                        if (isOriginImageHasDownloaded(messages.get(i))) {
+                            AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
+                            future.setCallback(callback);
+                        }
+                    }
+                    mDaoSession.getImMessageDao().insert(temp);
+
+                    ImSession mImSession = mDaoSession.getImSessionDao().queryBuilder().where(ImSessionDao.Properties.UserId.eq(messages.get(i).getFromAccount())).build().unique();
+                    if (mImSession==null) {
+                        ImSession mImSessionTemp = new ImSession(messages.get(i).getFromAccount(), messages.get(i).getContent()
+                                , messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString()
+                                , messages.get(i).getRemoteExtension().get("sex").toString()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , System.currentTimeMillis(), 0);
+                        mDaoSession.getImSessionDao().insert(mImSessionTemp);
+                    } else {
+                        mImSession.setContent(messages.get(i).getContent());
+                        mImSession.setTime(System.currentTimeMillis());
+                        mImSession.setUnreadNum(mImSession.getUnreadNum()+1);
+                        mDaoSession.getImSessionDao().update(mImSession);
+                    }
                 }
             }
             EventBus.getDefault().post(new YunXinMessageEvent());
+        }
+    };
+
+    public boolean isOriginImageHasDownloaded(final IMMessage message) {
+        if (message.getAttachStatus() == AttachStatusEnum.transferred &&
+                !TextUtils.isEmpty(((FileAttachment) message.getAttachment()).getPath())) {
+            LogUtils.e("applicaion>>>>imagePath:"+((FileAttachment) message.getAttachment()).getPath());
+            return true;
+        }
+        return false;
+    }
+
+    private RequestCallback<List<IMMessage>> callback = new RequestCallback<List<IMMessage>>() {
+        @Override
+        public void onSuccess(List<IMMessage> imMessages) {
+            if (imMessages!=null) {
+                for (int i=0;i<imMessages.size();i++) {
+                    LogUtils.e("callback>>>>getPath:"+((FileAttachment)imMessages.get(i).getAttachment()).getPath());
+                    LogUtils.e("callback>>>>getPathForSave:"+((FileAttachment)imMessages.get(i).getAttachment()).getPathForSave());
+                    LogUtils.e("callback>>>>getThumbPath:"+((FileAttachment)imMessages.get(i).getAttachment()).getThumbPath());
+                    LogUtils.e("callback>>>>getThumbPathForSave:"+((FileAttachment)imMessages.get(i).getAttachment()).getThumbPathForSave());
+                    LogUtils.e("callback>>>>getUrl:"+((FileAttachment)imMessages.get(i).getAttachment()).getUrl());
+                }
+            } else {
+                LogUtils.e("callback>>>>null");
+            }
+        }
+
+        @Override
+        public void onFailed(int i) {
+
+        }
+
+        @Override
+        public void onException(Throwable throwable) {
+
         }
     };
 

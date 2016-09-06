@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,6 +37,9 @@ import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.widget.PromptDialog;
 import com.google.gson.Gson;
+import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
+import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.io.File;
 import java.io.IOException;
@@ -499,5 +503,14 @@ public class MyBaseActivity extends BaseAppCompatActivity {
             }
         }
         return updateFile;
+    }
+
+    public boolean isOriginImageHasDownloaded(final IMMessage message) {
+        if (message.getAttachStatus() == AttachStatusEnum.transferred &&
+                !TextUtils.isEmpty(((FileAttachment) message.getAttachment()).getPath())) {
+            LogUtils.e("imagePath:"+((FileAttachment) message.getAttachment()).getPath());
+            return true;
+        }
+        return false;
     }
 }
