@@ -2,11 +2,13 @@ package com.atman.wysq.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -47,11 +49,13 @@ public class P2PChatAdapter extends BaseAdapter {
     private boolean isShowTime = false;
     private PullToRefreshListView p2pChatLv;
     private boolean isBottom = false;
+    private P2PAdapterInter mP2PAdapterInter;
 
-    public P2PChatAdapter(Context context, PullToRefreshListView p2pChatLv) {
+    public P2PChatAdapter(Context context, PullToRefreshListView p2pChatLv, P2PAdapterInter mP2PAdapterInter) {
         this.context = context;
         this.mImMessage = new ArrayList<>();
         this.p2pChatLv = p2pChatLv;
+        this.mP2PAdapterInter = mP2PAdapterInter;
         layoutInflater = LayoutInflater.from(context);
     }
 
@@ -63,6 +67,7 @@ public class P2PChatAdapter extends BaseAdapter {
     public void addImMessageDao(List<ImMessage> mImMessageDao) {
         this.mImMessage.addAll(mImMessageDao);
         notifyDataSetChanged();
+        p2pChatLv.getRefreshableView().setSelection(p2pChatLv.getRefreshableView().getBottom());
     }
 
     public void setImMessageStatus(String id, int status) {
@@ -77,6 +82,7 @@ public class P2PChatAdapter extends BaseAdapter {
     public void addImMessageDao(ImMessage mImMessageDao) {
         this.mImMessage.add(mImMessageDao);
         notifyDataSetChanged();
+        p2pChatLv.getRefreshableView().setSelection(p2pChatLv.getRefreshableView().getBottom());
     }
 
     @Override
@@ -95,7 +101,7 @@ public class P2PChatAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public ImMessage getItem(int position) {
         return mImMessage.get(position);
     }
 
@@ -105,16 +111,16 @@ public class P2PChatAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        viewHolderText holderText = null;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        ViewHolder holderText = null;
 
         int type = getItemViewType(position);
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.item_p2pchat_text_view, parent, false);
-            holderText = new viewHolderText(convertView);
+            holderText = new ViewHolder(convertView);
             convertView.setTag(holderText);
         } else {
-            holderText = (viewHolderText) convertView.getTag();
+            holderText = (ViewHolder) convertView.getTag();
         }
 
         ImMessage temp = mImMessage.get(position);
@@ -129,21 +135,23 @@ public class P2PChatAdapter extends BaseAdapter {
         holderText.itemP2pchatTextLeftTx.setVisibility(View.GONE);
         holderText.itemP2pchatImageLeftIv.setVisibility(View.GONE);
         holderText.itemP2pchatFingerLeftIv.setVisibility(View.GONE);
+        holderText.itemP2pchatAudioLeftLl.setVisibility(View.GONE);
 
         holderText.itemP2pchatTextRightTx.setVisibility(View.GONE);
         holderText.itemP2pchatImageRightIv.setVisibility(View.GONE);
         holderText.itemP2pchatFingerRightIv.setVisibility(View.GONE);
+        holderText.itemP2pchatAudioRightLl.setVisibility(View.GONE);
         if (temp.getIsSelfSend()) {
             holderText.itemP2pchatTextHeadrightIv.setVisibility(View.VISIBLE);
             holderText.itemP2pchatTextHeadleftIv.setVisibility(View.GONE);
-            if (holderText.itemP2pchatTextHeadrightIv.getDrawable()==null) {
+            if (holderText.itemP2pchatTextHeadrightIv.getDrawable() == null) {
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + temp.getIcon()
                         , holderText.itemP2pchatTextHeadrightIv, MyBaseApplication.getApplication().getOptionsNot(), mListener);
             }
         } else {
             holderText.itemP2pchatTextHeadrightIv.setVisibility(View.GONE);
             holderText.itemP2pchatTextHeadleftIv.setVisibility(View.VISIBLE);
-            if (holderText.itemP2pchatTextHeadrightIv.getDrawable()==null) {
+            if (holderText.itemP2pchatTextHeadrightIv.getDrawable() == null) {
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + temp.getIcon()
                         , holderText.itemP2pchatTextHeadleftIv, MyBaseApplication.getApplication().getOptionsNot(), mListener);
             }
@@ -202,6 +210,13 @@ public class P2PChatAdapter extends BaseAdapter {
             case ContentTypeInter.contentTypeImageSmall:
                 break;
             case ContentTypeInter.contentTypeAudio:
+                if (temp.getIsSelfSend()) {
+                    holderText.itemP2pchatAudioRightLl.setVisibility(View.VISIBLE);
+                    holderText.itemP2pchatAudioRightTx.setText(temp.getAudioDuration()+"''");
+                } else {
+                    holderText.itemP2pchatAudioLeftLl.setVisibility(View.VISIBLE);
+                    holderText.itemP2pchatAudioLeftTx.setText(temp.getAudioDuration()+"''");
+                }
                 break;
             case ContentTypeInter.contentTypeFinger:
                 if (temp.getIsSelfSend()) {
@@ -225,6 +240,33 @@ public class P2PChatAdapter extends BaseAdapter {
                 }
                 break;
         }
+        final ViewHolder finalHolderText = holderText;
+        holderText.itemP2pchatAudioRightLl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mP2PAdapterInter.onItemAudio(v, position, (AnimationDrawable) finalHolderText.itemP2pchatAudioRightIv.getDrawable());
+            }
+        });
+
+        holderText.itemP2pchatAudioLeftLl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mP2PAdapterInter.onItemAudio(v, position, (AnimationDrawable) finalHolderText.itemP2pchatAudioLeftIv.getDrawable());
+            }
+        });
+
+        holderText.itemP2pchatImageRightIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mP2PAdapterInter.onItem(v, position);
+            }
+        });
+        holderText.itemP2pchatImageLeftIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mP2PAdapterInter.onItem(v, position);
+            }
+        });
 
         return convertView;
     }
@@ -244,7 +286,8 @@ public class P2PChatAdapter extends BaseAdapter {
         public void onLoadingComplete(String s, View view, Bitmap bitmap) {
             if (!isBottom) {
                 isBottom = true;
-                p2pChatLv.getRefreshableView().smoothScrollToPosition(p2pChatLv.getRefreshableView().getBottom());
+//                p2pChatLv.getRefreshableView().smoothScrollToPosition(p2pChatLv.getRefreshableView().getBottom());
+                p2pChatLv.getRefreshableView().setSelection(p2pChatLv.getRefreshableView().getBottom());
             }
         }
 
@@ -254,7 +297,7 @@ public class P2PChatAdapter extends BaseAdapter {
         }
     };
 
-    static class viewHolderText {
+    static class ViewHolder {
         @Bind(R.id.item_p2pchat_text_time_tx)
         TextView itemP2pchatTextTimeTx;
         @Bind(R.id.item_p2pchat_text_headleft_iv)
@@ -267,6 +310,12 @@ public class P2PChatAdapter extends BaseAdapter {
         ImageView itemP2pchatImageLeftIv;
         @Bind(R.id.item_p2pchat_finger_left_iv)
         ImageView itemP2pchatFingerLeftIv;
+        @Bind(R.id.item_p2pchat_audio_left_tx)
+        TextView itemP2pchatAudioLeftTx;
+        @Bind(R.id.item_p2pchat_audio_left_iv)
+        ImageView itemP2pchatAudioLeftIv;
+        @Bind(R.id.item_p2pchat_audio_left_ll)
+        LinearLayout itemP2pchatAudioLeftLl;
         @Bind(R.id.item_p2pchat_right_progress)
         ProgressBar itemP2pchatRightProgress;
         @Bind(R.id.item_p2pchat_right_alert)
@@ -277,11 +326,21 @@ public class P2PChatAdapter extends BaseAdapter {
         ImageView itemP2pchatImageRightIv;
         @Bind(R.id.item_p2pchat_finger_right_iv)
         ImageView itemP2pchatFingerRightIv;
+        @Bind(R.id.item_p2pchat_audio_right_iv)
+        ImageView itemP2pchatAudioRightIv;
+        @Bind(R.id.item_p2pchat_audio_right_tx)
+        TextView itemP2pchatAudioRightTx;
+        @Bind(R.id.item_p2pchat_audio_right_ll)
+        LinearLayout itemP2pchatAudioRightLl;
 
-        viewHolderText(View view) {
+        ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }
 
-    //各个布局的控件资源
+    public interface P2PAdapterInter {
+        void onItem(View v, int position);
+
+        void onItemAudio(View v, int position, AnimationDrawable animationDrawable);
+    }
 }

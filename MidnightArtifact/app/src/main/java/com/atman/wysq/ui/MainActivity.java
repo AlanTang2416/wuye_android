@@ -145,7 +145,9 @@ public class MainActivity extends MyBaseActivity {
         mImSession = mImSessionDao.queryBuilder().build().list();
         int n = 0;
         for (int i = 0; i < mImSession.size(); i++) {
-            n += mImSession.get(i).getUnreadNum();
+            if (!mImSession.get(i).getNickName().equals("")) {
+                n += mImSession.get(i).getUnreadNum();
+            }
         }
         if (n==0) {
             tabSessionUnreadTx.setVisibility(View.GONE);

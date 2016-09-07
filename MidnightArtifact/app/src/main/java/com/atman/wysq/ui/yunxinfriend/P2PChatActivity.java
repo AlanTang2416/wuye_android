@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -28,6 +31,8 @@ import com.atman.wysq.model.bean.ImMessage;
 import com.atman.wysq.model.bean.ImSession;
 import com.atman.wysq.model.greendao.gen.ImMessageDao;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
+import com.atman.wysq.model.response.ChatAudioModel;
+import com.atman.wysq.ui.PictureBrowsingActivity;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.utils.UiHelper;
@@ -36,15 +41,17 @@ import com.atman.wysq.yunxin.model.GuessAttachment;
 import com.base.baselibs.iimp.EditCheckBack;
 import com.base.baselibs.iimp.MyTextWatcherTwo;
 import com.base.baselibs.util.LogUtils;
-import com.base.baselibs.util.ThumbnailQuery;
 import com.base.baselibs.widget.MyCleanEditText;
 import com.base.baselibs.widget.PromptDialog;
+import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.media.player.AudioPlayer;
+import com.netease.nimlib.sdk.media.player.OnPlayListener;
 import com.netease.nimlib.sdk.media.record.AudioRecorder;
 import com.netease.nimlib.sdk.media.record.IAudioRecordCallback;
 import com.netease.nimlib.sdk.media.record.RecordType;
@@ -53,9 +60,9 @@ import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
-import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.HashMap;
@@ -74,7 +81,7 @@ import okhttp3.Response;
  * 邮箱 bltang@atman.com
  * 电话 18578909061
  */
-public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IAudioRecordCallback {
+public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IAudioRecordCallback, P2PChatAdapter.P2PAdapterInter {
 
     @Bind(R.id.p2pchat_lv)
     PullToRefreshListView p2pChatLv;
@@ -136,6 +143,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     private List<ImMessage> mImMessageDelete;
     private ImMessage mImMessageUpdata;
     private P2PChatAdapter mAdapter;
+    private AudioPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +173,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         icon = getIntent().getStringExtra("icon");
         verify_status = getIntent().getIntExtra("verify_status", 0);
 
+        player = new AudioPlayer(mContext);
         setBarTitleTx(nick);
         setBarRightTx("清空").setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,14 +235,15 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
             @Override
             public void run() {
                 // Select the last row so it will scroll into view...
-                p2pChatLv.getRefreshableView().smoothScrollToPosition(mAdapter.getCount() - 1);
+//                p2pChatLv.getRefreshableView().smoothScrollToPosition(mAdapter.getCount() - 1);
+                p2pChatLv.getRefreshableView().setSelection(mAdapter.getCount());
             }
         });
     }
 
     private void initListView() {
         initRefreshView(PullToRefreshBase.Mode.DISABLED, p2pChatLv);
-        mAdapter = new P2PChatAdapter(mContext, p2pChatLv);
+        mAdapter = new P2PChatAdapter(mContext, p2pChatLv, this);
         p2pChatLv.setAdapter(mAdapter);
     }
 
@@ -403,6 +413,21 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                             , false, System.currentTimeMillis()
                             , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
                             , str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 1);
+                } else if (messageType == ContentTypeInter.contentTypeAudio) {
+                    ChatAudioModel mChatAudioModel = new Gson().fromJson(messages.get(i).getAttachment().toJson(true), ChatAudioModel.class);
+                    temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                            , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
+                            , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
+                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                            , false, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                            , "[语音]", "", "", "", "", "", "",
+                            ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
+                            , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
+                    LogUtils.e("get>>>>getPath:"+((FileAttachment)messages.get(i).getAttachment()).getPath());
+                    LogUtils.e("get>>>>getThumbPath:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPath());
+                    LogUtils.e("get>>>>getPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getPathForSave());
+                    LogUtils.e("get>>>>getThumbPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave());
+                    LogUtils.e("get>>>>getUrl"+((FileAttachment)messages.get(i).getAttachment()).getUrl());
                 }
                 mAdapter.addImMessageDao(temp);
                 setSession(temp);
@@ -561,18 +586,15 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, message.getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 0);
         } else if (contentType==ContentTypeInter.contentTypeImage) {
-            temp = new ImMessage(message.getUuid()
-                    , message.getSessionId()
-                    , message.getFromAccount()
-                    , message.getRemoteExtension().get("nickName").toString()
-                    , message.getRemoteExtension().get("icon").toString()
-                    , message.getRemoteExtension().get("sex").toString()
-                    , Integer.parseInt(message.getRemoteExtension().get("verify_status").toString())
-                    , true, System.currentTimeMillis()
-                    , Integer.parseInt(message.getRemoteExtension().get("contentType").toString())
-                    , "［图片］", ((FileAttachment)message.getAttachment()).getPathForSave()
+            temp = new ImMessage(message.getUuid(), id
+                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                    , true, System.currentTimeMillis(), contentType, "［图片］", ((FileAttachment)message.getAttachment()).getPathForSave()
                     , ((FileAttachment)message.getAttachment()).getUrl()
-                    , ((FileAttachment)message.getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
+                    , ((FileAttachment)message.getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 0);
         } else if (contentType==ContentTypeInter.contentTypeFinger) {
             LogUtils.e("contentFinger:"+contentFinger);
             int fingerValue = 1;
@@ -591,6 +613,21 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
                     , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 0);
+        } else if (contentType==ContentTypeInter.contentTypeAudio) {
+            LogUtils.e("seedMessage>>>getPath:"+((FileAttachment)message.getAttachment()).getPath());
+            LogUtils.e("seedMessage>>>>getThumbPath:"+((FileAttachment)message.getAttachment()).getThumbPath());
+            LogUtils.e("seedMessage>>>>getPathForSave:"+((FileAttachment)message.getAttachment()).getPathForSave());
+            LogUtils.e("seedMessage>>>>getThumbPathForSave:"+((FileAttachment)message.getAttachment()).getThumbPathForSave());
+            LogUtils.e("seedMessage>>>>getUrl"+((FileAttachment)message.getAttachment()).getUrl());
+            ChatAudioModel mChatAudioModel = new Gson().fromJson(message.getAttachment().toJson(true), ChatAudioModel.class);
+            temp = new ImMessage(message.getUuid(), id
+                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                    , true, System.currentTimeMillis(), contentType, "[语音]", "", "", "", "", "", "", ((FileAttachment)message.getAttachment()).getPathForSave()
+                    , ((FileAttachment)message.getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 0);
         }
         mAdapter.addImMessageDao(temp);
         mImMessageDao.insertOrReplace(temp);
@@ -636,11 +673,6 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         }
         if (imageUri != null) {
             IMMessage message = null;
-//            LogUtils.e("imageUri:" + imageUri);
-//            LogUtils.e("imageUri.toString():" + imageUri.toString());
-//            LogUtils.e("imageUri>>>>:" + imageUri.toString().contains("content:"));
-//            LogUtils.e("imageUri.getPath():" + imageUri.getPath());
-//            LogUtils.e("imageUri>>>>:" + imageUri.getPath().toString().contains("content:"));
             // 创建图片消息
             if (imageUri.toString().contains("content:")){
                 String[] proj = {MediaStore.Images.Media.DATA};
@@ -718,7 +750,80 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         }
     };
 
-    private void selectLast(){
+    @Override
+    public void onItem(View v, int position) {
+        switch (v.getId()) {
+            case R.id.item_p2pchat_image_left_iv:
+            case R.id.item_p2pchat_image_right_iv:
+                String imagePath = "";
+                if (mAdapter.getItem(position).getImageThumUrl().startsWith("http")) {
+                    LogUtils.e(">>>>:"+mAdapter.getItem(position).getImageUrl());
+                    imagePath = mAdapter.getItem(position).getImageUrl();
+                } else {
+                    File mFile = new File(mAdapter.getItem(position).getImageFilePath());
+                    if (mFile.exists()) {
+                        LogUtils.e(">>>>:"+("file://"+mAdapter.getItem(position).getImageFilePath()));
+                        imagePath = "file://"+mAdapter.getItem(position).getImageFilePath();
+                    } else {
+                        LogUtils.e(">>>>:"+mAdapter.getItem(position).getImageUrl());
+                        imagePath = mAdapter.getItem(position).getImageUrl();
+                    }
+                }
 
+                Intent intent = new Intent();
+                intent.putExtra("image", imagePath);
+                intent.putExtra("num", 0);
+                intent.setClass(mContext, PictureBrowsingActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void onItemAudio(View v, int position, final AnimationDrawable animationDrawable) {
+        switch (v.getId()) {
+            case R.id.item_p2pchat_audio_right_ll:
+            case R.id.item_p2pchat_audio_left_ll:
+                if ((new File(mAdapter.getItem(position).getAudioFilePath()).exists())) {
+                    player.setDataSource(mAdapter.getItem(position).getAudioFilePath());
+                    player.setOnPlayListener(new OnPlayListener() {
+                        @Override
+                        public void onPrepared() {
+
+                        }
+
+                        @Override
+                        public void onCompletion() {
+                            animationDrawable.stop();
+                            animationDrawable.selectDrawable(0);
+                        }
+
+                        @Override
+                        public void onInterrupt() {
+                            animationDrawable.stop();
+                            animationDrawable.selectDrawable(0);
+                        }
+
+                        @Override
+                        public void onError(String s) {
+                            animationDrawable.stop();
+                            animationDrawable.selectDrawable(0);
+                        }
+
+                        @Override
+                        public void onPlaying(long l) {
+                            animationDrawable.start();
+                        }
+                    });
+                    if (animationDrawable.isRunning()) {
+                        player.stop();
+                    } else {
+                        player.start(AudioManager.STREAM_MUSIC);
+                    }
+                } else {
+                    showToast("没有文件");
+                }
+                break;
+        }
     }
 }

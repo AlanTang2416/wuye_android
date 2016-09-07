@@ -18,6 +18,7 @@ import com.atman.wysq.model.greendao.gen.DaoMaster;
 import com.atman.wysq.model.greendao.gen.DaoSession;
 import com.atman.wysq.model.greendao.gen.ImMessageDao;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
+import com.atman.wysq.model.response.ChatAudioModel;
 import com.atman.wysq.model.response.ConfigModel;
 import com.atman.wysq.model.response.GetGoldenRoleModel;
 import com.atman.wysq.model.response.GetUserIndexModel;
@@ -29,6 +30,7 @@ import com.base.baselibs.base.BaseApplication;
 import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PhoneInfo;
 import com.base.baselibs.util.PreferenceUtil;
+import com.google.gson.Gson;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -189,16 +191,6 @@ public class MyBaseApplication extends BaseApplication {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
             for (int i=0;i<messages.size();i++) {
                 if (messages.get(i).getRemoteExtension()!=null) {
-
-//                    LogUtils.e("messages.size():"+messages.size()+",messages.get(i).getUuid():"+messages.get(i).getUuid());
-//                    LogUtils.e("messages.get(i).getSessionId():"+messages.get(i).getSessionId());
-//                    LogUtils.e("messages.get(i).getFromAccount():"+messages.get(i).getFromAccount());
-//                    LogUtils.e("messages.get(i).getRemoteExtension().get(\"nickName\").toString():"+messages.get(i).getRemoteExtension().get("nickName").toString());
-//                    LogUtils.e("messages.get(i).getRemoteExtension().get(\"icon\").toString():"+messages.get(i).getRemoteExtension().get("icon").toString());
-//                    LogUtils.e("messages.get(i).getRemoteExtension().get(\"sex\").toString():"+messages.get(i).getRemoteExtension().get("sex").toString());
-//                    LogUtils.e("Integer.parseInt(messages.get(i).getRemoteExtension().get(\"verify_status\").toString()):"+Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString()));
-//                    LogUtils.e("Integer.parseInt(messages.get(i).getRemoteExtension().get(\"contentType\").toString()):"+Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString()));
-//                    LogUtils.e("messages.get(i).getContent():"+messages.get(i).getContent());
                     ImMessage temp = null;
                     boolean isMy = false;
                     if (messages.get(i).getFromAccount().equals(String.valueOf(
@@ -244,6 +236,22 @@ public class MyBaseApplication extends BaseApplication {
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
                                 , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
                                 , str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 1);
+                    } else if (messageType == ContentTypeInter.contentTypeAudio) {
+                        ChatAudioModel mChatAudioModel = new Gson().fromJson(messages.get(i).getAttachment().toJson(true), ChatAudioModel.class);
+                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , "[语音]", "", "", "", "", "", "",
+                                ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
+//                        LogUtils.e("application>>>>get>>>>getPath:"+((FileAttachment)messages.get(i).getAttachment()).getPath());
+//                        LogUtils.e("application>>>>get>>>>getThumbPath:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPath());
+//                        LogUtils.e("application>>>>get>>>>getPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getPathForSave());
+//                        LogUtils.e("application>>>>get>>>>getThumbPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave());
+//                        LogUtils.e("application>>>>get>>>>getUrl"+((FileAttachment)messages.get(i).getAttachment()).getUrl());
+//                        LogUtils.e("application>>>>get>>>>toJson"+((FileAttachment)messages.get(i).getAttachment()).toJson(true));
                     }
                     if (!messages.get(i).getSessionId().equals(mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id())) {
                         mDaoSession.getImMessageDao().insertOrReplace(temp);
