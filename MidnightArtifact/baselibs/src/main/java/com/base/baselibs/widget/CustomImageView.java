@@ -72,9 +72,11 @@ public class CustomImageView extends ImageView {
                     getPaddingLeft(), getPaddingTop(), null);
 
         } else {
-            Bitmap reSizeImage = reSizeImage(image, width, height);
-            canvas.drawBitmap(createRoundImage(reSizeImage, width, height),
-                    getPaddingLeft(), getPaddingTop(), null);
+            if (image != null){
+                Bitmap reSizeImage = reSizeImage(image, width, height);
+                canvas.drawBitmap(createRoundImage(reSizeImage, width, height),
+                        getPaddingLeft(), getPaddingTop(), null);
+            }
         }
     }
 

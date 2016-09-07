@@ -23,6 +23,7 @@ import com.atman.wysq.model.response.GetGoldenRoleModel;
 import com.atman.wysq.model.response.GetUserIndexModel;
 import com.atman.wysq.ui.MainActivity;
 import com.atman.wysq.yunxin.DemoCache;
+import com.atman.wysq.yunxin.model.ContentTypeInter;
 import com.atman.wysq.yunxin.utils.SystemUtil;
 import com.base.baselibs.base.BaseApplication;
 import com.base.baselibs.util.LogUtils;
@@ -122,9 +123,11 @@ public class MyBaseApplication extends BaseApplication {
         initDisplayConfig();
 
         UMmengInit();
-        YunXinInit();
 
         setDatabase();
+
+        YunXinInit();
+
     }
 
     public static MyBaseApplication getApplication() {
@@ -160,6 +163,12 @@ public class MyBaseApplication extends BaseApplication {
         // SDK初始化（启动后台服务，若已经存在用户登录信息， SDK 将完成自动登录）
         NIMClient.init(this, loginInfo(), options());
 
+        if (isLogined()) {
+            initObserver();
+        }
+    }
+
+    public void initObserver() {
         // ... your codes
         if (inMainProcess()) {
             // 注意：以下操作必须在主进程中进行
@@ -170,6 +179,10 @@ public class MyBaseApplication extends BaseApplication {
         }
     }
 
+    String nick = "";
+    String sex = "F";
+    String icon = "";
+    String verify_status = "0";
     Observer<List<IMMessage>> incomingMessageObserver = new Observer<List<IMMessage>>() {
         @Override
         public void onEvent(List<IMMessage> messages) {
@@ -187,57 +200,76 @@ public class MyBaseApplication extends BaseApplication {
 //                    LogUtils.e("Integer.parseInt(messages.get(i).getRemoteExtension().get(\"contentType\").toString()):"+Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString()));
 //                    LogUtils.e("messages.get(i).getContent():"+messages.get(i).getContent());
                     ImMessage temp = null;
-                    if (messages.get(i).getMsgType() == MsgTypeEnum.text) {
-                        temp = new ImMessage(messages.get(i).getUuid()
-                                , messages.get(i).getSessionId()
-                                , messages.get(i).getFromAccount()
-                                , messages.get(i).getRemoteExtension().get("nickName").toString()
-                                , messages.get(i).getRemoteExtension().get("icon").toString()
-                                , messages.get(i).getRemoteExtension().get("sex").toString()
+                    boolean isMy = false;
+                    if (messages.get(i).getFromAccount().equals(String.valueOf(
+                            mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id()))) {
+                        isMy = true;
+                    }
+                    int messageType = Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString());
+                    if (messageType == ContentTypeInter.contentTypeText) {
+                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                                , false, System.currentTimeMillis()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
                                 , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
-                    } else if (messages.get(i).getMsgType() == MsgTypeEnum.image) {
-//                        LogUtils.e("MsgTypeEnum.image:"+messages.get(i).getAttachment().toJson(true).toString());
-//                        LogUtils.e("application>>>>image>>>>getPath:"+((FileAttachment)messages.get(i).getAttachment()).getPath());
-//                        LogUtils.e("application>>>>image>>>>getPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getPathForSave());
-//                        LogUtils.e("application>>>>image>>>>getThumbPath:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPath());
-//                        LogUtils.e("application>>>>image>>>>getThumbPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave());
-//                        LogUtils.e("application>>>>image>>>>getUrl:"+((FileAttachment)messages.get(i).getAttachment()).getUrl());
-                        temp = new ImMessage(messages.get(i).getUuid()
-                                , messages.get(i).getSessionId()
-                                , messages.get(i).getFromAccount()
-                                , messages.get(i).getRemoteExtension().get("nickName").toString()
-                                , messages.get(i).getRemoteExtension().get("icon").toString()
-                                , messages.get(i).getRemoteExtension().get("sex").toString()
+                    } else if (messageType == ContentTypeInter.contentTypeImage) {
+                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                                , false, System.currentTimeMillis()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
-                                , "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
+                                , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , "[图片]", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
                         if (isOriginImageHasDownloaded(messages.get(i))) {
                             AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
                             future.setCallback(callback);
                         }
-                    }
-                    mDaoSession.getImMessageDao().insert(temp);
-
-                    ImSession mImSession = mDaoSession.getImSessionDao().queryBuilder().where(ImSessionDao.Properties.UserId.eq(messages.get(i).getFromAccount())).build().unique();
-                    if (mImSession==null) {
-                        ImSession mImSessionTemp = new ImSession(messages.get(i).getFromAccount(), messages.get(i).getContent()
-                                , messages.get(i).getRemoteExtension().get("nickName").toString()
-                                , messages.get(i).getRemoteExtension().get("icon").toString()
-                                , messages.get(i).getRemoteExtension().get("sex").toString()
+                    } else if (messageType == ContentTypeInter.contentTypeFinger) {
+                        LogUtils.e("contentFinger:"+messages.get(i).getRemoteExtension().get("contentFinger"));
+                        String contentFinger = messages.get(i).getRemoteExtension().get("contentFinger").toString();
+                        int fingerValue = 1;
+                        String str = "[石头]";
+                        if (contentFinger.equals("2")) {
+                            str = "[剪刀]";
+                            fingerValue = 2;
+                        } else if (contentFinger.equals("3")) {
+                            str = "[布]";
+                            fingerValue = 3;
+                        }
+                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                                , System.currentTimeMillis(), 0);
-                        mDaoSession.getImSessionDao().insert(mImSessionTemp);
-                    } else {
-                        mImSession.setContent(messages.get(i).getContent());
-                        mImSession.setTime(System.currentTimeMillis());
-                        mImSession.setUnreadNum(mImSession.getUnreadNum()+1);
-                        mDaoSession.getImSessionDao().update(mImSession);
+                                , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 1);
+                    }
+                    if (!messages.get(i).getSessionId().equals(mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id())) {
+                        mDaoSession.getImMessageDao().insertOrReplace(temp);
+
+                        ImSession mImSession = mDaoSession.getImSessionDao().queryBuilder().where(ImSessionDao.Properties.UserId.eq(messages.get(i).getSessionId())).build().unique();
+                        if (!messages.get(i).getFromAccount().equals(String.valueOf(
+                                mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id()))) {
+                            nick = messages.get(i).getRemoteExtension().get("nickName").toString();
+                            sex = messages.get(i).getRemoteExtension().get("sex").toString();
+                            icon = messages.get(i).getRemoteExtension().get("icon").toString();
+                            verify_status = messages.get(i).getRemoteExtension().get("verify_status").toString();
+                        }
+                        if (mImSession==null) {
+                            ImSession mImSessionTemp = new ImSession(messages.get(i).getSessionId(), temp.getContent()
+                                    , nick, icon, sex, Integer.parseInt(verify_status), System.currentTimeMillis(), 0);
+                            mDaoSession.getImSessionDao().insertOrReplace(mImSessionTemp);
+                        } else {
+                            mImSession.setContent(temp.getContent());
+                            mImSession.setNickName(nick);
+                            mImSession.setSex(sex);
+                            mImSession.setIcon(icon);
+                            mImSession.setVerify_status(Integer.parseInt(verify_status));
+                            mImSession.setTime(System.currentTimeMillis());
+                            mImSession.setUnreadNum(mImSession.getUnreadNum()+1);
+                            mDaoSession.getImSessionDao().update(mImSession);
+                        }
                     }
                 }
             }

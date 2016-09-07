@@ -15,22 +15,22 @@ import com.tbl.okhttputils.utils.L;
  */
 public class BaseApplication extends Application {
 
-    private static Context mContext = null;
-    protected static BaseApplication mInstance = null;
+    private static Context mBaseContext = null;
+    protected static BaseApplication mBaseInstance = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = getApplicationContext();
-        mInstance = this;
+        mBaseContext = getApplicationContext();
+        mBaseInstance = this;
     }
 
     public static Context getmContext() {
-        return mContext;
+        return mBaseContext;
     }
 
-    public static BaseApplication getApp(){
-        return mInstance;
+    public static BaseApplication getBaseApp(){
+        return mBaseInstance;
     }
 
     /**

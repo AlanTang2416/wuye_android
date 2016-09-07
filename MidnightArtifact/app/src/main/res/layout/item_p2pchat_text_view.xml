@@ -21,7 +21,6 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/item_p2pchat_text_time_tx"
         android:layout_marginLeft="@dimen/dimen_dp_10"
-        android:src="@mipmap/ic_launcher"
         android:visibility="gone"
         img:circle="false"
         img:radius="@dimen/dimen_dp_5" />
@@ -33,7 +32,6 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/item_p2pchat_text_time_tx"
         android:layout_marginRight="@dimen/dimen_dp_10"
-        android:src="@mipmap/ic_launcher"
         android:visibility="gone"
         img:circle="false"
         img:radius="@dimen/dimen_dp_5" />
@@ -64,6 +62,23 @@
                 android:textColor="@color/color_black"
                 android:layout_marginTop="@dimen/dimen_dp_5"
                 android:textSize="@dimen/dimen_sp_15"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/item_p2pchat_image_left_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_message_left_bg"
+                android:maxWidth="@dimen/dimen_dp_250"
+                android:layout_marginTop="@dimen/dimen_dp_5"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/item_p2pchat_finger_left_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_dp_10"
+                android:layout_marginTop="@dimen/dimen_dp_5"
                 android:visibility="gone" />
         </FrameLayout>
 
@@ -112,6 +127,25 @@
                     android:gravity="center"
                     android:textColor="@color/color_black"
                     android:textSize="@dimen/dimen_sp_15"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/item_p2pchat_image_right_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/item_message_right_bg"
+                    android:layout_marginTop="@dimen/dimen_dp_5"
+                    android:maxWidth="@dimen/dimen_dp_250"
+                    android:gravity="center"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/item_p2pchat_finger_right_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_dp_5"
+                    android:layout_marginRight="@dimen/dimen_dp_10"
+                    android:gravity="center"
                     android:visibility="gone" />
             </FrameLayout>
 

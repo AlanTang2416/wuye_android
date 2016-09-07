@@ -222,7 +222,13 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
         mImMessage = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(id)).build().list();
         mAdapter.addImMessageDao(mImMessage);
-        p2pChatLv.getRefreshableView().smoothScrollToPosition(p2pChatLv.getRefreshableView().getBottom());
+        p2pChatLv.getRefreshableView().post(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                p2pChatLv.getRefreshableView().smoothScrollToPosition(mAdapter.getCount() - 1);
+            }
+        });
     }
 
     private void initListView() {
@@ -346,7 +352,8 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
             for (int i=0;i<messages.size();i++) {
                 ImMessage temp = null;
-                if (messages.get(i).getMsgType() == MsgTypeEnum.text) {
+                int messageType = Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString());
+                if (messageType == ContentTypeInter.contentTypeText) {
                     temp = new ImMessage(messages.get(i).getUuid()
                             , messages.get(i).getSessionId()
                             , messages.get(i).getFromAccount()
@@ -357,12 +364,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                             , false, System.currentTimeMillis()
                             , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
                             , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
-                } else if (messages.get(i).getMsgType() == MsgTypeEnum.image) {
-//                    LogUtils.e("get>>>>image>>>>getPath:"+((FileAttachment)messages.get(i).getAttachment()).getPath());
-//                    LogUtils.e("get>>>>image>>>>getPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getPathForSave());
-//                    LogUtils.e("get>>>>image>>>>getThumbPath:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPath());
-//                    LogUtils.e("get>>>>image>>>>getThumbPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave());
-//                    LogUtils.e("get>>>>image>>>>getUrl:"+((FileAttachment)messages.get(i).getAttachment()).getUrl());
+                } else if (messageType == ContentTypeInter.contentTypeImage) {
                     temp = new ImMessage(messages.get(i).getUuid()
                             , messages.get(i).getSessionId()
                             , messages.get(i).getFromAccount()
@@ -379,11 +381,32 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                         AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
                         future.setCallback(callback);
                     }
+                } else if (messageType == ContentTypeInter.contentTypeFinger) {
+                    LogUtils.e("contentFinger:"+messages.get(i).getRemoteExtension().get("contentFinger"));
+                    String contentFinger = messages.get(i).getRemoteExtension().get("contentFinger").toString();
+                    int fingerValue = Integer.parseInt(messages.get(i).getRemoteExtension().get("contentFinger").toString());
+                    String str = "[石头]";
+                    if (contentFinger.equals("2")) {
+                        str = "[剪刀]";
+                        fingerValue = 2;
+                    } else if (contentFinger.equals("3")) {
+                        str = "[布]";
+                        fingerValue = 3;
+                    }
+                    temp = new ImMessage(messages.get(i).getUuid()
+                            , messages.get(i).getSessionId()
+                            , messages.get(i).getFromAccount()
+                            , messages.get(i).getRemoteExtension().get("nickName").toString()
+                            , messages.get(i).getRemoteExtension().get("icon").toString()
+                            , messages.get(i).getRemoteExtension().get("sex").toString()
+                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                            , false, System.currentTimeMillis()
+                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                            , str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 1);
                 }
                 mAdapter.addImMessageDao(temp);
-                setSession(messages.get(i));
+                setSession(temp);
             }
-            p2pChatLv.getRefreshableView().smoothScrollToPosition(p2pChatLv.getRefreshableView().getBottom());
         }
     };
 
@@ -538,11 +561,6 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, message.getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 0);
         } else if (contentType==ContentTypeInter.contentTypeImage) {
-//            LogUtils.e("p2p>>>>image>>>>getPath:"+((FileAttachment)message.getAttachment()).getPath());
-//            LogUtils.e("p2p>>>>image>>>>getPathForSave:"+((FileAttachment)message.getAttachment()).getPathForSave());
-//            LogUtils.e("p2p>>>>image>>>>getThumbPath:"+((FileAttachment)message.getAttachment()).getThumbPath());
-//            LogUtils.e("p2p>>>>image>>>>getThumbPathForSave:"+((FileAttachment)message.getAttachment()).getThumbPathForSave());
-//            LogUtils.e("p2p>>>>image>>>>getUrl:"+((FileAttachment)message.getAttachment()).getUrl());
             temp = new ImMessage(message.getUuid()
                     , message.getSessionId()
                     , message.getFromAccount()
@@ -555,19 +573,36 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     , "［图片］", ((FileAttachment)message.getAttachment()).getPathForSave()
                     , ((FileAttachment)message.getAttachment()).getUrl()
                     , ((FileAttachment)message.getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
+        } else if (contentType==ContentTypeInter.contentTypeFinger) {
+            LogUtils.e("contentFinger:"+contentFinger);
+            int fingerValue = 1;
+            String str = "[石头]";
+            if (contentFinger.equals("2")) {
+                str = "[剪刀]";
+                fingerValue = 2;
+            } else if (contentFinger.equals("3")) {
+                str = "[布]";
+                fingerValue = 3;
+            }
+            temp= new ImMessage(message.getUuid(), id
+                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                    , true, System.currentTimeMillis(), contentType, str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 0);
         }
         mAdapter.addImMessageDao(temp);
-        mImMessageDao.insert(temp);
-        p2pChatLv.getRefreshableView().smoothScrollToPosition(p2pChatLv.getRefreshableView().getBottom());
-        setSession(message);
+        mImMessageDao.insertOrReplace(temp);
+        setSession(temp);
     }
 
-    private void setSession(IMMessage message) {
+    private void setSession(ImMessage message) {
         mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(id)).build().unique();
         if (mImSession==null) {
             ImSession mImSessionTemp = new ImSession(id, message.getContent(), nick, icon, sex, verify_status
                     , System.currentTimeMillis(), 0);
-            mImSessionDao.insert(mImSessionTemp);
+            mImSessionDao.insertOrReplace(mImSessionTemp);
         } else {
             mImSession.setContent(message.getContent());
             mImSession.setTime(System.currentTimeMillis());

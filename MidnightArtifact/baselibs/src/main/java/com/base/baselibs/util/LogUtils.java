@@ -11,7 +11,7 @@ public class LogUtils {
      * @param msg The message you would like logged.
      */
     public static void v(String msg) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.v(TAG, buildMessage(msg));
     }
 
@@ -22,7 +22,7 @@ public class LogUtils {
      * @param thr An exception to log
      */
     public static void v(String msg, Throwable thr) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.v(TAG, buildMessage(msg), thr);
     }
 
@@ -32,7 +32,7 @@ public class LogUtils {
      * @param msg
      */
     public static void d(String msg) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.d(TAG, buildMessage(msg));
     }
 
@@ -43,7 +43,7 @@ public class LogUtils {
      * @param thr An exception to log
      */
     public static void d(String msg, Throwable thr) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.d(TAG, buildMessage(msg), thr);
     }
 
@@ -53,7 +53,7 @@ public class LogUtils {
      * @param msg The message you would like logged.
      */
     public static void i(String msg) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.i(TAG, buildMessage(msg));
     }
     /**
@@ -62,7 +62,7 @@ public class LogUtils {
      * @param msg The message you would like logged.
      */
     public static void i(String TAG,String msg) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.i(TAG, buildMessage(msg));
     }
 
@@ -73,7 +73,7 @@ public class LogUtils {
      * @param thr An exception to log
      */
     public static void i(String msg, Throwable thr) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.i(TAG, buildMessage(msg), thr);
     }
 
@@ -83,7 +83,7 @@ public class LogUtils {
      * @param msg The message you would like logged.
      */
     public static void e(String msg) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.e(TAG, buildMessage(msg));
     }
 
@@ -93,7 +93,7 @@ public class LogUtils {
      * @param msg The message you would like logged.
      */
     public static void w(String msg) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.w(TAG, buildMessage(msg));
     }
 
@@ -104,7 +104,7 @@ public class LogUtils {
      * @param thr An exception to log
      */
     public static void w(String msg, Throwable thr) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.w(TAG, buildMessage(msg), thr);
     }
 
@@ -114,7 +114,7 @@ public class LogUtils {
      * @param thr An exception to log
      */
     public static void w(Throwable thr) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.w(TAG, buildMessage(""), thr);
     }
 
@@ -125,7 +125,7 @@ public class LogUtils {
      * @param thr An exception to log
      */
     public static void e(String msg, Throwable thr) {
-        if (BaseApplication.getApp().isApkDebugable())
+        if (BaseApplication.getBaseApp().isApkDebugable())
             android.util.Log.e(TAG, buildMessage(msg), thr);
     }
 
