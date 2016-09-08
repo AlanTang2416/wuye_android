@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -19,6 +20,8 @@ import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.MyTools;
 import com.atman.wysq.widget.face.SmileUtils;
 import com.atman.wysq.yunxin.model.ContentTypeInter;
+import com.base.baselibs.util.DensityUtil;
+import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.CustomImageView;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -50,12 +53,14 @@ public class P2PChatAdapter extends BaseAdapter {
     private PullToRefreshListView p2pChatLv;
     private boolean isBottom = false;
     private P2PAdapterInter mP2PAdapterInter;
+    private int width;
 
-    public P2PChatAdapter(Context context, PullToRefreshListView p2pChatLv, P2PAdapterInter mP2PAdapterInter) {
+    public P2PChatAdapter(Context context, int width, PullToRefreshListView p2pChatLv, P2PAdapterInter mP2PAdapterInter) {
         this.context = context;
         this.mImMessage = new ArrayList<>();
         this.p2pChatLv = p2pChatLv;
         this.mP2PAdapterInter = mP2PAdapterInter;
+        this.width = width;
         layoutInflater = LayoutInflater.from(context);
     }
 
@@ -125,11 +130,16 @@ public class P2PChatAdapter extends BaseAdapter {
 
         ImMessage temp = mImMessage.get(position);
 
-        if (position == 0 || (MyTools.getGapCountM(time, temp.getTime()) >= 5)) {
+        if (position == 0) {
             time = temp.getTime();
             isShowTime = true;
         } else {
-            isShowTime = false;
+            if (MyTools.getGapCountM(time, temp.getTime()) >= 5) {
+                time = temp.getTime();
+                isShowTime = true;
+            } else {
+                isShowTime = false;
+            }
         }
 
         holderText.itemP2pchatTextLeftTx.setVisibility(View.GONE);
@@ -144,17 +154,17 @@ public class P2PChatAdapter extends BaseAdapter {
         if (temp.getIsSelfSend()) {
             holderText.itemP2pchatTextHeadrightIv.setVisibility(View.VISIBLE);
             holderText.itemP2pchatTextHeadleftIv.setVisibility(View.GONE);
-            if (holderText.itemP2pchatTextHeadrightIv.getDrawable() == null) {
+//            if (holderText.itemP2pchatTextHeadrightIv.getDrawable() == null) {
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + temp.getIcon()
                         , holderText.itemP2pchatTextHeadrightIv, MyBaseApplication.getApplication().getOptionsNot(), mListener);
-            }
+//            }
         } else {
             holderText.itemP2pchatTextHeadrightIv.setVisibility(View.GONE);
             holderText.itemP2pchatTextHeadleftIv.setVisibility(View.VISIBLE);
-            if (holderText.itemP2pchatTextHeadrightIv.getDrawable() == null) {
+//            if (holderText.itemP2pchatTextHeadrightIv.getDrawable() == null) {
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + temp.getIcon()
                         , holderText.itemP2pchatTextHeadleftIv, MyBaseApplication.getApplication().getOptionsNot(), mListener);
-            }
+//            }
         }
         if (isShowTime) {
             holderText.itemP2pchatTextTimeTx.setVisibility(View.VISIBLE);
@@ -210,10 +220,18 @@ public class P2PChatAdapter extends BaseAdapter {
             case ContentTypeInter.contentTypeImageSmall:
                 break;
             case ContentTypeInter.contentTypeAudio:
+                int w = (int)temp.getAudioDuration()* DensityUtil.dp2px(context, 250)/60;
+                if (DensityUtil.dp2px(context, w)<DensityUtil.dp2px(context, 70)) {
+                    w = 70;
+                }
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(DensityUtil.dp2px(context, w)
+                        , FrameLayout.LayoutParams.WRAP_CONTENT);
                 if (temp.getIsSelfSend()) {
                     holderText.itemP2pchatAudioRightLl.setVisibility(View.VISIBLE);
+                    holderText.itemP2pchatAudioRightLl.setLayoutParams(params);
                     holderText.itemP2pchatAudioRightTx.setText(temp.getAudioDuration()+"''");
                 } else {
+                    holderText.itemP2pchatAudioLeftLl.setLayoutParams(params);
                     holderText.itemP2pchatAudioLeftLl.setVisibility(View.VISIBLE);
                     holderText.itemP2pchatAudioLeftTx.setText(temp.getAudioDuration()+"''");
                 }

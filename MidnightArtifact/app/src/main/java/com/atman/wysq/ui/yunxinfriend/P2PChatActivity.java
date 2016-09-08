@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -243,7 +244,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
 
     private void initListView() {
         initRefreshView(PullToRefreshBase.Mode.DISABLED, p2pChatLv);
-        mAdapter = new P2PChatAdapter(mContext, p2pChatLv, this);
+        mAdapter = new P2PChatAdapter(mContext, getmWidth(), p2pChatLv, this);
         p2pChatLv.setAdapter(mAdapter);
     }
 
@@ -498,6 +499,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 p2pchatRecordBt.setVisibility(View.GONE);
                 p2pchatAddLl.setVisibility(View.GONE);
                 p2pchatRecordIv.setImageResource(R.mipmap.chat_record_ic);
+                handler.postDelayed(runnable, 200);
                 break;
             case R.id.p2pchat_record_iv:
                 if (llFacechoose.getVisibility() == View.VISIBLE) {
@@ -520,6 +522,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 }
                 blogdetailAddemolIv.setImageResource(R.mipmap.chat_face_ic);
                 p2pchatAddLl.setVisibility(View.GONE);
+                handler.postDelayed(runnable, 200);
                 break;
             case R.id.p2pchat_add_iv:
                 if (p2pchatAddLl.getVisibility() == View.GONE) {
@@ -538,6 +541,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 llFacechoose.setVisibility(View.GONE);
                 p2pchatRecordIv.setImageResource(R.mipmap.chat_record_ic);
                 blogdetailAddemolIv.setImageResource(R.mipmap.chat_face_ic);
+                handler.postDelayed(runnable, 200);
                 break;
             case R.id.p2pchat_send_bt:
                 // 创建文本消息
@@ -757,15 +761,12 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
             case R.id.item_p2pchat_image_right_iv:
                 String imagePath = "";
                 if (mAdapter.getItem(position).getImageThumUrl().startsWith("http")) {
-                    LogUtils.e(">>>>:"+mAdapter.getItem(position).getImageUrl());
                     imagePath = mAdapter.getItem(position).getImageUrl();
                 } else {
                     File mFile = new File(mAdapter.getItem(position).getImageFilePath());
                     if (mFile.exists()) {
-                        LogUtils.e(">>>>:"+("file://"+mAdapter.getItem(position).getImageFilePath()));
                         imagePath = "file://"+mAdapter.getItem(position).getImageFilePath();
                     } else {
-                        LogUtils.e(">>>>:"+mAdapter.getItem(position).getImageUrl());
                         imagePath = mAdapter.getItem(position).getImageUrl();
                     }
                 }
@@ -826,4 +827,12 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 break;
         }
     }
+
+    Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            p2pChatLv.getRefreshableView().smoothScrollToPosition(mAdapter.getCount());
+        }
+    };
 }

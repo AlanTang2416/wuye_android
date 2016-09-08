@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_dp_5"
-                android:gravity="center_vertical|left"
+                android:gravity="center_vertical|right"
                 android:background="@drawable/item_message_left_bg"
                 android:visibility="gone"
                 android:clickable="true"
