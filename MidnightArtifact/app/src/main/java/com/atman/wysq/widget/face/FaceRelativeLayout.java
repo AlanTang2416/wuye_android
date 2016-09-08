@@ -253,8 +253,8 @@ public class FaceRelativeLayout extends RelativeLayout implements
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT,
                             LayoutParams.WRAP_CONTENT));
-            layoutParams.leftMargin = 10;
-            layoutParams.rightMargin = 10;
+            layoutParams.leftMargin = 5;
+            layoutParams.rightMargin = 5;
             layoutParams.width = 8;
             layoutParams.height = 8;
             layout_point.addView(imageView, layoutParams);

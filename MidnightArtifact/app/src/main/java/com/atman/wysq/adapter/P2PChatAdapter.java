@@ -128,7 +128,7 @@ public class P2PChatAdapter extends BaseAdapter {
             holderText = (ViewHolder) convertView.getTag();
         }
 
-        ImMessage temp = mImMessage.get(position);
+        final ImMessage temp = mImMessage.get(position);
 
         if (position == 0) {
             time = temp.getTime();
@@ -218,11 +218,32 @@ public class P2PChatAdapter extends BaseAdapter {
                 }
                 break;
             case ContentTypeInter.contentTypeImageSmall:
+                if (temp.getIsSelfSend()) {
+                    holderText.itemP2pchatImageRightIv.setVisibility(View.VISIBLE);
+                    if (temp.getImageSThumUrl().startsWith("http")) {
+                        ImageLoader.getInstance().displayImage(temp.getImageSUrl(), holderText.itemP2pchatImageRightIv
+                                , MyBaseApplication.getApplication().getOptionsNot(), mListener);
+                    } else {
+                        File mFile = new File(temp.getImageSFilePath());
+                        if (mFile.exists()) {
+                            ImageLoader.getInstance().displayImage("file://" + temp.getImageSFilePath(), holderText.itemP2pchatImageRightIv);
+                        } else {
+                            ImageLoader.getInstance().displayImage(temp.getImageSUrl(), holderText.itemP2pchatImageRightIv
+                                    , MyBaseApplication.getApplication().getOptionsNot(), mListener);
+                        }
+                    }
+                } else {
+                    holderText.itemP2pchatImageLeftIv.setVisibility(View.VISIBLE);
+                    ImageLoader.getInstance().displayImage(temp.getImageSUrl(), holderText.itemP2pchatImageLeftIv, MyBaseApplication.getApplication().getOptionsNot());
+                }
                 break;
             case ContentTypeInter.contentTypeAudio:
-                int w = (int)temp.getAudioDuration()* DensityUtil.dp2px(context, 250)/60;
+                int w = (int)temp.getAudioDuration()* DensityUtil.dp2px(context, 180)/60;
+                w = (int) ((w *2 / context.getResources().getDisplayMetrics().density)*10/10);
                 if (DensityUtil.dp2px(context, w)<DensityUtil.dp2px(context, 70)) {
                     w = 70;
+                } else if (DensityUtil.dp2px(context, w)>=DensityUtil.dp2px(context, 180)) {
+                    w = 180;
                 }
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(DensityUtil.dp2px(context, w)
                         , FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -276,13 +297,17 @@ public class P2PChatAdapter extends BaseAdapter {
         holderText.itemP2pchatImageRightIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mP2PAdapterInter.onItem(v, position);
+                if (temp.getContentType()!=ContentTypeInter.contentTypeImageSmall) {
+                    mP2PAdapterInter.onItem(v, position);
+                }
             }
         });
         holderText.itemP2pchatImageLeftIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mP2PAdapterInter.onItem(v, position);
+                if (temp.getContentType()!=ContentTypeInter.contentTypeImageSmall) {
+                    mP2PAdapterInter.onItem(v, position);
+                }
             }
         });
 

@@ -140,13 +140,14 @@ public class MainActivity extends MyBaseActivity {
     }
 
     public void countUnReadNum() {
-        LogUtils.e("countUnReadNum>>>>");
         mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
         mImSession = mImSessionDao.queryBuilder().build().list();
         int n = 0;
-        for (int i = 0; i < mImSession.size(); i++) {
-            if (!mImSession.get(i).getNickName().equals("")) {
-                n += mImSession.get(i).getUnreadNum();
+        if (isLogin()) {
+            for (int i = 0; i < mImSession.size(); i++) {
+                if (!mImSession.get(i).getNickName().equals("")) {
+                    n += mImSession.get(i).getUnreadNum();
+                }
             }
         }
         if (n==0) {
@@ -196,7 +197,6 @@ public class MainActivity extends MyBaseActivity {
         setSwipeBackEnable(false);
         rtWidth = getmWidth()/8;
         params = (RelativeLayout.LayoutParams)tabSessionUnreadTx.getLayoutParams();
-        LogUtils.e("density:"+getResources().getDisplayMetrics().density);
         rtWidth = (int)(rtWidth/(getResources().getDisplayMetrics().density/2));
         params.setMargins(DensityUtil.dp2px(mContext,(rtWidth/2+DensityUtil.dp2px(mContext, 5))), DensityUtil.dp2px(mContext, 5), 0, 0);
     }

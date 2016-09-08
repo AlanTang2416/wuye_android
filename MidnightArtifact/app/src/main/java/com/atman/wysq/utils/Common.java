@@ -155,6 +155,10 @@ public class Common {
     public static String Url_Delete_Friends = hostUrl + "rest/user/follow/";
     //获取物流URL
     public static String Url_Get_Logistics = hostUrl + "rest/order/logistics/";
+    //获取礼物列表
+    public static String Url_Get_GiftList = hostUrl + "rest/gift/list";
+    //购买礼物
+    public static String Url_Pay_GiftList = hostUrl + "rest/gift/buy/";
     /**************************http访问路径*****************************/
 
 
@@ -284,6 +288,10 @@ public class Common {
     public static int NET_DLELTE_FRIEND = 61;
     //获取物流URL
     public static int NET_GET_LOGISTICS = 62;
+    //获取礼物列表
+    public static int NET_GET_GIFTLIST = 63;
+    //购买礼物
+    public static int NET_PAY_GIFTLIST = 64;
     /**************************http访问回应识别码*****************************/
 
 
@@ -301,5 +309,6 @@ public class Common {
     public static int toAddAddress = 1009;
     public static int toOrderDetail = 1010;
     public static int toPostDetail = 1011;
+    public static int toSelectGift = 1012;
     /**************************跳转码*****************************/
 }

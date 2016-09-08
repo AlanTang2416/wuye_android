@@ -246,12 +246,19 @@ public class MyBaseApplication extends BaseApplication {
                                 , "[语音]", "", "", "", "", "", "",
                                 ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
-//                        LogUtils.e("application>>>>get>>>>getPath:"+((FileAttachment)messages.get(i).getAttachment()).getPath());
-//                        LogUtils.e("application>>>>get>>>>getThumbPath:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPath());
-//                        LogUtils.e("application>>>>get>>>>getPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getPathForSave());
-//                        LogUtils.e("application>>>>get>>>>getThumbPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave());
-//                        LogUtils.e("application>>>>get>>>>getUrl"+((FileAttachment)messages.get(i).getAttachment()).getUrl());
-//                        LogUtils.e("application>>>>get>>>>toJson"+((FileAttachment)messages.get(i).getAttachment()).toJson(true));
+                    } else if (messageType == ContentTypeInter.contentTypeImageSmall) {
+                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , "[图片]", "", "", "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", 0, 0, false, 1);
+                        if (isOriginImageHasDownloaded(messages.get(i))) {
+                            AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
+                            future.setCallback(callback);
+                        }
                     }
                     if (!messages.get(i).getSessionId().equals(mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id())) {
                         mDaoSession.getImMessageDao().insertOrReplace(temp);

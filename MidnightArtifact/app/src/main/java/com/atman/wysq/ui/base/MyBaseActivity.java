@@ -154,6 +154,10 @@ public class MyBaseActivity extends BaseAppCompatActivity {
         rootContentLl.addView(v);
     }
 
+    public LinearLayout getRootContentLl() {
+        return rootContentLl;
+    }
+
     public LinearLayout getBarBackLl() {
         return barBackLl;
     }

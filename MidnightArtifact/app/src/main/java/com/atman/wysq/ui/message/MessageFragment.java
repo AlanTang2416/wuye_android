@@ -112,7 +112,13 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
     @Override
     public void onResume() {
         super.onResume();
-        setUnreadMessageNum();
+        if (isLogin()) {
+            setUnreadMessageNum();
+        } else {
+            if (mAdapter!=null) {
+                mAdapter.clearData();
+            }
+        }
     }
 
     private void setUnreadMessageNum() {

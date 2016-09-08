@@ -183,6 +183,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     }
 
     public void doHttp() {
+        LogUtils.e("!isLogin():"+(!isLogin()));
         if (!isLogin()) {
             hitSetring();
         } else {
@@ -556,7 +557,13 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             }
         } else if (requestCode == Common.toLogin) {
 //            LogUtils.e("Common.toLogin:"+Common.toLogin);
-            doHttp();
+//            doHttp();
+            mGetUserIndexModel = MyBaseApplication.mGetUserIndexModel;
+            UpDateUI();
+            OkHttpUtils.get().url(Common.Url_Get_Task)
+                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
+                    .tag(Common.NET_GET_RASK).id(Common.NET_GET_RASK).build()
+                    .execute(new MyStringCallback(getActivity(), this, true));
         } else if (requestCode == CHOOSE_BIG_PICTURE) {//选择照片
             imageUri = data.getData();
             cropImageUri(imageUri, outputX, outputX, CROP_BIG_PICTURE);

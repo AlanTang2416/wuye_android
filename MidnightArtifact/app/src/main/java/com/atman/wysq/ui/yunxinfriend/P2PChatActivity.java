@@ -9,7 +9,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -36,6 +35,7 @@ import com.atman.wysq.model.response.ChatAudioModel;
 import com.atman.wysq.ui.PictureBrowsingActivity;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
+import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.UiHelper;
 import com.atman.wysq.yunxin.model.ContentTypeInter;
 import com.atman.wysq.yunxin.model.GuessAttachment;
@@ -362,76 +362,91 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         public void onEvent(List<IMMessage> messages) {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
             for (int i=0;i<messages.size();i++) {
-                ImMessage temp = null;
-                int messageType = Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString());
-                if (messageType == ContentTypeInter.contentTypeText) {
-                    temp = new ImMessage(messages.get(i).getUuid()
-                            , messages.get(i).getSessionId()
-                            , messages.get(i).getFromAccount()
-                            , messages.get(i).getRemoteExtension().get("nickName").toString()
-                            , messages.get(i).getRemoteExtension().get("icon").toString()
-                            , messages.get(i).getRemoteExtension().get("sex").toString()
-                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                            , false, System.currentTimeMillis()
-                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
-                            , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
-                } else if (messageType == ContentTypeInter.contentTypeImage) {
-                    temp = new ImMessage(messages.get(i).getUuid()
-                            , messages.get(i).getSessionId()
-                            , messages.get(i).getFromAccount()
-                            , messages.get(i).getRemoteExtension().get("nickName").toString()
-                            , messages.get(i).getRemoteExtension().get("icon").toString()
-                            , messages.get(i).getRemoteExtension().get("sex").toString()
-                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                            , false, System.currentTimeMillis()
-                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
-                            , "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
-                            , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
-                            , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
-                    if (isOriginImageHasDownloaded(messages.get(i))) {
-                        AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
-                        future.setCallback(callback);
+                LogUtils.e("messages.get(i).getMsgType():"+messages.get(i).getMsgType());
+                if (messages.get(i).getRemoteExtension()!=null) {
+                    ImMessage temp = null;
+                    int messageType = Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString());
+                    if (messageType == ContentTypeInter.contentTypeText) {
+                        temp = new ImMessage(messages.get(i).getUuid()
+                                , messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount()
+                                , messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString()
+                                , messages.get(i).getRemoteExtension().get("sex").toString()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , false, System.currentTimeMillis()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
+                    } else if (messageType == ContentTypeInter.contentTypeImage) {
+                        temp = new ImMessage(messages.get(i).getUuid()
+                                , messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount()
+                                , messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString()
+                                , messages.get(i).getRemoteExtension().get("sex").toString()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , false, System.currentTimeMillis()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
+                        if (isOriginImageHasDownloaded(messages.get(i))) {
+                            AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
+                            future.setCallback(callback);
+                        }
+                    } else if (messageType == ContentTypeInter.contentTypeFinger) {
+                        LogUtils.e("contentFinger:"+messages.get(i).getRemoteExtension().get("contentFinger"));
+                        String contentFinger = messages.get(i).getRemoteExtension().get("contentFinger").toString();
+                        int fingerValue = Integer.parseInt(messages.get(i).getRemoteExtension().get("contentFinger").toString());
+                        String str = "[石头]";
+                        if (contentFinger.equals("2")) {
+                            str = "[剪刀]";
+                            fingerValue = 2;
+                        } else if (contentFinger.equals("3")) {
+                            str = "[布]";
+                            fingerValue = 3;
+                        }
+                        temp = new ImMessage(messages.get(i).getUuid()
+                                , messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount()
+                                , messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString()
+                                , messages.get(i).getRemoteExtension().get("sex").toString()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , false, System.currentTimeMillis()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 1);
+                    } else if (messageType == ContentTypeInter.contentTypeAudio) {
+                        ChatAudioModel mChatAudioModel = new Gson().fromJson(messages.get(i).getAttachment().toJson(true), ChatAudioModel.class);
+                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , false, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , "[语音]", "", "", "", "", "", "",
+                                ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
+                    } else if (messageType == ContentTypeInter.contentTypeImageSmall) {
+                        temp = new ImMessage(messages.get(i).getUuid()
+                                , messages.get(i).getSessionId()
+                                , messages.get(i).getFromAccount()
+                                , messages.get(i).getRemoteExtension().get("nickName").toString()
+                                , messages.get(i).getRemoteExtension().get("icon").toString()
+                                , messages.get(i).getRemoteExtension().get("sex").toString()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , false, System.currentTimeMillis()
+                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , "", "", "", "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", 0, 0, false, 1);
+                        if (isOriginImageHasDownloaded(messages.get(i))) {
+                            AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
+                            future.setCallback(callback);
+                        }
                     }
-                } else if (messageType == ContentTypeInter.contentTypeFinger) {
-                    LogUtils.e("contentFinger:"+messages.get(i).getRemoteExtension().get("contentFinger"));
-                    String contentFinger = messages.get(i).getRemoteExtension().get("contentFinger").toString();
-                    int fingerValue = Integer.parseInt(messages.get(i).getRemoteExtension().get("contentFinger").toString());
-                    String str = "[石头]";
-                    if (contentFinger.equals("2")) {
-                        str = "[剪刀]";
-                        fingerValue = 2;
-                    } else if (contentFinger.equals("3")) {
-                        str = "[布]";
-                        fingerValue = 3;
-                    }
-                    temp = new ImMessage(messages.get(i).getUuid()
-                            , messages.get(i).getSessionId()
-                            , messages.get(i).getFromAccount()
-                            , messages.get(i).getRemoteExtension().get("nickName").toString()
-                            , messages.get(i).getRemoteExtension().get("icon").toString()
-                            , messages.get(i).getRemoteExtension().get("sex").toString()
-                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                            , false, System.currentTimeMillis()
-                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
-                            , str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 1);
-                } else if (messageType == ContentTypeInter.contentTypeAudio) {
-                    ChatAudioModel mChatAudioModel = new Gson().fromJson(messages.get(i).getAttachment().toJson(true), ChatAudioModel.class);
-                    temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
-                            , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
-                            , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
-                            , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                            , false, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
-                            , "[语音]", "", "", "", "", "", "",
-                            ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
-                            , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
-                    LogUtils.e("get>>>>getPath:"+((FileAttachment)messages.get(i).getAttachment()).getPath());
-                    LogUtils.e("get>>>>getThumbPath:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPath());
-                    LogUtils.e("get>>>>getPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getPathForSave());
-                    LogUtils.e("get>>>>getThumbPathForSave:"+((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave());
-                    LogUtils.e("get>>>>getUrl"+((FileAttachment)messages.get(i).getAttachment()).getUrl());
+                    mAdapter.addImMessageDao(temp);
+                    setSession(temp);
                 }
-                mAdapter.addImMessageDao(temp);
-                setSession(temp);
             }
         }
     };
@@ -559,6 +574,8 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 path = UiHelper.photo(mContext, path, TAKE_BIG_PICTURE);
                 break;
             case R.id.p2pchat_add_gif_tv:
+                startActivityForResult(SelectGiftActivity.buildIntent(mContext, id), Common.toSelectGift);
+                p2pchatAddLl.setVisibility(View.GONE);
                 break;
             case R.id.p2pchat_add_finger_tv:
                 GuessAttachment attachment = new GuessAttachment();
@@ -566,6 +583,12 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 seedMessage(CustomMessage, ContentTypeInter.contentTypeFinger, "", attachment.getValue().getDesc());
                 break;
         }
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
+        super.startActivityForResult(intent, requestCode, options);
+        overridePendingTransition(com.base.baselibs.R.anim.activity_bottom_in, com.base.baselibs.R.anim.activity_bottom_out);
     }
 
     private void seedMessage(IMMessage message, int contentType,String contentImageSUrl, String contentFinger) {
@@ -618,11 +641,6 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 0);
         } else if (contentType==ContentTypeInter.contentTypeAudio) {
-            LogUtils.e("seedMessage>>>getPath:"+((FileAttachment)message.getAttachment()).getPath());
-            LogUtils.e("seedMessage>>>>getThumbPath:"+((FileAttachment)message.getAttachment()).getThumbPath());
-            LogUtils.e("seedMessage>>>>getPathForSave:"+((FileAttachment)message.getAttachment()).getPathForSave());
-            LogUtils.e("seedMessage>>>>getThumbPathForSave:"+((FileAttachment)message.getAttachment()).getThumbPathForSave());
-            LogUtils.e("seedMessage>>>>getUrl"+((FileAttachment)message.getAttachment()).getUrl());
             ChatAudioModel mChatAudioModel = new Gson().fromJson(message.getAttachment().toJson(true), ChatAudioModel.class);
             temp = new ImMessage(message.getUuid(), id
                     , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
@@ -632,6 +650,16 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, "[语音]", "", "", "", "", "", "", ((FileAttachment)message.getAttachment()).getPathForSave()
                     , ((FileAttachment)message.getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 0);
+        } else if (contentType==ContentTypeInter.contentTypeImageSmall) {
+            temp = new ImMessage(message.getUuid(), id
+                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                    , true, System.currentTimeMillis(), contentType, "［图片］", "", "", "", ((FileAttachment)message.getAttachment()).getPathForSave()
+                    , ((FileAttachment)message.getAttachment()).getUrl()
+                    , ((FileAttachment)message.getAttachment()).getThumbPathForSave(), "", "", 0, 0, false, 0);
         }
         mAdapter.addImMessageDao(temp);
         mImMessageDao.insertOrReplace(temp);
@@ -670,31 +698,43 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        if (requestCode == CHOOSE_BIG_PICTURE) {//选择照片
-            imageUri = data.getData();
-        } else if (requestCode == TAKE_BIG_PICTURE) {
-            imageUri = Uri.parse("file:///" + path);
-        }
-        if (imageUri != null) {
-            IMMessage message = null;
-            // 创建图片消息
-            if (imageUri.toString().contains("content:")){
-                String[] proj = {MediaStore.Images.Media.DATA};
-                Cursor cursor = managedQuery(imageUri, proj, null, null, null);
-                //按我个人理解 这个是获得用户选择的图片的索引值
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                //最后根据索引值获取图片路径
-                String path = cursor.getString(column_index);
-                LogUtils.e("path:"+path);
-                message = MessageBuilder.createImageMessage(id, SessionTypeEnum.P2P,
-                        new File(path), "");
-            } else {
-                LogUtils.e("path:"+path);
-                message = MessageBuilder.createImageMessage(id, SessionTypeEnum.P2P,
-                        new File(imageUri.getPath()), "");
+        if (requestCode == Common.toSelectGift) {
+            String text = data.getStringExtra("text");
+            File file = ImageLoader.getInstance().getDiskCache().get(Common.ImageUrl+data.getStringExtra("url"));
+            IMMessage message = MessageBuilder.createImageMessage(id, SessionTypeEnum.P2P, file, "");
+            seedMessage(message, ContentTypeInter.contentTypeImageSmall, "", "");
+            if (!text.isEmpty() && !TextUtils.isEmpty(text)) {
+                IMMessage messagetext = MessageBuilder.createTextMessage(id, SessionTypeEnum.P2P
+                        , text.toString());
+                seedMessage(messagetext, ContentTypeInter.contentTypeText, "", "");
             }
-            seedMessage(message, ContentTypeInter.contentTypeImage, "", "");
+        } else {
+            if (requestCode == CHOOSE_BIG_PICTURE) {//选择照片
+                imageUri = data.getData();
+            } else if (requestCode == TAKE_BIG_PICTURE) {
+                imageUri = Uri.parse("file:///" + path);
+            }
+            if (imageUri != null) {
+                IMMessage message = null;
+                // 创建图片消息
+                if (imageUri.toString().contains("content:")){
+                    String[] proj = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = managedQuery(imageUri, proj, null, null, null);
+                    //按我个人理解 这个是获得用户选择的图片的索引值
+                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    cursor.moveToFirst();
+                    //最后根据索引值获取图片路径
+                    String path = cursor.getString(column_index);
+                    LogUtils.e("path:"+path);
+                    message = MessageBuilder.createImageMessage(id, SessionTypeEnum.P2P,
+                            new File(path), "");
+                } else {
+                    LogUtils.e("path:"+path);
+                    message = MessageBuilder.createImageMessage(id, SessionTypeEnum.P2P,
+                            new File(imageUri.getPath()), "");
+                }
+                seedMessage(message, ContentTypeInter.contentTypeImage, "", "");
+            }
         }
     }
 

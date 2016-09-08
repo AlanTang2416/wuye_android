@@ -60,6 +60,8 @@
         <activity android:name=".ui.yunxinfriend.HisVisitorActivity"/>
         <activity android:name=".ui.yunxinfriend.HisGuardianActivity"/>
         <activity android:name=".ui.yunxinfriend.P2PChatActivity"/>
+        <activity android:name=".ui.yunxinfriend.SelectGiftActivity"
+            android:theme="@style/giftStyle" android:windowSoftInputMode="stateUnchanged|adjustPan" />
 
         <activity android:name="com.choicepicture_library.ImageGridActivity"/>
 

@@ -160,19 +160,6 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
             final String account = mLoginResultModel.getBody()+"";
             final String token = PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_YUNXIN_TOKEN);
 
-//            PreferenceUtil.savePreference(mContext,PreferenceUtil.PARM_PW,MD5Util.getMD5(passWord));
-//            PreferenceUtil.savePreference(mContext,PreferenceUtil.PARM_USERID,mLoginResultModel.getBody()+"");
-//            MyBaseApplication.getApplication().setLock(false);
-//            if (PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_GESTURE_PW).isEmpty()
-//                    && PreferenceUtil.getBoolPreferences(LoginActivity.this, PreferenceUtil.PARM_ISOPEN_GESTURE)) {
-//                startActivityForResult(new Intent(mContext, CreateGestrureLockActivity.class), Common.toLoginCreateGesrure);
-//            } else {
-//                OkHttpUtils.get().url(Common.Url_GetUserInfo+ mLoginResultModel.getBody())
-//                        .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
-//                        .tag(Common.NET_GETUSERINFO).id(Common.NET_GETUSERINFO).build()
-//                        .execute(new MyStringCallback(mContext, LoginActivity.this, true));
-//            }
-
             // 登录
             loginRequest = NIMClient.getService(AuthService.class).login(new LoginInfo(account, token));
             loginRequest.setCallback(new RequestCallback<LoginInfo>() {

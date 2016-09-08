@@ -29,6 +29,14 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <style name="giftStyle" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_black</item>
+        <item name="colorAccent">@color/color_black</item>
+        <item name="colorPrimaryDark">@color/color_black</item>
+        <item name="android:windowBackground">@color/color_gift_all</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <style name="MyDialogStyleCenterFuzzy" parent="android:Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <!--边框-->
