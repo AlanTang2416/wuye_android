@@ -46,6 +46,7 @@ import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.CustomNotification;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -178,7 +179,22 @@ public class MyBaseApplication extends BaseApplication {
             // 2、相关Service调用
             setAuthServiceObserver();//监听用户在线状态
             ReceiveMessageObserver(true);
+            setTouChuanMessageObserver(true);
         }
+    }
+
+    private void setTouChuanMessageObserver(boolean b) {
+        NIMClient.getService(MsgServiceObserve.class).observeCustomNotification(new Observer<CustomNotification>() {
+            @Override
+            public void onEvent(CustomNotification message) {
+                // 在这里处理自定义通知。
+                LogUtils.e("touchuan>>>>getContent:"+message.getContent());
+                LogUtils.e("touchuan>>>>getApnsText:"+message.getApnsText());
+                LogUtils.e("touchuan>>>>getConfig:"+message.getConfig().toString());
+                LogUtils.e("touchuan>>>>getPushPayload:"+message.getPushPayload().toString());
+                LogUtils.e("touchuan>>>>getSessionType:"+message.getSessionType());
+            }
+        }, b);
     }
 
     String nick = "";

@@ -123,7 +123,14 @@ public class GetHisGuardianAdapter extends BaseAdapter {
             holder.itemBrowseVipTx.setVisibility(View.GONE);
         } else {
             holder.itemBrowseVipTx.setVisibility(View.VISIBLE);
-            holder.itemBrowseVipTx.setText("VIP." + mBodyEntity.getVip_level());
+            if (mBodyEntity.getVip_level()>=4) {
+                holder.itemBrowseVipTx.setVisibility(View.GONE);
+                holder.itemBrowseSvipIv.setVisibility(View.VISIBLE);
+            } else {
+                holder.itemBrowseSvipIv.setVisibility(View.GONE);
+                holder.itemBrowseVipTx.setVisibility(View.VISIBLE);
+                holder.itemBrowseVipTx.setText("VIP." + mBodyEntity.getVip_level());
+            }
         }
         holder.itemBrowseCoinTx.setText("累积赠送金币额：" + mBodyEntity.getCharm());
 
@@ -149,6 +156,8 @@ public class GetHisGuardianAdapter extends BaseAdapter {
         ImageView itemBrowseGenderIv;
         @Bind(R.id.item_browse_verify_img)
         CustomImageView itemBrowseVerifyImg;
+        @Bind(R.id.item_browse_svip_iv)
+        ImageView itemBrowseSvipIv;
         @Bind(R.id.item_browse_head_rl)
         RelativeLayout itemBrowseHeadRl;
         @Bind(R.id.item_browse_name_tx)

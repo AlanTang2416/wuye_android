@@ -78,6 +78,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        disableLoginCheck();
         setContentView(R.layout.activity_otherpersonal);
         ButterKnife.bind(this);
     }
@@ -179,7 +180,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
 
     private void updataView() {
         otherpersonalNameTx.setText(mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
-        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()==4) {
+        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()>=4) {
             otherpersonalVipTx.setVisibility(View.GONE);
             otherpersonalSvipIv.setVisibility(View.VISIBLE);
         } else {
@@ -351,6 +352,10 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.otherpersonal_relationship_bt:
+                if (!isLogin()) {
+                    showLogin();
+                    return;
+                }
                 if (mGetUserIndexModel.getBody().isFriend()) {
                     PromptDialog.Builder builder = new PromptDialog.Builder(this);
                     builder.setMessage("您确定要删除好友吗？");
@@ -382,14 +387,14 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.otherpersonal_visitor_ll:
-                if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<1) {
+                if (!isLogin() || mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<1) {
                     showWraning("VIP.1以上用户才有权限查看");
                     return;
                 }
                 startActivity(HisVisitorActivity.buildIntent(mContext, id, "TA的访客"));
                 break;
             case R.id.otherpersonal_friends_ll:
-                if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<2) {
+                if (!isLogin() || mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<2) {
                     showWraning("VIP.2以上用户才有权限查看");
                     return;
                 }
@@ -402,6 +407,10 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                 showBottomImg();
                 break;
             case R.id.otherpersonal_chat_iv:
+                if (!isLogin()) {
+                    showLogin();
+                    return;
+                }
                 startActivity(P2PChatActivity.buildIntent(mContext, String.valueOf(id)
                         , mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
                         , mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()

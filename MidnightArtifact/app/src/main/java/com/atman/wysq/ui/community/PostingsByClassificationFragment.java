@@ -15,6 +15,7 @@ import com.atman.wysq.adapter.PostingListAdapter;
 import com.atman.wysq.model.response.GetBolgListModel;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.base.MyBaseFragment;
+import com.atman.wysq.ui.yunxinfriend.OtherPersonalActivity;
 import com.atman.wysq.utils.Common;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.net.MyStringCallback;
@@ -150,7 +151,7 @@ public class PostingsByClassificationFragment extends MyBaseFragment implements 
                 onLoad(PullToRefreshBase.Mode.PULL_FROM_START, pullToRefreshListView);
             } else {
                 onLoad(PullToRefreshBase.Mode.BOTH, pullToRefreshListView);
-                List<GetBolgListModel.BodyEntity> bottomList = mGetBolgListModel.getBody();
+                final List<GetBolgListModel.BodyEntity> bottomList = mGetBolgListModel.getBody();
                 if (mPage == 1) {
                     postingsTopLl.removeAllViews();
                     for (int i = 0; i < bottomList.size(); i++) {
@@ -160,10 +161,11 @@ public class PostingsByClassificationFragment extends MyBaseFragment implements 
                             TextView mTopChildrenTx = (TextView) mTopChildrenView.findViewById(R.id.part_posting_top_children_title_tx);
                             mTopChildrenTx.setText(bottomList.get(i).getTitle());
                             mTopChildrenTx.setTag(bottomList.get(i).getBlog_id());
+                            final int finalI = i;
                             mTopChildrenTx.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    toPostingsDetail((Integer) v.getTag(), "");
+                                    toPostingsDetail((Integer) v.getTag(), "", bottomList.get(finalI).getVip_level());
                                 }
                             });
                             postingsTopLl.addView(mTopChildrenView);
@@ -220,9 +222,9 @@ public class PostingsByClassificationFragment extends MyBaseFragment implements 
                 .tag(Common.NET_GET_BLOGLIST).build().execute(new MyStringCallback(getActivity(), this, b));
     }
 
-    private void toPostingsDetail(int Id, String title) {
+    private void toPostingsDetail(int Id, String title, int Vip_level) {
         blogId = Id;
-        startActivity(PostingsDetailActivity.buildIntent(getActivity(), title, blogId, false));
+        startActivity(PostingsDetailActivity.buildIntent(getActivity(), title, blogId, false, Vip_level));
         OkHttpUtils.postString().url(Common.Url_Add_Browse+blogId).mediaType(Common.JSON)
                 .content("{}")
                 .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
@@ -249,10 +251,13 @@ public class PostingsByClassificationFragment extends MyBaseFragment implements 
     @Override
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.item_bloglist_head_rl:
+                startActivity(OtherPersonalActivity.buildIntent(getActivity(), mAdapter.getItem(position).getUser_id()));
+                break;
             case R.id.item_bloglist_browse_ll:
             case R.id.item_bloglist_root_ll:
             case R.id.item_bloglist_comment_ll:
-                toPostingsDetail(mAdapter.getItem(position).getBlog_id(), mAdapter.getItem(position).getTitle());
+                toPostingsDetail(mAdapter.getItem(position).getBlog_id(), mAdapter.getItem(position).getTitle(), mAdapter.getItem(position).getVip_level());
                 break;
             case R.id.item_bloglist_collection_ll:
                 if (!isLogin()) {

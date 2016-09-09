@@ -23,6 +23,7 @@ import com.atman.wysq.model.response.GetChildrenCommentModel;
 import com.atman.wysq.model.response.GetPostingsDetailsCommentListModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
+import com.atman.wysq.ui.yunxinfriend.OtherPersonalActivity;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.MyTools;
 import com.base.baselibs.iimp.AdapterInterface;
@@ -68,6 +69,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
     private int id;
     private int verifyState;
     private int level;
+    private int vipLevel;
     private int page = 1;
     private int blog_id;
     private int isReplay = 0;
@@ -86,14 +88,17 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
     private ChildrenCommentAdapter mAdapter;
 
     private View headView;
+    private RelativeLayout childrencommentHeadRl;
     private CustomImageView childrencommentHeadImg;
     private CustomImageView childrencommentVerifyImg;
     private ImageView childrencommentGenderImg;
+    private ImageView childrencommentSvipIv;
     private TextView childrencommentNameTx;
     private TextView childrencommentLevelTx;
     private TextView childrencommentTimeTx;
     private TextView childrencommentHostTx;
     private TextView childrencommentCommentTx;
+    private TextView childrencommentVipTx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +112,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
 
     public static Intent buildIntent(Context context, int blog_id, int id, String headUrl, int verifyState, String name
             , String sex, int level, long time, long ueseID, String content, long blogUserId, boolean isAnonymity
-            , String anonymityImg, int isReplay) {
+            , String anonymityImg, int isReplay, int vipLevel) {
         Intent intent = new Intent(context, CommentChildrenListActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("blog_id", blog_id);
@@ -123,6 +128,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
         intent.putExtra("blogUserId", blogUserId);
         intent.putExtra("anonymityImg", anonymityImg);
         intent.putExtra("isReplay", isReplay);
+        intent.putExtra("vipLevel", vipLevel);
         return intent;
     }
 
@@ -133,6 +139,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
         verifyState = getIntent().getIntExtra("verifyState", 0);
         isReplay = getIntent().getIntExtra("isReplay", 0);
         level = getIntent().getIntExtra("level", 0);
+        vipLevel = getIntent().getIntExtra("vipLevel", 0);
         headUrl = getIntent().getStringExtra("headUrl");
         blog_id = getIntent().getIntExtra("blog_id", -1);
         name = getIntent().getStringExtra("name");
@@ -148,14 +155,26 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
         setBarTitleTx("回复详情");
 
         headView = LayoutInflater.from(mContext).inflate(R.layout.part_childrencomment_head_view, null);
+        childrencommentHeadRl = (RelativeLayout) headView.findViewById(R.id.childrencomment_head_rl);
         childrencommentHeadImg = (CustomImageView) headView.findViewById(R.id.childrencomment_head_img);
         childrencommentVerifyImg = (CustomImageView) headView.findViewById(R.id.childrencomment_verify_img);
         childrencommentGenderImg = (ImageView) headView.findViewById(R.id.childrencomment_gender_img);
+        childrencommentSvipIv = (ImageView) headView.findViewById(R.id.childrencomment_svip_iv);
         childrencommentNameTx = (TextView) headView.findViewById(R.id.childrencomment_name_tx);
         childrencommentLevelTx = (TextView) headView.findViewById(R.id.childrencomment_level_tx);
         childrencommentTimeTx = (TextView) headView.findViewById(R.id.childrencomment_time_tx);
         childrencommentHostTx = (TextView) headView.findViewById(R.id.childrencomment_host_tx);
+        childrencommentVipTx = (TextView) headView.findViewById(R.id.childrencomment_vip_tx);
         childrencommentCommentTx = (TextView) headView.findViewById(R.id.blogdetail_comment_tx);
+
+        childrencommentHeadRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!(blogUserId == ueseID && isAnonymity)) {
+                    startActivity(OtherPersonalActivity.buildIntent(mContext, ueseID));
+                }
+            }
+        });
 
         ImageLoader.getInstance().displayImage(Common.ImageUrl+headUrl, childrencommentHeadImg, MyBaseApplication.getApplication().getOptionsNot());
         if (verifyState == 1) {
@@ -175,6 +194,19 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
         childrencommentCommentTx.setText(content);
         childrencommentTimeTx.setText(MyTools.convertTime(time, "yyyy.MM.dd HH:mm"));
 
+        if (vipLevel>=4) {
+            childrencommentVipTx.setVisibility(View.GONE);
+            childrencommentSvipIv.setVisibility(View.VISIBLE);
+        } else {
+            childrencommentSvipIv.setVisibility(View.GONE);
+            if (vipLevel==0) {
+                childrencommentVipTx.setVisibility(View.GONE);
+            } else {
+                childrencommentVipTx.setText("VIP."+vipLevel);
+                childrencommentVipTx.setVisibility(View.VISIBLE);
+            }
+        }
+
         initListView();
 
         if (blogUserId == ueseID) {
@@ -182,6 +214,8 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
                 childrencommentLevelTx.setVisibility(View.GONE);
                 childrencommentGenderImg.setVisibility(View.GONE);
                 childrencommentVerifyImg.setVisibility(View.GONE);
+                childrencommentVerifyImg.setVisibility(View.GONE);
+                childrencommentGenderImg.setVisibility(View.GONE);
                 childrencommentNameTx.setText("匿名用户");
                 ImageLoader.getInstance().displayImage(anonymityImg, childrencommentHeadImg
                         , MyBaseApplication.getApplication().getOptionsNot());
@@ -359,7 +393,11 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
 
     @Override
     public void onItemClick(View view, int position) {
-
+        switch (view.getId()) {
+            case R.id.item_children_comment_head_rl:
+                startActivity(OtherPersonalActivity.buildIntent(mContext, mAdapter.getItem(position).getUser_id()));
+                break;
+        }
     }
 
     @Override

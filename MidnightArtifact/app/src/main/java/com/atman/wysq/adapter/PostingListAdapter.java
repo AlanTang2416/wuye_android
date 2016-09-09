@@ -19,7 +19,6 @@ import com.atman.wysq.utils.MyTools;
 import com.atman.wysq.widget.face.SmileUtils;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.util.DensityUtil;
-import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.CustomImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -85,10 +84,10 @@ public class PostingListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void addBrowse (int num) {
-        for (int i=0;i<shop.size();i++) {
-            if (num==shop.get(i).getBlog_id()) {
-                shop.get(i).setView_count(shop.get(i).getView_count()+1);
+    public void addBrowse(int num) {
+        for (int i = 0; i < shop.size(); i++) {
+            if (num == shop.get(i).getBlog_id()) {
+                shop.get(i).setView_count(shop.get(i).getView_count() + 1);
             }
         }
         notifyDataSetChanged();
@@ -109,7 +108,7 @@ public class PostingListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        GetBolgListModel.BodyEntity mBodyEntity = shop.get(position);
+        final GetBolgListModel.BodyEntity mBodyEntity = shop.get(position);
 
         if (mBodyEntity.getType() == 2) {//2是精品
             holder.itemBloglistHighlyTx.setVisibility(View.VISIBLE);
@@ -124,10 +123,25 @@ public class PostingListAdapter extends BaseAdapter {
             holder.itemBloglistLevelTx.setVisibility(View.GONE);
             holder.itemBloglistGenderImg.setVisibility(View.GONE);
             holder.itemBloglistVerifyImg.setVisibility(View.GONE);
+            holder.itemBloglistVipTx.setVisibility(View.GONE);
+            holder.itemBloglistSvipIv.setVisibility(View.GONE);
         } else {
             holder.itemBloglistLevelTx.setVisibility(View.VISIBLE);
             holder.itemBloglistNameTx.setText(mBodyEntity.getUser_name());
             holder.itemBloglistLevelTx.setText("Lv " + mBodyEntity.getUserLevel());
+
+            if (shop.get(position).getVip_level() >= 4) {
+                holder.itemBloglistVipTx.setVisibility(View.GONE);
+                holder.itemBloglistSvipIv.setVisibility(View.VISIBLE);
+            } else {
+                holder.itemBloglistSvipIv.setVisibility(View.GONE);
+                if (shop.get(position).getVip_level() == 0) {
+                    holder.itemBloglistVipTx.setVisibility(View.GONE);
+                } else {
+                    holder.itemBloglistVipTx.setText("VIP." + shop.get(position).getVip_level());
+                    holder.itemBloglistVipTx.setVisibility(View.VISIBLE);
+                }
+            }
             imgUrl = mBodyEntity.getIcon();
             if (mBodyEntity.getVerify_status() == 1) {
                 holder.itemBloglistVerifyImg.setVisibility(View.VISIBLE);
@@ -139,7 +153,7 @@ public class PostingListAdapter extends BaseAdapter {
         }
 
         if (!imgUrl.startsWith("/")) {
-            imgUrl = "/"+imgUrl;
+            imgUrl = "/" + imgUrl;
         }
         ImageLoader.getInstance().displayImage(Common.ImageUrl + imgUrl, holder.itemBloglistHeadImg
                 , MyBaseApplication.getApplication().getOptionsNot());
@@ -174,10 +188,10 @@ public class PostingListAdapter extends BaseAdapter {
         holder.itemBloglistCommentTx.setText(mBodyEntity.getComment_count() + "");
         holder.itemBloglistBrowseTx.setText(mBodyEntity.getView_count() + "");
         holder.itemBloglistCollectionTx.setText(mBodyEntity.getFavorite_count() + "");
-        if (typeId==3) {//0：热门 2:精品 3:最新
-            holder.itemBloglistTimeTx.setText(MyTools.convertTime(shop.get(position).getCreate_time(),"yyyy.MM.dd HH:mm"));
+        if (typeId == 3) {//0：热门 2:精品 3:最新
+            holder.itemBloglistTimeTx.setText(MyTools.convertTime(shop.get(position).getCreate_time(), "yyyy.MM.dd HH:mm"));
         } else {
-            holder.itemBloglistTimeTx.setText(MyTools.convertTime(shop.get(position).getUpdate_time(),"yyyy.MM.dd HH:mm"));
+            holder.itemBloglistTimeTx.setText(MyTools.convertTime(shop.get(position).getUpdate_time(), "yyyy.MM.dd HH:mm"));
         }
 
         String temp = mBodyEntity.getContent();
@@ -186,7 +200,7 @@ public class PostingListAdapter extends BaseAdapter {
             String str = temp.substring(0, temp.indexOf("<wysqimg="));
             holder.itemBloglistContentimgTx.setText(SmileUtils.getEmotionContent(context, holder.itemBloglistContentimgTx, str));
             if (!img.startsWith("/")) {
-                img = "/"+img;
+                img = "/" + img;
             }
             if (img.isEmpty()) {
                 holder.itemBloglistContentTx.setVisibility(View.VISIBLE);
@@ -229,6 +243,14 @@ public class PostingListAdapter extends BaseAdapter {
                 mAdapterInterface.onItemClick(v, position);
             }
         });
+        holder.itemBloglistHeadRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBodyEntity.getAnonymityUser() == null) {
+                    mAdapterInterface.onItemClick(v, position);
+                }
+            }
+        });
 
         return convertView;
     }
@@ -251,6 +273,10 @@ public class PostingListAdapter extends BaseAdapter {
         TextView itemBloglistNameTx;
         @Bind(R.id.item_bloglist_level_tx)
         TextView itemBloglistLevelTx;
+        @Bind(R.id.item_bloglist_vip_tx)
+        TextView itemBloglistVipTx;
+        @Bind(R.id.item_bloglist_svip_iv)
+        ImageView itemBloglistSvipIv;
         @Bind(R.id.item_bloglist_time_tx)
         TextView itemBloglistTimeTx;
         @Bind(R.id.item_bloglist_top_rl)

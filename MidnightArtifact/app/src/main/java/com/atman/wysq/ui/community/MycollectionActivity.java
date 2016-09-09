@@ -11,6 +11,7 @@ import com.atman.wysq.adapter.MyCollectionListAdapter;
 import com.atman.wysq.model.response.GetMyCollectionModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
+import com.atman.wysq.ui.yunxinfriend.OtherPersonalActivity;
 import com.atman.wysq.utils.Common;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.net.MyStringCallback;
@@ -148,12 +149,15 @@ public class MycollectionActivity extends MyBaseActivity implements AdapterInter
     @Override
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.item_bloglist_head_rl:
+                startActivity(OtherPersonalActivity.buildIntent(mContext, mAdapter.getItem(position).getUser_id()));
+                break;
             case R.id.item_bloglist_browse_ll:
             case R.id.item_bloglist_root_ll:
             case R.id.item_bloglist_comment_ll:
                 blogId = mAdapter.getItem(position).getBlog_id();
                 startActivity(PostingsDetailActivity.buildIntent(mContext, mAdapter.getItem(position).getTitle()
-                        , blogId, false));
+                        , blogId, false, mAdapter.getItem(position).getVip_level()));
                 OkHttpUtils.postString().url(Common.Url_Add_Browse+blogId).mediaType(Common.JSON)
                         .content("{}")
                         .addHeader("cookie", MyBaseApplication.getApplication().getCookie())

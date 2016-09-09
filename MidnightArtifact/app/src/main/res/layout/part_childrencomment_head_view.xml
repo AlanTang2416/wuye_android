@@ -17,6 +17,7 @@
 
         <RelativeLayout
             android:id="@+id/childrencomment_head_rl"
+            android:clickable="true"
             android:layout_width="40dp"
             android:layout_height="40dp">
 
@@ -70,7 +71,35 @@
             android:paddingRight="@dimen/dimen_dp_3"
             android:text="Lv 1"
             android:textColor="@color/color_white"
-            android:textSize="10sp" />
+            android:textSize="@dimen/dimen_sp_10" />
+
+        <RelativeLayout
+            android:layout_toRightOf="@+id/childrencomment_level_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/childrencomment_vip_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_dp_5"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="@dimen/dimen_dp_5"
+                android:paddingRight="@dimen/dimen_dp_5"
+                android:background="@drawable/level_red_bg"
+                android:text="VIP.0"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/dimen_sp_10" />
+
+            <ImageView
+                android:id="@+id/childrencomment_svip_iv"
+                android:layout_width="@dimen/dimen_dp_50"
+                android:layout_height="@dimen/dimen_dp_13"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:src="@mipmap/other_svip_ic" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/childrencomment_time_tx"

@@ -86,6 +86,16 @@
             android:background="@drawable/level_red_frame_bg"
             android:textSize="@dimen/dimen_sp_10"
             android:textColor="#f1908b"/>
+
+        <ImageView
+            android:id="@+id/item_browse_svip_iv"
+            android:layout_width="@dimen/dimen_dp_45"
+            android:layout_height="@dimen/dimen_dp_15"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/dimen_dp_3"
+            android:layout_marginTop="@dimen/dimen_dp_5"
+            android:visibility="gone"
+            android:src="@mipmap/other_svip_ic" />
     </LinearLayout>
 
     <TextView

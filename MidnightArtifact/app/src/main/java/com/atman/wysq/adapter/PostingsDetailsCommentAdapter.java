@@ -108,6 +108,20 @@ public class PostingsDetailsCommentAdapter extends BaseAdapter {
             holder.nullTx.setVisibility(View.GONE);
             holder.itemPostingsdetailCommentNameTv.setText(shop.get(position).getUser_name());
             holder.itemPostingsdetailCommentLevelTx.setText("Lv." + shop.get(position).getUserLevel());
+
+            if (shop.get(position).getVip_level()>=4) {
+                holder.itemPostingsdetailCommentVipTx.setVisibility(View.GONE);
+                holder.itemPostingsdetailCommentSvipIv.setVisibility(View.VISIBLE);
+            } else {
+                holder.itemPostingsdetailCommentSvipIv.setVisibility(View.GONE);
+                if (shop.get(position).getVip_level()==0) {
+                    holder.itemPostingsdetailCommentVipTx.setVisibility(View.GONE);
+                } else {
+                    holder.itemPostingsdetailCommentVipTx.setText("VIP."+shop.get(position).getVip_level());
+                    holder.itemPostingsdetailCommentVipTx.setVisibility(View.VISIBLE);
+                }
+            }
+
             if (shop.get(position).getSex().equals("M")) {
                 holder.itemPostingsdetailCommentGenderIv.setImageResource(R.mipmap.personal_man_ic);
             } else {
@@ -168,6 +182,8 @@ public class PostingsDetailsCommentAdapter extends BaseAdapter {
                     holder.itemPostingsdetailCommentNameTv.setText("匿名用户");
                     holder.itemPostingsdetailCommentGenderIv.setVisibility(View.GONE);
                     holder.itemPostingsdetailCommentVerifyImg.setVisibility(View.GONE);
+                    holder.itemPostingsdetailCommentVipTx.setVisibility(View.GONE);
+                    holder.itemPostingsdetailCommentSvipIv.setVisibility(View.GONE);
                 } else {
                     ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon(),
                             holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
@@ -195,6 +211,15 @@ public class PostingsDetailsCommentAdapter extends BaseAdapter {
             }
         }
 
+        holder.itemPostingsdetailCommentHeadRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!(shop.get(position).getUser_id() == blogUserId && isAnonymity)) {
+                    mAdapterInterface.onItemClick(v, position);
+                }
+            }
+        });
+
 
         return convertView;
     }
@@ -205,9 +230,9 @@ public class PostingsDetailsCommentAdapter extends BaseAdapter {
     }
 
     public void addBody(List<GetPostingsDetailsCommentListModel.BodyEntity> body) {
-        for (int i=0;i<shop.size();i++) {
-            for (int j=0;j<body.size();j++) {
-                if (shop.get(i).getBlog_comment_id()==body.get(j).getBlog_comment_id()) {
+        for (int i = 0; i < shop.size(); i++) {
+            for (int j = 0; j < body.size(); j++) {
+                if (shop.get(i).getBlog_comment_id() == body.get(j).getBlog_comment_id()) {
                     shop.remove(i);
                     i -= 1;
                 }
@@ -235,6 +260,10 @@ public class PostingsDetailsCommentAdapter extends BaseAdapter {
         TextView itemPostingsdetailCommentNameTv;
         @Bind(R.id.item_postingsdetail_comment_level_tx)
         TextView itemPostingsdetailCommentLevelTx;
+        @Bind(R.id.item_postingsdetail_comment_vip_tx)
+        TextView itemPostingsdetailCommentVipTx;
+        @Bind(R.id.item_postingsdetail_comment_svip_iv)
+        ImageView itemPostingsdetailCommentSvipIv;
         @Bind(R.id.item_postingsdetail_comment_name_ll)
         LinearLayout itemPostingsdetailCommentNameLl;
         @Bind(R.id.item_postingsdetail_comment_time_tv)

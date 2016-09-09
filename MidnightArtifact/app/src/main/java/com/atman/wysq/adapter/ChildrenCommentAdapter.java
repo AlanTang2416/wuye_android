@@ -17,7 +17,6 @@ import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.MyTools;
 import com.atman.wysq.widget.face.SmileUtils;
 import com.base.baselibs.iimp.AdapterInterface;
-import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.CustomImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -89,6 +88,19 @@ public class ChildrenCommentAdapter extends BaseAdapter {
 
         holder.itemChildrenCommentNameTv.setText(shop.get(position).getUser_name());
         holder.itemChildrenCommentLevelTx.setText("Lv." + shop.get(position).getUserLevel());
+
+        if (shop.get(position).getVip_level()>=4) {
+            holder.itemChildrenCommentVipTx.setVisibility(View.GONE);
+            holder.itemChildrenCommentSvipIv.setVisibility(View.VISIBLE);
+        } else {
+            holder.itemChildrenCommentSvipIv.setVisibility(View.GONE);
+            if (shop.get(position).getVip_level()==0) {
+                holder.itemChildrenCommentVipTx.setVisibility(View.GONE);
+            } else {
+                holder.itemChildrenCommentVipTx.setText("VIP."+shop.get(position).getVip_level());
+                holder.itemChildrenCommentVipTx.setVisibility(View.VISIBLE);
+            }
+        }
         if (shop.get(position).getSex().equals("M")) {
             holder.itemChildrenCommentGenderIv.setImageResource(R.mipmap.personal_man_ic);
         } else {
@@ -111,6 +123,8 @@ public class ChildrenCommentAdapter extends BaseAdapter {
                 holder.itemChildrenCommentNameTv.setText("匿名用户");
                 holder.itemChildrenCommentGenderIv.setVisibility(View.GONE);
                 holder.itemChildrenCommentVerifyImg.setVisibility(View.GONE);
+                holder.itemChildrenCommentVipTx.setVisibility(View.GONE);
+                holder.itemChildrenCommentSvipIv.setVisibility(View.GONE);
                 holder.itemChildrenCommentLevelTx.setVisibility(View.GONE);
                 ImageLoader.getInstance().displayImage(anonymityImg,
                         holder.itemChildrenCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
@@ -125,6 +139,15 @@ public class ChildrenCommentAdapter extends BaseAdapter {
             holder.itemChildrenHostTx.setVisibility(View.INVISIBLE);
         }
 
+        holder.itemChildrenCommentHeadRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!(shop.get(position).getUser_id() == blogUserId && isAnonymity)) {
+                    mAdapterInterface.onItemClick(v, position);
+                }
+            }
+        });
+
         return convertView;
     }
 
@@ -134,9 +157,9 @@ public class ChildrenCommentAdapter extends BaseAdapter {
     }
 
     public void addBody(List<GetChildrenCommentModel.BodyEntity> body) {
-        for (int i=0;i<shop.size();i++) {
-            for (int j=0;j<body.size();j++) {
-                if (shop.get(i).getBlog_comment_id()==body.get(j).getBlog_comment_id()) {
+        for (int i = 0; i < shop.size(); i++) {
+            for (int j = 0; j < body.size(); j++) {
+                if (shop.get(i).getBlog_comment_id() == body.get(j).getBlog_comment_id()) {
                     shop.remove(i);
                     i -= 1;
                 }
@@ -168,6 +191,10 @@ public class ChildrenCommentAdapter extends BaseAdapter {
         TextView itemChildrenCommentNameTv;
         @Bind(R.id.item_children_comment_level_tx)
         TextView itemChildrenCommentLevelTx;
+        @Bind(R.id.item_children_comment_vip_tx)
+        TextView itemChildrenCommentVipTx;
+        @Bind(R.id.item_children_comment_svip_iv)
+        ImageView itemChildrenCommentSvipIv;
         @Bind(R.id.item_children_comment_name_ll)
         LinearLayout itemChildrenCommentNameLl;
         @Bind(R.id.item_children_comment_time_tv)

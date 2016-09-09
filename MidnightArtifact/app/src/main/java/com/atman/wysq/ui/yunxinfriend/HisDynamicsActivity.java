@@ -59,6 +59,7 @@ public class HisDynamicsActivity extends MyBaseActivity implements AdapterInterf
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        disableLoginCheck();
         setContentView(R.layout.activity_hisdynamics);
         ButterKnife.bind(this);
     }
@@ -193,12 +194,15 @@ public class HisDynamicsActivity extends MyBaseActivity implements AdapterInterf
     @Override
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.item_bloglist_head_rl:
+                startActivity(OtherPersonalActivity.buildIntent(mContext, mAdapter.getItem(position).getUser_id()));
+                break;
             case R.id.item_bloglist_browse_ll:
             case R.id.item_bloglist_root_ll:
             case R.id.item_bloglist_comment_ll:
                 this.position = position;
                 startActivityForResult(PostingsDetailActivity.buildIntent(mContext, mAdapter.getItem(position).getTitle()
-                        , mAdapter.getItem(position).getBlog_id(), true), Common.toPostDetail);
+                        , mAdapter.getItem(position).getBlog_id(), true, mAdapter.getItem(position).getVip_level()), Common.toPostDetail);
                 blogId = mAdapter.getItem(position).getBlog_id();
                 OkHttpUtils.postString().url(Common.Url_Add_Browse + blogId).mediaType(Common.JSON)
                         .content("{}")

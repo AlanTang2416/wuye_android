@@ -109,9 +109,17 @@ public class GetHisVisitorAdapter extends BaseAdapter {
         holder.itemBrowseLevelTx.setText("LV." + mBodyEntity.getUserLevel());
         if (mBodyEntity.getVip_level() == 0) {
             holder.itemBrowseVipTx.setVisibility(View.GONE);
+            holder.itemBrowseSvipIv.setVisibility(View.GONE);
         } else {
             holder.itemBrowseVipTx.setVisibility(View.VISIBLE);
-            holder.itemBrowseVipTx.setText("VIP." + mBodyEntity.getVip_level());
+            if (mBodyEntity.getVip_level()>=4) {
+                holder.itemBrowseVipTx.setVisibility(View.GONE);
+                holder.itemBrowseSvipIv.setVisibility(View.VISIBLE);
+            } else {
+                holder.itemBrowseSvipIv.setVisibility(View.GONE);
+                holder.itemBrowseVipTx.setVisibility(View.VISIBLE);
+                holder.itemBrowseVipTx.setText("VIP." + mBodyEntity.getVip_level());
+            }
         }
         holder.itemBrowseTimeTx.setText("到访时间：" + MyTools.convertTimeS(mBodyEntity.getCreate_time()));
 
@@ -135,6 +143,8 @@ public class GetHisVisitorAdapter extends BaseAdapter {
         CustomImageView itemBrowseHeadIv;
         @Bind(R.id.item_browse_gender_iv)
         ImageView itemBrowseGenderIv;
+        @Bind(R.id.item_browse_svip_iv)
+        ImageView itemBrowseSvipIv;
         @Bind(R.id.item_browse_verify_img)
         CustomImageView itemBrowseVerifyImg;
         @Bind(R.id.item_browse_head_rl)

@@ -210,6 +210,8 @@ public class MyCollectionListAdapter extends BaseAdapter {
             holder.itemBloglistLevelTx.setVisibility(View.GONE);
             holder.itemBloglistGenderImg.setVisibility(View.GONE);
             holder.itemBloglistVerifyImg.setVisibility(View.GONE);
+            holder.itemBloglistVipTx.setVisibility(View.GONE);
+            holder.itemBloglistSvipIv.setVisibility(View.GONE);
         } else {
             holder.itemBloglistLevelTx.setVisibility(View.VISIBLE);
             if (mBodyEntity.getVerify_status()==1) {
@@ -221,9 +223,30 @@ public class MyCollectionListAdapter extends BaseAdapter {
             }
             holder.itemBloglistNameTx.setText(mBodyEntity.getUser_name());
             holder.itemBloglistLevelTx.setText("Lv " + mBodyEntity.getUserLevel());
+            if (shop.get(position).getVip_level() >= 4) {
+                holder.itemBloglistVipTx.setVisibility(View.GONE);
+                holder.itemBloglistSvipIv.setVisibility(View.VISIBLE);
+            } else {
+                holder.itemBloglistSvipIv.setVisibility(View.GONE);
+                if (shop.get(position).getVip_level() == 0) {
+                    holder.itemBloglistVipTx.setVisibility(View.GONE);
+                } else {
+                    holder.itemBloglistVipTx.setText("VIP." + shop.get(position).getVip_level());
+                    holder.itemBloglistVipTx.setVisibility(View.VISIBLE);
+                }
+            }
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getIcon()
                     , holder.itemBloglistHeadImg, MyBaseApplication.getApplication().getOptionsNot());
         }
+
+        holder.itemBloglistHeadRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (shop.get(position).getAnonymityUser() == null) {
+                    mAdapterInterface.onItemClick(v, position);
+                }
+            }
+        });
 
         return convertView;
     }
@@ -268,6 +291,10 @@ public class MyCollectionListAdapter extends BaseAdapter {
         TextView itemBloglistBrowseTx;
         @Bind(R.id.item_bloglist_browse_ll)
         LinearLayout itemBloglistBrowseLl;
+        @Bind(R.id.item_bloglist_vip_tx)
+        TextView itemBloglistVipTx;
+        @Bind(R.id.item_bloglist_svip_iv)
+        ImageView itemBloglistSvipIv;
         @Bind(R.id.item_bloglist_highly_tx)
         TextView itemBloglistHighlyTx;
         @Bind(R.id.item_bloglist_collection_tx)

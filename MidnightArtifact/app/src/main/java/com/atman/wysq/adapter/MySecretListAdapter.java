@@ -19,7 +19,6 @@ import com.atman.wysq.utils.MyTools;
 import com.atman.wysq.widget.face.SmileUtils;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.util.DensityUtil;
-import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.CustomImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -75,20 +74,20 @@ public class MySecretListAdapter extends BaseAdapter {
     }
 
     public void setFavoriteById(int isOk, int num) {
-        if (isOk==1) {//收藏
+        if (isOk == 1) {//收藏
             shop.get(num).setFavorite_id(1);
-            shop.get(num).setFavorite_count(shop.get(num).getFavorite_count()+1);
+            shop.get(num).setFavorite_count(shop.get(num).getFavorite_count() + 1);
         } else {//取消收藏
             shop.get(num).setFavorite_id(0);
-            shop.get(num).setFavorite_count(shop.get(num).getFavorite_count()-1);
+            shop.get(num).setFavorite_count(shop.get(num).getFavorite_count() - 1);
         }
         notifyDataSetChanged();
     }
 
-    public void addBrowse (int num) {
-        for (int i=0;i<shop.size();i++) {
-            if (num==shop.get(i).getBlog_id()) {
-                shop.get(i).setView_count(shop.get(i).getView_count()+1);
+    public void addBrowse(int num) {
+        for (int i = 0; i < shop.size(); i++) {
+            if (num == shop.get(i).getBlog_id()) {
+                shop.get(i).setView_count(shop.get(i).getView_count() + 1);
             }
         }
         notifyDataSetChanged();
@@ -122,7 +121,7 @@ public class MySecretListAdapter extends BaseAdapter {
             holder.itemBloglistHighlyTx.setVisibility(View.GONE);
         }
 
-        if (mBodyEntity.getGoods_id()>0) {
+        if (mBodyEntity.getGoods_id() > 0) {
             holder.itemBloglistTopRl.setVisibility(View.GONE);
             holder.itemBloglistBottomLl.setVisibility(View.GONE);
             holder.itemBloglistTitleTx.setVisibility(View.GONE);
@@ -134,14 +133,14 @@ public class MySecretListAdapter extends BaseAdapter {
         }
 
         Drawable drawable = null;
-        if (mBodyEntity.getFavorite_id()>0) {
+        if (mBodyEntity.getFavorite_id() > 0) {
             drawable = context.getResources().getDrawable(R.mipmap.square_like_press);
         } else {
             drawable = context.getResources().getDrawable(R.mipmap.square_like_default);
         }
         /// 这一步必须要做,否则不会显示.
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        holder.itemBloglistCollectionImgTx.setCompoundDrawables(drawable,null,null,null);
+        holder.itemBloglistCollectionimgTx.setCompoundDrawables(drawable, null, null, null);
 
         if (mBodyEntity.getSex().equals("M")) {
             holder.itemBloglistGenderImg.setImageResource(R.mipmap.personal_man_ic);
@@ -152,7 +151,7 @@ public class MySecretListAdapter extends BaseAdapter {
         holder.itemBloglistCommentTx.setText(mBodyEntity.getComment_count() + "");
         holder.itemBloglistBrowseTx.setText(mBodyEntity.getView_count() + "");
         holder.itemBloglistCollectionTx.setText(mBodyEntity.getFavorite_count() + "");
-        if (mStateId==0) {
+        if (mStateId == 0) {
             holder.itemBloglistTimeTx.setText(MyTools.convertTimeS(mBodyEntity.getCreate_time()));
         } else {
             holder.itemBloglistTimeTx.setText(MyTools.convertTimeS(mBodyEntity.getUpdate_time()));
@@ -165,7 +164,7 @@ public class MySecretListAdapter extends BaseAdapter {
             String img = temp.substring(temp.indexOf("<wysqimg=") + 9, temp.indexOf("=wysqimg>"));
             String str = temp.substring(0, temp.indexOf("<wysqimg="));
             if (!img.startsWith("/")) {
-                img = "/"+img;
+                img = "/" + img;
             }
             holder.itemBloglistContentimgTx.setText(SmileUtils.getEmotionContent(context, holder.itemBloglistContentimgTx, str));
             ImageLoader.getInstance().displayImage(Common.ImageUrl + img
@@ -210,9 +209,11 @@ public class MySecretListAdapter extends BaseAdapter {
             holder.itemBloglistLevelTx.setVisibility(View.GONE);
             holder.itemBloglistGenderImg.setVisibility(View.GONE);
             holder.itemBloglistVerifyImg.setVisibility(View.GONE);
+            holder.itemBloglistVipTx.setVisibility(View.GONE);
+            holder.itemBloglistSvipIv.setVisibility(View.GONE);
         } else {
             holder.itemBloglistLevelTx.setVisibility(View.VISIBLE);
-            if (mBodyEntity.getVerify_status()==1) {
+            if (mBodyEntity.getVerify_status() == 1) {
                 holder.itemBloglistVerifyImg.setVisibility(View.VISIBLE);
                 holder.itemBloglistGenderImg.setVisibility(View.GONE);
             } else {
@@ -221,9 +222,30 @@ public class MySecretListAdapter extends BaseAdapter {
             }
             holder.itemBloglistNameTx.setText(mBodyEntity.getUser_name());
             holder.itemBloglistLevelTx.setText("Lv " + mBodyEntity.getUserLevel());
+            if (shop.get(position).getVip_level() >= 4) {
+                holder.itemBloglistVipTx.setVisibility(View.GONE);
+                holder.itemBloglistSvipIv.setVisibility(View.VISIBLE);
+            } else {
+                holder.itemBloglistSvipIv.setVisibility(View.GONE);
+                if (shop.get(position).getVip_level() == 0) {
+                    holder.itemBloglistVipTx.setVisibility(View.GONE);
+                } else {
+                    holder.itemBloglistVipTx.setText("VIP." + shop.get(position).getVip_level());
+                    holder.itemBloglistVipTx.setVisibility(View.VISIBLE);
+                }
+            }
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getIcon()
                     , holder.itemBloglistHeadImg, MyBaseApplication.getApplication().getOptionsNot());
         }
+
+        holder.itemBloglistHeadRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (shop.get(position).getAnonymityUser() == null) {
+                    mAdapterInterface.onItemClick(v, position);
+                }
+            }
+        });
 
         return convertView;
     }
@@ -246,10 +268,16 @@ public class MySecretListAdapter extends BaseAdapter {
         TextView itemBloglistNameTx;
         @Bind(R.id.item_bloglist_level_tx)
         TextView itemBloglistLevelTx;
+        @Bind(R.id.item_bloglist_vip_tx)
+        TextView itemBloglistVipTx;
+        @Bind(R.id.item_bloglist_svip_iv)
+        ImageView itemBloglistSvipIv;
         @Bind(R.id.item_bloglist_time_tx)
         TextView itemBloglistTimeTx;
         @Bind(R.id.item_bloglist_top_rl)
         RelativeLayout itemBloglistTopRl;
+        @Bind(R.id.item_bloglist_highly_tx)
+        TextView itemBloglistHighlyTx;
         @Bind(R.id.item_bloglist_title_tx)
         TextView itemBloglistTitleTx;
         @Bind(R.id.item_bloglist_content_tx)
@@ -268,14 +296,12 @@ public class MySecretListAdapter extends BaseAdapter {
         TextView itemBloglistBrowseTx;
         @Bind(R.id.item_bloglist_browse_ll)
         LinearLayout itemBloglistBrowseLl;
+        @Bind(R.id.item_bloglist_collectionimg_tx)
+        TextView itemBloglistCollectionimgTx;
         @Bind(R.id.item_bloglist_collection_tx)
         TextView itemBloglistCollectionTx;
-        @Bind(R.id.item_bloglist_collectionimg_tx)
-        TextView itemBloglistCollectionImgTx;
         @Bind(R.id.item_bloglist_collection_ll)
         LinearLayout itemBloglistCollectionLl;
-        @Bind(R.id.item_bloglist_highly_tx)
-        TextView itemBloglistHighlyTx;
         @Bind(R.id.item_bloglist_comment_tx)
         TextView itemBloglistCommentTx;
         @Bind(R.id.item_bloglist_comment_ll)

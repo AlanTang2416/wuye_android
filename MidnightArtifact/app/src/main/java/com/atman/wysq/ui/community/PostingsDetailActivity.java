@@ -39,6 +39,7 @@ import com.atman.wysq.ui.PictureBrowsingActivity;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.mall.GoodsDetailActivity;
+import com.atman.wysq.ui.yunxinfriend.OtherPersonalActivity;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.MyTools;
 import com.atman.wysq.utils.ShareHelper;
@@ -102,6 +103,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
     private GoodsDetailsResponseModel mGoodsDetailsResponseModel;
 
     private int favoriteId = 0;
+    private int vipLevel = 0;
     private String favoriteStr = "收藏";
     private boolean isMy = false;
     private long blogUserId;
@@ -112,10 +114,12 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
 
     private View headView;
     private ImageView blogdetailHeadImg;
+    private ImageView blogdetailSvipIv;
     private ImageView blogdetailVerifyImg;
     private ImageView blogdetailGenderImg;
     private ImageView blogdetailGoodsIv;
     private ImageView blogdetailFlowerIv;
+    private TextView blogdetailVipTx;
     private TextView blogdetailNameTx;
     private TextView blogdetailLevelTx;
     private TextView bloglistTimeTx;
@@ -140,11 +144,12 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         ButterKnife.bind(this);
     }
 
-    public static Intent buildIntent(Context context, String tilte, int id, boolean isMy) {
+    public static Intent buildIntent(Context context, String tilte, int id, boolean isMy, int vipLevel) {
         Intent intent = new Intent(context, PostingsDetailActivity.class);
         intent.putExtra("tilte", tilte);
         intent.putExtra("id", id);
         intent.putExtra("isMy", isMy);
+        intent.putExtra("vipLevel", vipLevel);
         return intent;
     }
 
@@ -154,6 +159,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
 
         tilte = getIntent().getStringExtra("tilte");
         bolgId = getIntent().getIntExtra("id", -1);
+        vipLevel = getIntent().getIntExtra("vipLevel", 0);
         isMy = getIntent().getBooleanExtra("isMy", false);
         LogUtils.e("id:" + bolgId + ",isMy:" + isMy);
 
@@ -205,7 +211,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                     startActivity(CommentChildrenListActivity.buildIntent(mContext, mBodyEntity.getBlog_id(), mBodyEntity.getBlog_comment_id()
                             , mBodyEntity.getIcon(), mBodyEntity.getVerify_status(), mBodyEntity.getUser_name()
                             , mBodyEntity.getSex(), mBodyEntity.getUserLevel(), mBodyEntity.getCreate_time()
-                            , mBodyEntity.getUser_id(), mBodyEntity.getContent(), blogUserId, isAnonymity, anonymityImg, isReplay));
+                            , mBodyEntity.getUser_id(), mBodyEntity.getContent(), blogUserId, isAnonymity, anonymityImg, isReplay, mBodyEntity.getVip_level()));
                 }
             }
         });
@@ -396,14 +402,24 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
         blogdetailHeadImg = (ImageView) headView.findViewById(R.id.blogdetail_head_img);
         blogdetailVerifyImg = (ImageView) headView.findViewById(R.id.blogdetail_verify_img);
         blogdetailGenderImg = (ImageView) headView.findViewById(R.id.blogdetail_gender_img);
+        blogdetailSvipIv = (ImageView) headView.findViewById(R.id.blogdetail_svip_iv);
         blogdetailGoodsIv = (ImageView) headView.findViewById(R.id.blogdetail_goods_iv);
         blogdetailNameTx = (TextView) headView.findViewById(R.id.blogdetail_name_tx);
+        blogdetailVipTx = (TextView) headView.findViewById(R.id.blogdetail_vip_tx);
         blogdetailLevelTx = (TextView) headView.findViewById(R.id.blogdetail_level_tx);
         bloglistTimeTx = (TextView) headView.findViewById(R.id.bloglist_time_tx);
         blogdetailTitleTx = (TextView) headView.findViewById(R.id.blogdetail_title_tx);
         blogdetailGoodsNameIv = (TextView) headView.findViewById(R.id.blogdetail_goods_name_iv);
         blogdetailGoodsPriceIv = (TextView) headView.findViewById(R.id.blogdetail_goods_price_iv);
         blogdetailHeadRl = (RelativeLayout) headView.findViewById(R.id.blogdetail_head_rl);
+        blogdetailHeadRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mGetBlogDetailModel!=null && mGetBlogDetailModel.getBody().get(0).getAnonymityUser() == null) {
+                    startActivity(OtherPersonalActivity.buildIntent(mContext, mGetBlogDetailModel.getBody().get(0).getUser_id()));
+                }
+            }
+        });
         blogdetailGoodsRl = (RelativeLayout) headView.findViewById(R.id.blogdetail_goods_rl);
         blogdetailGoodsRl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -498,6 +514,8 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             blogdetailLevelTx.setVisibility(View.GONE);
             blogdetailGenderImg.setVisibility(View.GONE);
             blogdetailVerifyImg.setVisibility(View.GONE);
+            blogdetailVipTx.setVisibility(View.GONE);
+            blogdetailSvipIv.setVisibility(View.GONE);
         } else {
             isAnonymity = false;
             blogdetailLevelTx.setVisibility(View.VISIBLE);
@@ -512,6 +530,19 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             blogdetailLevelTx.setText("Lv " + mBodyEntity.getUserLevel());
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getIcon()
                     , blogdetailHeadImg, MyBaseApplication.getApplication().getOptionsNot());
+        }
+
+        if (vipLevel>=4) {
+            blogdetailVipTx.setVisibility(View.GONE);
+            blogdetailSvipIv.setVisibility(View.VISIBLE);
+        } else {
+            blogdetailSvipIv.setVisibility(View.GONE);
+            if (vipLevel==0) {
+                blogdetailVipTx.setVisibility(View.GONE);
+            } else {
+                blogdetailVipTx.setText("VIP."+vipLevel);
+                blogdetailVipTx.setVisibility(View.VISIBLE);
+            }
         }
 
         bloglistTimeTx.setText(MyTools.convertTime(mBodyEntity.getCreate_time(), "yyyy.MM.dd HH:mm"));
@@ -784,6 +815,9 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                         .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .content("{}").mediaType(Common.JSON).id(Common.NET_ADD_LIKE).tag(Common.NET_ADD_LIKE)
                         .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
+                break;
+            case R.id.item_postingsdetail_comment_head_rl:
+                startActivity(OtherPersonalActivity.buildIntent(mContext, mAdapter.getItem(position).getUser_id()));
                 break;
         }
     }

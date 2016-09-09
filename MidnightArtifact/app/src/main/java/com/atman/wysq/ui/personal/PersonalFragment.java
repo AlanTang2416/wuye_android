@@ -86,6 +86,8 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     private LinearLayout personalFriendsLl;
 
     private TextView personalVisitorNumTx;
+    private TextView personalVipTx;
+    private ImageView personalSVipIv;
     private TextView personalMycoinTv;
     private RoundImageView personalVisitorOneIv, personalVisitorTwoIv, personalVisitorThreeIv;
     private RoundImageView personalGuardianOneIv, personalGuardianTwoIv, personalGuardianThreeIv;
@@ -140,6 +142,8 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalMyorderLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_myorder_ll);
         personalVisitorNumTx = (TextView) personalScrollview.findViewById(R.id.personal_visitor_num_tx);
         personalMycoinTv = (TextView) personalScrollview.findViewById(R.id.personal_mycoin_tv);
+        personalVipTx = (TextView) personalScrollview.findViewById(R.id.personal_vip_tx);
+        personalSVipIv = (ImageView) personalScrollview.findViewById(R.id.personal_svip_iv);
 
         personalVisitorLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_visitor_ll);
         personalVisitorLl.setOnClickListener(this);
@@ -211,6 +215,9 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalVisitorThreeIv.setVisibility(View.GONE);
 
         personalMycoinTv.setVisibility(View.GONE);
+
+        personalVipTx.setVisibility(View.GONE);
+        personalSVipIv.setVisibility(View.GONE);
     }
 
     @Override
@@ -304,6 +311,19 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         MyBaseApplication.mHEAD_URL = mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon();
         personalSettingIv.setVisibility(View.VISIBLE);
         personalGenderIv.setVisibility(View.VISIBLE);
+
+        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()>=4) {
+            personalVipTx.setVisibility(View.GONE);
+            personalSVipIv.setVisibility(View.VISIBLE);
+        } else {
+            personalSVipIv.setVisibility(View.GONE);
+            if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()==0) {
+                personalVipTx.setVisibility(View.GONE);
+            } else {
+                personalVipTx.setText("VIP."+mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level());
+                personalVipTx.setVisibility(View.VISIBLE);
+            }
+        }
         personalNameTx.setText(mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
         if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("M")) {
             personalGenderIv.setImageResource(R.mipmap.personal_man_ic);

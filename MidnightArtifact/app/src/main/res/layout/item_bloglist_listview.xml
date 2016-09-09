@@ -21,6 +21,7 @@
 
         <RelativeLayout
             android:id="@+id/item_bloglist_head_rl"
+            android:clickable="true"
             android:layout_width="@dimen/dimen_dp_40"
             android:layout_height="@dimen/dimen_dp_40">
 
@@ -76,6 +77,36 @@
             android:textColor="@color/color_white"
             android:background="@drawable/level_blue_bg"
             android:text="Lv 1"/>
+
+        <RelativeLayout
+            android:layout_toRightOf="@+id/item_bloglist_level_tx"
+            android:layout_marginLeft="@dimen/dimen_dp_3"
+            android:layout_marginTop="@dimen/dimen_dp_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/item_bloglist_vip_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="@dimen/dimen_dp_5"
+                android:paddingRight="@dimen/dimen_dp_5"
+                android:background="@drawable/level_red_bg"
+                android:text="VIP.0"
+                android:visibility="gone"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/dimen_sp_12" />
+
+            <ImageView
+                android:id="@+id/item_bloglist_svip_iv"
+                android:layout_width="@dimen/dimen_dp_50"
+                android:layout_height="@dimen/dimen_dp_16"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:src="@mipmap/other_svip_ic" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/item_bloglist_time_tx"

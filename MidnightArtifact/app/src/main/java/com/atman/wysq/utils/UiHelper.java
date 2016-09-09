@@ -57,7 +57,7 @@ public class UiHelper {
                 break;
             case 6://帖子
                 context.startActivity(PostingsDetailActivity.buildIntent(context, ""
-                        , bodyEntity.getAd_goods_id(), false));
+                        , bodyEntity.getAd_goods_id(), false, 0));
                 break;
             case 8://众筹
                 break;
