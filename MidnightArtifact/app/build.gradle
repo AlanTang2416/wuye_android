@@ -11,7 +11,9 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "2.0.0"
+        multiDexEnabled true
     }
+
     signingConfigs {
         releaseConfig {
             keyAlias 'wys7'
