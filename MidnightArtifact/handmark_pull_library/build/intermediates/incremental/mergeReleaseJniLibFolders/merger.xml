@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/tangbingliang/Desktop/gitTestProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/jniLibs"/></dataSet><dataSet config="release"><source path="/Users/tangbingliang/Desktop/gitTestProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/release/jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="D:\AndroidStudioProjects\wuye_android\MidnightArtifact\handmark_pull_library\src\main\jniLibs"/></dataSet><dataSet config="release"><source path="D:\AndroidStudioProjects\wuye_android\MidnightArtifact\handmark_pull_library\src\release\jniLibs"/></dataSet></merger>

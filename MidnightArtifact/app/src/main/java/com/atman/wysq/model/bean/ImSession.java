@@ -15,6 +15,7 @@ import org.greenrobot.greendao.annotation.Generated;
 public class ImSession {
     @Id
     private String userId;
+    private String loginUserId;
     private String content;
     private String nickName;
     private String icon;
@@ -64,16 +65,24 @@ public class ImSession {
     public void setContent(String content) {
         this.content = content;
     }
+    public String getLoginUserId() {
+        return this.loginUserId;
+    }
+    public void setLoginUserId(String loginUserId) {
+        this.loginUserId = loginUserId;
+    }
     public String getUserId() {
         return this.userId;
     }
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    @Generated(hash = 410044566)
-    public ImSession(String userId, String content, String nickName, String icon,
-            String sex, int verify_status, long time, int unreadNum) {
+    @Generated(hash = 1213762483)
+    public ImSession(String userId, String loginUserId, String content,
+            String nickName, String icon, String sex, int verify_status, long time,
+            int unreadNum) {
         this.userId = userId;
+        this.loginUserId = loginUserId;
         this.content = content;
         this.nickName = nickName;
         this.icon = icon;

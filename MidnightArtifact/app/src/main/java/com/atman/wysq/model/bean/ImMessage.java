@@ -13,8 +13,10 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 @Entity
 public class ImMessage {
-    @Id
+    @Id(autoincrement = true)
+    private Long id;
     private String uuid;
+    private String loginUserId;
     private String chatId;
     private String userId;
     private String nickName;
@@ -169,21 +171,36 @@ public class ImMessage {
     public void setChatId(String chatId) {
         this.chatId = chatId;
     }
+    public String getLoginUserId() {
+        return this.loginUserId;
+    }
+    public void setLoginUserId(String loginUserId) {
+        this.loginUserId = loginUserId;
+    }
     public String getUuid() {
         return this.uuid;
     }
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
-    @Generated(hash = 1503554263)
-    public ImMessage(String uuid, String chatId, String userId, String nickName,
-            String icon, String sex, int verify_status, boolean isSelfSend,
-            long time, int contentType, String content, String imageFilePath,
-            String imageUrl, String imageThumUrl, String imageSFilePath,
-            String imageSUrl, String imageSThumUrl, String audioFilePath,
-            String audioUrl, long audioDuration, int fingerValue,
-            boolean isGiftMessage, int isSeedSuccess) {
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    @Generated(hash = 469320086)
+    public ImMessage(Long id, String uuid, String loginUserId, String chatId,
+            String userId, String nickName, String icon, String sex,
+            int verify_status, boolean isSelfSend, long time, int contentType,
+            String content, String imageFilePath, String imageUrl,
+            String imageThumUrl, String imageSFilePath, String imageSUrl,
+            String imageSThumUrl, String audioFilePath, String audioUrl,
+            long audioDuration, int fingerValue, boolean isGiftMessage,
+            int isSeedSuccess) {
+        this.id = id;
         this.uuid = uuid;
+        this.loginUserId = loginUserId;
         this.chatId = chatId;
         this.userId = userId;
         this.nickName = nickName;

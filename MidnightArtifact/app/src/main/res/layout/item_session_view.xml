@@ -47,10 +47,12 @@
 
     <TextView
         android:id="@+id/item_session_unread_tx"
-        android:layout_width="@dimen/dimen_dp_16"
-        android:layout_height="@dimen/dimen_dp_16"
+        android:layout_width="@dimen/dimen_dp_19"
+        android:layout_height="@dimen/dimen_dp_19"
+        android:layout_marginLeft="-8dp"
         android:gravity="center"
         android:text="0"
+        android:textSize="@dimen/dimen_sp_10"
         android:textColor="@color/color_white"
         android:background="@mipmap/dote_pressed"/>
 

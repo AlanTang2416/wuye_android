@@ -108,7 +108,11 @@ public class MessageSessionListAdapter extends BaseAdapter {
 
         if (dataList.get(position).getUnreadNum()>0) {
             holder.itemSessionUnreadTx.setVisibility(View.VISIBLE);
-            holder.itemSessionUnreadTx.setText(dataList.get(position).getUnreadNum()+"");
+            if (dataList.get(position).getUnreadNum()>99) {
+                holder.itemSessionUnreadTx.setText("99+");
+            } else {
+                holder.itemSessionUnreadTx.setText(dataList.get(position).getUnreadNum()+"");
+            }
         } else {
             holder.itemSessionUnreadTx.setVisibility(View.INVISIBLE);
         }

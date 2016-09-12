@@ -216,14 +216,16 @@ public class MyBaseApplication extends BaseApplication {
                     }
                     int messageType = Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString());
                     if (messageType == ContentTypeInter.contentTypeText) {
-                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                        temp = new ImMessage(null, messages.get(i).getUuid()
+                                , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID), messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
                                 , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
                                 , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
                                 , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeImage) {
-                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                        temp = new ImMessage(null, messages.get(i).getUuid()
+                                , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID), messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
                                 , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
@@ -247,7 +249,8 @@ public class MyBaseApplication extends BaseApplication {
                             str = "[布]";
                             fingerValue = 3;
                         }
-                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                        temp = new ImMessage(null, messages.get(i).getUuid()
+                                , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID), messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
                                 , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
@@ -255,7 +258,8 @@ public class MyBaseApplication extends BaseApplication {
                                 , str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeAudio) {
                         ChatAudioModel mChatAudioModel = new Gson().fromJson(messages.get(i).getAttachment().toJson(true), ChatAudioModel.class);
-                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                        temp = new ImMessage(null, messages.get(i).getUuid()
+                                , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID), messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
                                 , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
@@ -264,7 +268,8 @@ public class MyBaseApplication extends BaseApplication {
                                 ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeImageSmall) {
-                        temp = new ImMessage(messages.get(i).getUuid(), messages.get(i).getSessionId()
+                        temp = new ImMessage(null, messages.get(i).getUuid()
+                                , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID), messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
                                 , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
@@ -280,7 +285,8 @@ public class MyBaseApplication extends BaseApplication {
                     if (!messages.get(i).getSessionId().equals(mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id())) {
                         mDaoSession.getImMessageDao().insertOrReplace(temp);
 
-                        ImSession mImSession = mDaoSession.getImSessionDao().queryBuilder().where(ImSessionDao.Properties.UserId.eq(messages.get(i).getSessionId())).build().unique();
+                        ImSession mImSession = mDaoSession.getImSessionDao().queryBuilder().where(ImSessionDao.Properties.UserId.eq(messages.get(i).getSessionId())
+                                , ImSessionDao.Properties.LoginUserId.eq(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID))).build().unique();
                         if (!messages.get(i).getFromAccount().equals(String.valueOf(
                                 mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id()))) {
                             nick = messages.get(i).getRemoteExtension().get("nickName").toString();
@@ -289,7 +295,8 @@ public class MyBaseApplication extends BaseApplication {
                             verify_status = messages.get(i).getRemoteExtension().get("verify_status").toString();
                         }
                         if (mImSession==null) {
-                            ImSession mImSessionTemp = new ImSession(messages.get(i).getSessionId(), temp.getContent()
+                            ImSession mImSessionTemp = new ImSession(messages.get(i).getSessionId()
+                                    , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID), temp.getContent()
                                     , nick, icon, sex, Integer.parseInt(verify_status), System.currentTimeMillis(), 0);
                             mDaoSession.getImSessionDao().insertOrReplace(mImSessionTemp);
                         } else {

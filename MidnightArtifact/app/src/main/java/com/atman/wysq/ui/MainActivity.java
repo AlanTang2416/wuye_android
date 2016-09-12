@@ -40,6 +40,7 @@ import com.atman.wysq.widget.face.FaceConversionUtil;
 import com.base.baselibs.net.MyStringCallback;
 import com.base.baselibs.util.DensityUtil;
 import com.base.baselibs.util.LogUtils;
+import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.widget.NoSwipeViewPager;
 import com.base.baselibs.widget.PromptDialog;
 import com.tbl.okhttputils.OkHttpUtils;
@@ -145,7 +146,8 @@ public class MainActivity extends MyBaseActivity {
         int n = 0;
         if (isLogin()) {
             for (int i = 0; i < mImSession.size(); i++) {
-                if (!mImSession.get(i).getNickName().equals("")) {
+                if (!mImSession.get(i).getNickName().equals("") && mImSession.get(i).getLoginUserId()
+                        .equals(PreferenceUtil.getPreferences(mContext, PreferenceUtil.PARM_USERID))) {
                     n += mImSession.get(i).getUnreadNum();
                 }
             }
@@ -154,7 +156,11 @@ public class MainActivity extends MyBaseActivity {
             tabSessionUnreadTx.setVisibility(View.GONE);
         } else {
             tabSessionUnreadTx.setVisibility(View.VISIBLE);
-            tabSessionUnreadTx.setText(""+n);
+            if (n>99) {
+                tabSessionUnreadTx.setText("99+");
+            } else {
+                tabSessionUnreadTx.setText(""+n);
+            }
         }
         tabSessionUnreadTx.setLayoutParams(params);
     }

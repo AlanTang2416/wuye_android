@@ -25,13 +25,14 @@ public class ImSessionDao extends AbstractDao<ImSession, String> {
      */
     public static class Properties {
         public final static Property UserId = new Property(0, String.class, "userId", true, "USER_ID");
-        public final static Property Content = new Property(1, String.class, "content", false, "CONTENT");
-        public final static Property NickName = new Property(2, String.class, "nickName", false, "NICK_NAME");
-        public final static Property Icon = new Property(3, String.class, "icon", false, "ICON");
-        public final static Property Sex = new Property(4, String.class, "sex", false, "SEX");
-        public final static Property Verify_status = new Property(5, int.class, "verify_status", false, "VERIFY_STATUS");
-        public final static Property Time = new Property(6, long.class, "time", false, "TIME");
-        public final static Property UnreadNum = new Property(7, int.class, "unreadNum", false, "UNREAD_NUM");
+        public final static Property LoginUserId = new Property(1, String.class, "loginUserId", false, "LOGIN_USER_ID");
+        public final static Property Content = new Property(2, String.class, "content", false, "CONTENT");
+        public final static Property NickName = new Property(3, String.class, "nickName", false, "NICK_NAME");
+        public final static Property Icon = new Property(4, String.class, "icon", false, "ICON");
+        public final static Property Sex = new Property(5, String.class, "sex", false, "SEX");
+        public final static Property Verify_status = new Property(6, int.class, "verify_status", false, "VERIFY_STATUS");
+        public final static Property Time = new Property(7, long.class, "time", false, "TIME");
+        public final static Property UnreadNum = new Property(8, int.class, "unreadNum", false, "UNREAD_NUM");
     }
 
 
@@ -48,13 +49,14 @@ public class ImSessionDao extends AbstractDao<ImSession, String> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"IM_SESSION\" (" + //
                 "\"USER_ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: userId
-                "\"CONTENT\" TEXT," + // 1: content
-                "\"NICK_NAME\" TEXT," + // 2: nickName
-                "\"ICON\" TEXT," + // 3: icon
-                "\"SEX\" TEXT," + // 4: sex
-                "\"VERIFY_STATUS\" INTEGER NOT NULL ," + // 5: verify_status
-                "\"TIME\" INTEGER NOT NULL ," + // 6: time
-                "\"UNREAD_NUM\" INTEGER NOT NULL );"); // 7: unreadNum
+                "\"LOGIN_USER_ID\" TEXT," + // 1: loginUserId
+                "\"CONTENT\" TEXT," + // 2: content
+                "\"NICK_NAME\" TEXT," + // 3: nickName
+                "\"ICON\" TEXT," + // 4: icon
+                "\"SEX\" TEXT," + // 5: sex
+                "\"VERIFY_STATUS\" INTEGER NOT NULL ," + // 6: verify_status
+                "\"TIME\" INTEGER NOT NULL ," + // 7: time
+                "\"UNREAD_NUM\" INTEGER NOT NULL );"); // 8: unreadNum
     }
 
     /** Drops the underlying database table. */
@@ -72,28 +74,33 @@ public class ImSessionDao extends AbstractDao<ImSession, String> {
             stmt.bindString(1, userId);
         }
  
+        String loginUserId = entity.getLoginUserId();
+        if (loginUserId != null) {
+            stmt.bindString(2, loginUserId);
+        }
+ 
         String content = entity.getContent();
         if (content != null) {
-            stmt.bindString(2, content);
+            stmt.bindString(3, content);
         }
  
         String nickName = entity.getNickName();
         if (nickName != null) {
-            stmt.bindString(3, nickName);
+            stmt.bindString(4, nickName);
         }
  
         String icon = entity.getIcon();
         if (icon != null) {
-            stmt.bindString(4, icon);
+            stmt.bindString(5, icon);
         }
  
         String sex = entity.getSex();
         if (sex != null) {
-            stmt.bindString(5, sex);
+            stmt.bindString(6, sex);
         }
-        stmt.bindLong(6, entity.getVerify_status());
-        stmt.bindLong(7, entity.getTime());
-        stmt.bindLong(8, entity.getUnreadNum());
+        stmt.bindLong(7, entity.getVerify_status());
+        stmt.bindLong(8, entity.getTime());
+        stmt.bindLong(9, entity.getUnreadNum());
     }
 
     @Override
@@ -105,28 +112,33 @@ public class ImSessionDao extends AbstractDao<ImSession, String> {
             stmt.bindString(1, userId);
         }
  
+        String loginUserId = entity.getLoginUserId();
+        if (loginUserId != null) {
+            stmt.bindString(2, loginUserId);
+        }
+ 
         String content = entity.getContent();
         if (content != null) {
-            stmt.bindString(2, content);
+            stmt.bindString(3, content);
         }
  
         String nickName = entity.getNickName();
         if (nickName != null) {
-            stmt.bindString(3, nickName);
+            stmt.bindString(4, nickName);
         }
  
         String icon = entity.getIcon();
         if (icon != null) {
-            stmt.bindString(4, icon);
+            stmt.bindString(5, icon);
         }
  
         String sex = entity.getSex();
         if (sex != null) {
-            stmt.bindString(5, sex);
+            stmt.bindString(6, sex);
         }
-        stmt.bindLong(6, entity.getVerify_status());
-        stmt.bindLong(7, entity.getTime());
-        stmt.bindLong(8, entity.getUnreadNum());
+        stmt.bindLong(7, entity.getVerify_status());
+        stmt.bindLong(8, entity.getTime());
+        stmt.bindLong(9, entity.getUnreadNum());
     }
 
     @Override
@@ -138,13 +150,14 @@ public class ImSessionDao extends AbstractDao<ImSession, String> {
     public ImSession readEntity(Cursor cursor, int offset) {
         ImSession entity = new ImSession( //
             cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // userId
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // content
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // nickName
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // icon
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // sex
-            cursor.getInt(offset + 5), // verify_status
-            cursor.getLong(offset + 6), // time
-            cursor.getInt(offset + 7) // unreadNum
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // loginUserId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // content
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // nickName
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // icon
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // sex
+            cursor.getInt(offset + 6), // verify_status
+            cursor.getLong(offset + 7), // time
+            cursor.getInt(offset + 8) // unreadNum
         );
         return entity;
     }
@@ -152,13 +165,14 @@ public class ImSessionDao extends AbstractDao<ImSession, String> {
     @Override
     public void readEntity(Cursor cursor, ImSession entity, int offset) {
         entity.setUserId(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setContent(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setNickName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setIcon(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setSex(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setVerify_status(cursor.getInt(offset + 5));
-        entity.setTime(cursor.getLong(offset + 6));
-        entity.setUnreadNum(cursor.getInt(offset + 7));
+        entity.setLoginUserId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setContent(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setNickName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setIcon(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setSex(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setVerify_status(cursor.getInt(offset + 6));
+        entity.setTime(cursor.getLong(offset + 7));
+        entity.setUnreadNum(cursor.getInt(offset + 8));
      }
     
     @Override

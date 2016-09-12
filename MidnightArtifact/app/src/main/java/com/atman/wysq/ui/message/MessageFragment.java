@@ -22,6 +22,7 @@ import com.atman.wysq.ui.yunxinfriend.MoFriendsActivity;
 import com.atman.wysq.ui.yunxinfriend.P2PChatActivity;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.util.LogUtils;
+import com.base.baselibs.util.PreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -123,7 +124,8 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
 
     private void setUnreadMessageNum() {
         mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
-        mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.NickName.notEq("")).build().list();
+        mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.NickName.notEq(""), ImSessionDao.Properties.LoginUserId.eq(
+                PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID))).build().list();
         if (mImSession!=null) {
             mAdapter.addBody(mImSession);
         }
