@@ -325,6 +325,11 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             }
         }
         personalNameTx.setText(mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
+        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()>=3) {
+            personalNameTx.setTextColor(getResources().getColor(R.color.color_red));
+        } else {
+            personalNameTx.setTextColor(getResources().getColor(R.color.color_7F2505));
+        }
         if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("M")) {
             personalGenderIv.setImageResource(R.mipmap.personal_man_ic);
         } else {

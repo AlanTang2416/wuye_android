@@ -85,7 +85,7 @@ public class HisDynamicsActivity extends MyBaseActivity implements AdapterInterf
 
         mEmpty = LayoutInflater.from(mContext).inflate(R.layout.part_list_empty, null);
         mEmptyTX = (TextView) mEmpty.findViewById(R.id.empty_list_tx);
-        mEmptyTX.setText("暂无动态");
+        mEmptyTX.setText("这个人很懒，还未发布过动态");
 
         mAdapter = new PostingListAdapter(mContext, getmWidth(), this);
         pullToRefreshListView.setEmptyView(mEmpty);
@@ -202,7 +202,7 @@ public class HisDynamicsActivity extends MyBaseActivity implements AdapterInterf
             case R.id.item_bloglist_comment_ll:
                 this.position = position;
                 startActivityForResult(PostingsDetailActivity.buildIntent(mContext, mAdapter.getItem(position).getTitle()
-                        , mAdapter.getItem(position).getBlog_id(), true, mAdapter.getItem(position).getVip_level()), Common.toPostDetail);
+                        , mAdapter.getItem(position).getBlog_id(), false, mAdapter.getItem(position).getVip_level()), Common.toPostDetail);
                 blogId = mAdapter.getItem(position).getBlog_id();
                 OkHttpUtils.postString().url(Common.Url_Add_Browse + blogId).mediaType(Common.JSON)
                         .content("{}")

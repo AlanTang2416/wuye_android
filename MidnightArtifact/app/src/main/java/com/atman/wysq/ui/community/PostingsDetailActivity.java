@@ -528,6 +528,11 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             }
             blogdetailNameTx.setText(mBodyEntity.getUser_name());
             blogdetailLevelTx.setText("Lv " + mBodyEntity.getUserLevel());
+            if (vipLevel>=3) {
+                blogdetailNameTx.setTextColor(getResources().getColor(R.color.color_red));
+            } else {
+                blogdetailNameTx.setTextColor(getResources().getColor(R.color.color_333333));
+            }
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getIcon()
                     , blogdetailHeadImg, MyBaseApplication.getApplication().getOptionsNot());
         }

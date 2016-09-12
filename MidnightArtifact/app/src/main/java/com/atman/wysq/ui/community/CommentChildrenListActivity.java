@@ -220,6 +220,11 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
                 ImageLoader.getInstance().displayImage(anonymityImg, childrencommentHeadImg
                         , MyBaseApplication.getApplication().getOptionsNot());
             } else {
+                if (vipLevel>=3) {
+                    childrencommentNameTx.setTextColor(getResources().getColor(R.color.color_red));
+                } else {
+                    childrencommentNameTx.setTextColor(getResources().getColor(R.color.color_333333));
+                }
                 childrencommentNameTx.setText(name);
                 ImageLoader.getInstance().displayImage(Common.ImageUrl+headUrl, childrencommentHeadImg
                         , MyBaseApplication.getApplication().getOptionsNot());

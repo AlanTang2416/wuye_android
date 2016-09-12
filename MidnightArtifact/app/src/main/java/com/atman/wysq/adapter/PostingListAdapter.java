@@ -125,6 +125,7 @@ public class PostingListAdapter extends BaseAdapter {
             holder.itemBloglistVerifyImg.setVisibility(View.GONE);
             holder.itemBloglistVipTx.setVisibility(View.GONE);
             holder.itemBloglistSvipIv.setVisibility(View.GONE);
+            holder.itemBloglistNameTx.setTextColor(context.getResources().getColor(R.color.color_333333));
         } else {
             holder.itemBloglistLevelTx.setVisibility(View.VISIBLE);
             holder.itemBloglistNameTx.setText(mBodyEntity.getUser_name());
@@ -149,6 +150,11 @@ public class PostingListAdapter extends BaseAdapter {
             } else {
                 holder.itemBloglistVerifyImg.setVisibility(View.GONE);
                 holder.itemBloglistGenderImg.setVisibility(View.VISIBLE);
+            }
+            if (shop.get(position).getVip_level()>=3) {
+                holder.itemBloglistNameTx.setTextColor(context.getResources().getColor(R.color.color_red));
+            } else {
+                holder.itemBloglistNameTx.setTextColor(context.getResources().getColor(R.color.color_333333));
             }
         }
 

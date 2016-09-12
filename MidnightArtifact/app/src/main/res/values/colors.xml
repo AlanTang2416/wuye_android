@@ -12,6 +12,10 @@
     <color name="color_red">#ff0000</color>
     <color name="color_blue">#0000ff</color>
     <color name="color_gift_all">#22000000</color>
+    <color name="color_7F2505">#7F2505</color>
+    <color name="color_333333">#333333</color>
+    <color name="color_2B2B2B">#2B2B2B</color>
+    <color name="color_DF9E37">#DF9E37</color>
 
     <color name="main_title_orange_color">#E55D46</color>
     <color name="activity_default_bg">#efeff4</color>

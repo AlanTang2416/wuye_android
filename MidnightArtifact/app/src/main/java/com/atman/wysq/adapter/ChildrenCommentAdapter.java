@@ -126,9 +126,21 @@ public class ChildrenCommentAdapter extends BaseAdapter {
                 holder.itemChildrenCommentVipTx.setVisibility(View.GONE);
                 holder.itemChildrenCommentSvipIv.setVisibility(View.GONE);
                 holder.itemChildrenCommentLevelTx.setVisibility(View.GONE);
+                holder.itemChildrenCommentContentTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
+                holder.itemChildrenCommentNameTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
                 ImageLoader.getInstance().displayImage(anonymityImg,
                         holder.itemChildrenCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
             } else {
+                if (shop.get(position).getVip_level()>=3) {
+                    holder.itemChildrenCommentNameTv.setTextColor(context.getResources().getColor(R.color.color_red));
+                    if (shop.get(position).getVip_level()>=4) {
+                        holder.itemChildrenCommentContentTv.setTextColor(context.getResources().getColor(R.color.color_red));
+                    } else {
+                        holder.itemChildrenCommentContentTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
+                    }
+                } else {
+                    holder.itemChildrenCommentNameTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
+                }
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon(),
                         holder.itemChildrenCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
             }

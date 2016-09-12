@@ -211,6 +211,7 @@ public class MySecretListAdapter extends BaseAdapter {
             holder.itemBloglistVerifyImg.setVisibility(View.GONE);
             holder.itemBloglistVipTx.setVisibility(View.GONE);
             holder.itemBloglistSvipIv.setVisibility(View.GONE);
+            holder.itemBloglistNameTx.setTextColor(context.getResources().getColor(R.color.color_333333));
         } else {
             holder.itemBloglistLevelTx.setVisibility(View.VISIBLE);
             if (mBodyEntity.getVerify_status() == 1) {
@@ -233,6 +234,11 @@ public class MySecretListAdapter extends BaseAdapter {
                     holder.itemBloglistVipTx.setText("VIP." + shop.get(position).getVip_level());
                     holder.itemBloglistVipTx.setVisibility(View.VISIBLE);
                 }
+            }
+            if (shop.get(position).getVip_level()>=3) {
+                holder.itemBloglistNameTx.setTextColor(context.getResources().getColor(R.color.color_red));
+            } else {
+                holder.itemBloglistNameTx.setTextColor(context.getResources().getColor(R.color.color_333333));
             }
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getIcon()
                     , holder.itemBloglistHeadImg, MyBaseApplication.getApplication().getOptionsNot());

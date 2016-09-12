@@ -180,6 +180,11 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
 
     private void updataView() {
         otherpersonalNameTx.setText(mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
+        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()>=3) {
+            otherpersonalNameTx.setTextColor(getResources().getColor(R.color.color_red));
+        } else {
+            otherpersonalNameTx.setTextColor(getResources().getColor(R.color.color_7F2505));
+        }
         if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()>=4) {
             otherpersonalVipTx.setVisibility(View.GONE);
             otherpersonalSvipIv.setVisibility(View.VISIBLE);
@@ -393,14 +398,14 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.otherpersonal_visitor_ll:
-                if (!isLogin() || mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<1) {
+                if (!isLogin() || MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<1) {
                     showWraning("VIP.1以上用户才有权限查看");
                     return;
                 }
                 startActivity(HisVisitorActivity.buildIntent(mContext, id, "TA的访客"));
                 break;
             case R.id.otherpersonal_friends_ll:
-                if (!isLogin() || mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<2) {
+                if (!isLogin() || MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<2) {
                     showWraning("VIP.2以上用户才有权限查看");
                     return;
                 }
