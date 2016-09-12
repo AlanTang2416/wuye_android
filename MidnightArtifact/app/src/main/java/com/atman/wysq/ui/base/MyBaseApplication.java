@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
 import com.atman.wysq.R;
@@ -685,5 +686,11 @@ public class MyBaseApplication extends BaseApplication {
                         }
                     }
                 }, true);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }
