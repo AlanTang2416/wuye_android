@@ -61,8 +61,15 @@ public class GetHisVisitorAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public List<GetUserBrowseModel.BodyEntity.DataListEntity> getShop() {
+        return shop;
+    }
+
     @Override
     public int getCount() {
+        if (shop.size()==0) {
+            return 1;
+        }
         return shop.size();
     }
 
@@ -86,49 +93,51 @@ public class GetHisVisitorAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        GetUserBrowseModel.BodyEntity.DataListEntity mBodyEntity = shop.get(position);
+        if (shop.size()>0) {
+            GetUserBrowseModel.BodyEntity.DataListEntity mBodyEntity = shop.get(position);
 
-        if (mBodyEntity.getSex().equals("M")) {
-            holder.itemBrowseGenderIv.setImageResource(R.mipmap.personal_man_ic);
-        } else {
-            holder.itemBrowseGenderIv.setImageResource(R.mipmap.personal_weman_ic);
-        }
-
-        if (mBodyEntity.getVerify_status() == 1) {
-            holder.itemBrowseVerifyImg.setVisibility(View.VISIBLE);
-            holder.itemBrowseGenderIv.setVisibility(View.GONE);
-        } else {
-            holder.itemBrowseVerifyImg.setVisibility(View.GONE);
-            holder.itemBrowseGenderIv.setVisibility(View.VISIBLE);
-        }
-
-        ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getIcon(),
-                holder.itemBrowseHeadIv, MyBaseApplication.getApplication().getOptionsNot());
-
-        holder.itemBrowseNameTx.setText(mBodyEntity.getNick_name());
-        holder.itemBrowseLevelTx.setText("LV." + mBodyEntity.getUserLevel());
-        if (mBodyEntity.getVip_level() == 0) {
-            holder.itemBrowseVipTx.setVisibility(View.GONE);
-            holder.itemBrowseSvipIv.setVisibility(View.GONE);
-        } else {
-            holder.itemBrowseVipTx.setVisibility(View.VISIBLE);
-            if (mBodyEntity.getVip_level()>=4) {
-                holder.itemBrowseVipTx.setVisibility(View.GONE);
-                holder.itemBrowseSvipIv.setVisibility(View.VISIBLE);
+            if (mBodyEntity.getSex().equals("M")) {
+                holder.itemBrowseGenderIv.setImageResource(R.mipmap.personal_man_ic);
             } else {
-                holder.itemBrowseSvipIv.setVisibility(View.GONE);
-                holder.itemBrowseVipTx.setVisibility(View.VISIBLE);
-                holder.itemBrowseVipTx.setText("VIP." + mBodyEntity.getVip_level());
+                holder.itemBrowseGenderIv.setImageResource(R.mipmap.personal_weman_ic);
             }
-        }
-        holder.itemBrowseTimeTx.setText("到访时间：" + MyTools.convertTimeS(mBodyEntity.getCreate_time()));
 
-        holder.itemBrowseRootRl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdapterInterface.onItemClick(v, position);
+            if (mBodyEntity.getVerify_status() == 1) {
+                holder.itemBrowseVerifyImg.setVisibility(View.VISIBLE);
+                holder.itemBrowseGenderIv.setVisibility(View.GONE);
+            } else {
+                holder.itemBrowseVerifyImg.setVisibility(View.GONE);
+                holder.itemBrowseGenderIv.setVisibility(View.VISIBLE);
             }
-        });
+
+            ImageLoader.getInstance().displayImage(Common.ImageUrl + mBodyEntity.getIcon(),
+                    holder.itemBrowseHeadIv, MyBaseApplication.getApplication().getOptionsNot());
+
+            holder.itemBrowseNameTx.setText(mBodyEntity.getNick_name());
+            holder.itemBrowseLevelTx.setText("LV." + mBodyEntity.getUserLevel());
+            if (mBodyEntity.getVip_level() == 0) {
+                holder.itemBrowseVipTx.setVisibility(View.GONE);
+                holder.itemBrowseSvipIv.setVisibility(View.GONE);
+            } else {
+                holder.itemBrowseVipTx.setVisibility(View.VISIBLE);
+                if (mBodyEntity.getVip_level()>=4) {
+                    holder.itemBrowseVipTx.setVisibility(View.GONE);
+                    holder.itemBrowseSvipIv.setVisibility(View.VISIBLE);
+                } else {
+                    holder.itemBrowseSvipIv.setVisibility(View.GONE);
+                    holder.itemBrowseVipTx.setVisibility(View.VISIBLE);
+                    holder.itemBrowseVipTx.setText("VIP." + mBodyEntity.getVip_level());
+                }
+            }
+            holder.itemBrowseTimeTx.setText("到访时间：" + MyTools.convertTimeS(mBodyEntity.getCreate_time()));
+
+            holder.itemBrowseRootRl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapterInterface.onItemClick(v, position);
+                }
+            });
+        }
 
         return convertView;
     }

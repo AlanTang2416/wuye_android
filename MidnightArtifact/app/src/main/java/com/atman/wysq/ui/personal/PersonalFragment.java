@@ -347,7 +347,6 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         ImageLoader.getInstance().displayImage(Common.ImageUrl + mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
                 , personalHeadIv, MyBaseApplication.getApplication().getOptions());
 
-        personalVisitorNumTx.setText(""+mGetUserIndexModel.getBody().getVisitorMap().getVisitorSize());
         initVisitorIV();
 
         initguardianIV();
@@ -391,7 +390,14 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     }
 
     private void initVisitorIV() {
-        int num = mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();
+        int num = 0;
+        for (int i=0;i<mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();i++) {
+            if (mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i).getUser_id()!=
+                    MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                num += 1;
+            }
+        }
+        personalVisitorNumTx.setText(""+num);
         if (num==1) {
             personalVisitorOneIv.setVisibility(View.GONE);
             personalVisitorTwoIv.setVisibility(View.GONE);

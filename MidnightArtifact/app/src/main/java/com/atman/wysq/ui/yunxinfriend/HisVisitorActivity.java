@@ -22,6 +22,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.tbl.okhttputils.OkHttpUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -54,6 +57,7 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
     private View mEmpty;
     private TextView mEmptyTX;
     private String title;
+    private List<GetUserBrowseModel.BodyEntity.DataListEntity> dataList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +166,6 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
         super.onStringResponse(data, response, id);
         if (id == Common.NET_GET_BROWSE) {
             mGetUserBrowseModel = mGson.fromJson(data, GetUserBrowseModel.class);
-            headViewNumTx.setText(""+mGetUserBrowseModel.getBody().getDataSize());
             if (mGetUserBrowseModel.getBody().getDataList() == null || mGetUserBrowseModel.getBody().getDataList().size() == 0) {
                 if (mAdapter != null && mAdapter.getCount() > 0) {
                     showToast("没有更多");
@@ -173,7 +176,15 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
                 if (mPage == 1) {
                     mAdapter.clearData();
                 }
-                mAdapter.addBody(mGetUserBrowseModel.getBody().getDataList());
+                dataList.clear();
+                for (int i=0;i<mGetUserBrowseModel.getBody().getDataList().size();i++) {
+                    if (mGetUserBrowseModel.getBody().getDataList().get(i).getUser_id()!=
+                            MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                        dataList.add(mGetUserBrowseModel.getBody().getDataList().get(i));
+                    }
+                }
+                mAdapter.addBody(dataList);
+                headViewNumTx.setText(""+mAdapter.getShop().size());
             }
         }
     }

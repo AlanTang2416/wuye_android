@@ -161,7 +161,7 @@ public class HisGuardianActivity extends MyBaseActivity implements AdapterInterf
         super.onStringResponse(data, response, id);
         if (id == Common.NET_GET_GUARD) {
             mGetHisGuardModel = mGson.fromJson(data, GetHisGuardModel.class);
-            headViewNumTx.setText(""+mGetHisGuardModel.getBody().getDataSize());
+
             if (mGetHisGuardModel.getBody().getDataList() == null || mGetHisGuardModel.getBody().getDataList().size() == 0) {
                 if (mAdapter != null && mAdapter.getCount() > 0) {
                     showToast("没有更多");
@@ -173,6 +173,7 @@ public class HisGuardianActivity extends MyBaseActivity implements AdapterInterf
                     mAdapter.clearData();
                 }
                 mAdapter.addBody(mGetHisGuardModel.getBody().getDataList());
+                headViewNumTx.setText(""+mAdapter.getShop().size());
             }
         }
     }

@@ -214,7 +214,6 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
         otherpersonalDynamicNumberTx.setText(""+mGetUserIndexModel.getBody().getBlogImageMap().getDataSize());
         initDynamicIV();
 
-        otherpersonalVisitorNumTx.setText(mGetUserIndexModel.getBody().getVisitorMap().getVisitorSize()+"");
         initVisitorIV();
 
         initguardianIV();
@@ -266,7 +265,14 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     }
 
     private void initVisitorIV() {
-        int num = mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();
+        int num = 0;
+        for (int i=0;i<mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();i++) {
+            if (mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i).getUser_id()!=
+                    MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                num += 1;
+            }
+        }
+        otherpersonalVisitorNumTx.setText(""+num);
         if (num==1) {
             otherpersonalVisitorOneIv.setVisibility(View.GONE);
             otherpersonalVisitorTwoIv.setVisibility(View.GONE);
@@ -308,33 +314,33 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             otherpersonalDynmicTwoIv.setVisibility(View.GONE);
             otherpersonalDynmicThreeIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
-                    ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
+                    ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
                     ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==3) {
             otherpersonalDynmicOneIv.setVisibility(View.GONE);
             otherpersonalDynmicTwoIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicThreeIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(2)
                     ,otherpersonalDynmicTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
                     ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(2)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
                     ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num>=4) {
             otherpersonalDynmicOneIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicTwoIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicThreeIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
-                    ,otherpersonalDynmicOneIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
-                    ,otherpersonalDynmicTwoIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(2)
-                    ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
             ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(3)
+                    ,otherpersonalDynmicOneIv,MyBaseApplication.getApplication().getOptionsNot());
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(2)
+                    ,otherpersonalDynmicTwoIv,MyBaseApplication.getApplication().getOptionsNot());
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
+                    ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
                     ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         }
     }
