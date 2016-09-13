@@ -22,6 +22,7 @@ import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.personal.RechargeActivity;
 import com.atman.wysq.utils.Common;
+import com.atman.wysq.utils.SortComparator;
 import com.atman.wysq.widget.face.FaceRelativeLayout;
 import com.base.baselibs.net.MyStringCallback;
 import com.base.baselibs.util.LogUtils;
@@ -30,6 +31,8 @@ import com.base.baselibs.widget.NoSwipeViewPager;
 import com.tbl.okhttputils.OkHttpUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -76,6 +79,7 @@ public class SelectGiftActivity extends MyBaseActivity {
     RelativeLayout giftLl;
 
     private Context mContext = SelectGiftActivity.this;
+    private List<GiftListModel.BodyEntity> mGiftList = new ArrayList<>();
     private GiftListModel mGiftListModel;
     private Adapter adapter;
     private List<ImageView> pointViews;
@@ -108,7 +112,7 @@ public class SelectGiftActivity extends MyBaseActivity {
 
     private void initViewpager() {
         mainViewpager.setPagingEnabled(true);//是否支持手势滑动
-        int num = mGiftListModel.getBody().size();
+        int num = mGiftList.size();
         int n = num / 6;
         if (num % 6 != 0) {
             n = n + 1;
@@ -198,6 +202,9 @@ public class SelectGiftActivity extends MyBaseActivity {
         super.onStringResponse(data, response, id);
         if (id == Common.NET_GET_GIFTLIST) {
             mGiftListModel = mGson.fromJson(data, GiftListModel.class);
+            mGiftList = mGiftListModel.getBody();
+            Comparator comp = new SortComparator();
+            Collections.sort(mGiftList, comp);
             initViewpager();
         }
     }

@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atman.wysq.R;
@@ -299,6 +300,12 @@ public class P2PChatAdapter extends BaseAdapter {
                 }
             }
         });
+        holderText.itemP2pchatRootRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mP2PAdapterInter.onItem(v, position);
+            }
+        });
 
         return convertView;
     }
@@ -364,6 +371,8 @@ public class P2PChatAdapter extends BaseAdapter {
         TextView itemP2pchatAudioRightTx;
         @Bind(R.id.item_p2pchat_audio_right_ll)
         LinearLayout itemP2pchatAudioRightLl;
+        @Bind(R.id.item_p2pchat_root_Rl)
+        RelativeLayout itemP2pchatRootRl;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

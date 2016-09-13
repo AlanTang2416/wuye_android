@@ -30,6 +30,7 @@ import com.atman.wysq.R;
 import com.atman.wysq.adapter.P2PChatAdapter;
 import com.atman.wysq.model.bean.ImMessage;
 import com.atman.wysq.model.bean.ImSession;
+import com.atman.wysq.model.event.YunXinMessageEvent;
 import com.atman.wysq.model.greendao.gen.ImMessageDao;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
 import com.atman.wysq.model.response.ChatAudioModel;
@@ -67,6 +68,8 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -100,26 +103,14 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     ImageView p2pchatAddIv;
     @Bind(R.id.p2pchat_send_bt)
     Button p2pchatSendBt;
-    @Bind(R.id.ll1)
-    LinearLayout ll1;
     @Bind(R.id.ll_facechoose)
     RelativeLayout llFacechoose;
-    @Bind(R.id.p2pchat_add_picture_tv)
-    TextView p2pchatAddPictureTv;
-    @Bind(R.id.p2pchat_add_camera_tv)
-    TextView p2pchatAddCameraTv;
-    @Bind(R.id.p2pchat_add_gif_tv)
-    TextView p2pchatAddGifTv;
-    @Bind(R.id.p2pchat_add_finger_tv)
-    TextView p2pchatAddFingerTv;
     @Bind(R.id.p2pchat_add_ll)
     LinearLayout p2pchatAddLl;
     @Bind(R.id.timer)
     Chronometer timer;
     @Bind(R.id.timer_tip)
     TextView timerTip;
-    @Bind(R.id.timer_tip_container)
-    LinearLayout timerTipContainer;
     @Bind(R.id.layoutPlayAudio)
     FrameLayout layoutPlayAudio;
 
@@ -145,7 +136,8 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     private ImMessageDao mImMessageDao;
     private List<ImMessage> mImMessage;
     private List<ImMessage> mImMessageDelete;
-    private ImMessage mImMessageUpdata;
+    private ImSession mImSessionDelete;
+    private List<ImMessage> mImMessageUpdata;
     private P2PChatAdapter mAdapter;
     private AudioPlayer player;
 
@@ -209,11 +201,20 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        mImMessageDelete = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(id)).build().list();
+                        mImMessageDelete = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(id), ImMessageDao.Properties.LoginUserId.eq(
+                                String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().list();
                         for (ImMessage imMessageDelete : mImMessageDelete) {
                             mImMessageDao.delete(imMessageDelete);
                         }
                         mAdapter.clearData();
+
+                        mImSessionDelete = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(id), ImSessionDao.Properties.LoginUserId.eq(
+                                String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().unique();
+                        if (mImSessionDelete!=null) {
+                            LogUtils.e("mImSessionDelete");
+                            mImSessionDao.delete(mImSessionDelete);
+                            EventBus.getDefault().post(new YunXinMessageEvent());
+                        }
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -515,16 +516,16 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(new Observer<IMMessage>() {
             @Override
             public void onEvent(IMMessage imMessage) {
-                mImMessageUpdata = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.Uuid.eq(imMessage.getUuid())).build().unique();
-                if (mImMessageUpdata!=null) {
+                mImMessageUpdata = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.Uuid.eq(imMessage.getUuid())).build().list();
+                for (int i=0;i<mImMessageUpdata.size();i++) {
                     if (imMessage.getStatus()==MsgStatusEnum.success) {
-                        mImMessageUpdata.setIsSeedSuccess(1);
+                        mImMessageUpdata.get(i).setIsSeedSuccess(1);
                         mAdapter.setImMessageStatus(imMessage.getUuid(), 1);
                     } else {
-                        mImMessageUpdata.setIsSeedSuccess(2);
+                        mImMessageUpdata.get(i).setIsSeedSuccess(2);
                         mAdapter.setImMessageStatus(imMessage.getUuid(), 2);
                     }
-                    mImMessageDao.update(mImMessageUpdata);
+                    mImMessageDao.update(mImMessageUpdata.get(i));
                 }
             }
         }, b);
@@ -889,6 +890,18 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     @Override
     public void onItem(View v, int position) {
         switch (v.getId()) {
+            case R.id.item_p2pchat_root_Rl:
+                if (isIMOpen()) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
+                }
+                blogdetailAddemolIv.setImageResource(R.mipmap.chat_face_ic);
+                p2pchatRecordIv.setImageResource(R.mipmap.chat_record_ic);
+                blogdetailAddcommentEt.setVisibility(View.VISIBLE);
+                llFacechoose.setVisibility(View.GONE);
+                p2pchatRecordBt.setVisibility(View.GONE);
+                p2pchatAddLl.setVisibility(View.GONE);
+                break;
             case R.id.item_p2pchat_image_left_iv:
             case R.id.item_p2pchat_image_right_iv:
                 if (layoutPlayAudio.getVisibility()==View.VISIBLE) {

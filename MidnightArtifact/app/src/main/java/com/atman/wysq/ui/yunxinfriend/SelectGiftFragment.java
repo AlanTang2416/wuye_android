@@ -14,6 +14,7 @@ import com.atman.wysq.model.response.GiftListModel;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.base.MyBaseFragment;
 import com.atman.wysq.utils.Common;
+import com.atman.wysq.utils.SortComparator;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.net.MyStringCallback;
 import com.base.baselibs.util.LogUtils;
@@ -21,6 +22,8 @@ import com.base.baselibs.widget.PromptDialog;
 import com.tbl.okhttputils.OkHttpUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -40,8 +43,9 @@ public class SelectGiftFragment extends MyBaseFragment implements AdapterInterfa
     GridView selectGiftGv;
 
     private int page = 0;
-    private GiftListModel mGiftListModel = new GiftListModel();
+//    private GiftListModel mGiftListModel = new GiftListModel();
     private List<GiftListModel.BodyEntity> data = new ArrayList<>();
+    private List<GiftListModel.BodyEntity> mGiftList = new ArrayList<>();
     private SelectGiftAdapter mAdapter;
 
     private int cionNum;
@@ -55,9 +59,12 @@ public class SelectGiftFragment extends MyBaseFragment implements AdapterInterfa
         Bundle b = getArguments();
         page = b.getInt("page");
         id = b.getString("id");
-        mGiftListModel = (GiftListModel) b.getSerializable("data");
-        for (int i=(page*6);i<mGiftListModel.getBody().size();i++) {
-            data.add(mGiftListModel.getBody().get(i));
+        GiftListModel mGiftListModel = (GiftListModel) b.getSerializable("data");
+        mGiftList = mGiftListModel.getBody();
+        Comparator comp = new SortComparator();
+        Collections.sort(mGiftList, comp);
+        for (int i=(page*6);i<mGiftList.size();i++) {
+            data.add(mGiftList.get(i));
         }
         return view;
     }
