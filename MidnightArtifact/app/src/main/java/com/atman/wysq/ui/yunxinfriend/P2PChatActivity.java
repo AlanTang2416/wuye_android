@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -131,6 +132,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
 
     private final int CHOOSE_BIG_PICTURE = 444;
     private final int TAKE_BIG_PICTURE = 555;
+    private final int maxDuration = 60;
     private Uri imageUri;
     private String path;
     protected AudioRecorder audioMessageHelper;
@@ -177,9 +179,30 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
 
         player = new AudioPlayer(mContext);
         setBarTitleTx(nick);
+        getBarBackLl().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
+                finish();
+            }
+        });
+        getBarBackIv().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
+                finish();
+            }
+        });
         setBarRightTx("清空").setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 PromptDialog.Builder builder = new PromptDialog.Builder(mContext);
                 builder.setMessage("您确定要清空与该好友的聊天记录吗？");
                 builder.setPositiveButton("清空", new DialogInterface.OnClickListener() {
@@ -275,7 +298,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
      */
     private void initAudioRecord() {
         if (audioMessageHelper == null) {
-            audioMessageHelper = new AudioRecorder(mContext, RecordType.AAC, AudioRecorder.DEFAULT_MAX_AUDIO_RECORD_TIME_SECOND, this);
+            audioMessageHelper = new AudioRecorder(mContext, RecordType.AAC, maxDuration, this);
         }
     }
 
@@ -310,7 +333,30 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         layoutPlayAudio.setVisibility(View.VISIBLE);
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
+        timer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                if ("1:00".equals(chronometer.getText().toString())) {
+                    Message message = new Message();
+                    message.what = 1;
+                    hand.sendMessage(message);
+                }
+            }
+        });
     }
+
+    Handler hand = new Handler(){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    touched = false;
+                    onEndAudioRecord(false);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+
+    };
 
     /**
      * 结束语音录制动画
@@ -506,6 +552,9 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.blogdetail_addemol_iv:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 if (llFacechoose.getVisibility() == View.GONE) {
                     if (isIMOpen()) {
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -526,6 +575,9 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 handler.postDelayed(runnable, 200);
                 break;
             case R.id.p2pchat_record_iv:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 if (llFacechoose.getVisibility() == View.VISIBLE) {
                     llFacechoose.setVisibility(View.GONE);
                 }
@@ -549,6 +601,9 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 handler.postDelayed(runnable, 200);
                 break;
             case R.id.p2pchat_add_iv:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 if (p2pchatAddLl.getVisibility() == View.GONE) {
                     if (isIMOpen()) {
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -568,6 +623,9 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 handler.postDelayed(runnable, 200);
                 break;
             case R.id.p2pchat_send_bt:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 // 创建文本消息
                 IMMessage message = MessageBuilder.createTextMessage(id, SessionTypeEnum.P2P
                         , blogdetailAddcommentEt.getText().toString());
@@ -575,18 +633,30 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 blogdetailAddcommentEt.setText("");
                 break;
             case R.id.p2pchat_add_picture_tv:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
                 getAlbum.setType("image/*");
                 startActivityForResult(getAlbum, CHOOSE_BIG_PICTURE);
                 break;
             case R.id.p2pchat_add_camera_tv:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 path = UiHelper.photo(mContext, path, TAKE_BIG_PICTURE);
                 break;
             case R.id.p2pchat_add_gif_tv:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 startActivityForResult(SelectGiftActivity.buildIntent(mContext, id), Common.toSelectGift);
                 p2pchatAddLl.setVisibility(View.GONE);
                 break;
             case R.id.p2pchat_add_finger_tv:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 GuessAttachment attachment = new GuessAttachment();
                 IMMessage CustomMessage = MessageBuilder.createCustomMessage(id, SessionTypeEnum.P2P, attachment.getValue().getDesc(), attachment);
                 seedMessage(CustomMessage, ContentTypeInter.contentTypeFinger, "", attachment.getValue().getDesc());
@@ -600,7 +670,15 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         overridePendingTransition(com.base.baselibs.R.anim.activity_bottom_in, com.base.baselibs.R.anim.activity_bottom_out);
     }
 
-    private void seedMessage(IMMessage message, int contentType,String contentImageSUrl, String contentFinger) {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (player!=null) {
+            player.stop();
+        }
+    }
+
+    private void seedMessage(IMMessage message, int contentType, String contentImageSUrl, String contentFinger) {
         Map<String, Object> map = new HashMap<>();
         map.put("contentType", contentType);
         map.put("contentImageSUrl", contentImageSUrl);
@@ -813,6 +891,9 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         switch (v.getId()) {
             case R.id.item_p2pchat_image_left_iv:
             case R.id.item_p2pchat_image_right_iv:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 String imagePath = "";
                 if (mAdapter.getItem(position).getImageThumUrl().startsWith("http")) {
                     imagePath = mAdapter.getItem(position).getImageUrl();
@@ -834,12 +915,19 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         }
     }
 
+    private int positionAudio;
     @Override
     public void onItemAudio(View v, int position, final AnimationDrawable animationDrawable) {
         switch (v.getId()) {
             case R.id.item_p2pchat_audio_right_ll:
             case R.id.item_p2pchat_audio_left_ll:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 if ((new File(mAdapter.getItem(position).getAudioFilePath()).exists())) {
+                    if (player!=null && positionAudio!=position) {
+                        player.stop();
+                    }
                     player.setDataSource(mAdapter.getItem(position).getAudioFilePath());
                     player.setOnPlayListener(new OnPlayListener() {
                         @Override
@@ -878,6 +966,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 } else {
                     showToast("没有文件");
                 }
+                positionAudio = position;
                 break;
         }
     }

@@ -22,6 +22,7 @@ import com.base.baselibs.iimp.EditCheckBack;
 import com.base.baselibs.iimp.MyTextWatcher;
 import com.base.baselibs.iimp.MyTextWatcherTwo;
 import com.base.baselibs.net.MyStringCallback;
+import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.MD5Util;
 import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.util.StringUtils;
@@ -223,6 +224,7 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                         ,MyBaseApplication.mVersionName
                         ,MyBaseApplication.mPhoneModel
                         ,MyBaseApplication.mChannel);
+//                LogUtils.e("mGson.toJson(mLoginRequestModel):"+mGson.toJson(mLoginRequestModel));
                 OkHttpUtils.postString()
                         .url(Common.Url_Login).tag(LoginActivity.this).id(Common.NET_LOGIN_ID)
                         .content(mGson.toJson(mLoginRequestModel))

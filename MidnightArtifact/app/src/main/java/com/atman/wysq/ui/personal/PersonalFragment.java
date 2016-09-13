@@ -50,6 +50,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -356,6 +358,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
 
         initguardianIV();
 
+        personalMycoinTv.setVisibility(View.VISIBLE);
         personalMycoinTv.setText(mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getGold_coin()+"｜更多");
     }
 
@@ -394,12 +397,15 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         }
     }
 
+    private List<GetUserIndexModel.BodyEntity.VisitorMapEntity.VisitorListEntity> dataList = new ArrayList<>();
     private void initVisitorIV() {
         int num = 0;
+        dataList.clear();
         for (int i=0;i<mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();i++) {
             if (mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i).getUser_id()!=
                     MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                 num += 1;
+                dataList.add(mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i));
             }
         }
         personalVisitorNumTx.setText(""+num);
@@ -407,25 +413,25 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             personalVisitorOneIv.setVisibility(View.GONE);
             personalVisitorTwoIv.setVisibility(View.GONE);
             personalVisitorThreeIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(0).getIcon()
                     ,personalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==2) {
             personalVisitorOneIv.setVisibility(View.GONE);
             personalVisitorTwoIv.setVisibility(View.VISIBLE);
             personalVisitorThreeIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(0).getIcon()
                     ,personalVisitorTwoIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(1).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(1).getIcon()
                     ,personalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num>=3) {
             personalVisitorOneIv.setVisibility(View.VISIBLE);
             personalVisitorTwoIv.setVisibility(View.VISIBLE);
             personalVisitorThreeIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(0).getIcon()
                     ,personalVisitorOneIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(1).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(1).getIcon()
                     ,personalVisitorTwoIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(2).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(2).getIcon()
                     ,personalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         }
     }

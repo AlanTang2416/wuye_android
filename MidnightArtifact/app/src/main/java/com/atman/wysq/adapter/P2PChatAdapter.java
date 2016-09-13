@@ -49,11 +49,11 @@ public class P2PChatAdapter extends BaseAdapter {
     private Context context;
     protected LayoutInflater layoutInflater;
     private long time = 0;
-    private boolean isShowTime = false;
     private PullToRefreshListView p2pChatLv;
     private boolean isBottom = false;
     private P2PAdapterInter mP2PAdapterInter;
     private int width;
+    private long l1 = 5L;//定义一个long型变量
 
     public P2PChatAdapter(Context context, int width, PullToRefreshListView p2pChatLv, P2PAdapterInter mP2PAdapterInter) {
         this.context = context;
@@ -130,18 +130,6 @@ public class P2PChatAdapter extends BaseAdapter {
 
         final ImMessage temp = mImMessage.get(position);
 
-        if (position == 0) {
-            time = temp.getTime();
-            isShowTime = true;
-        } else {
-            if (MyTools.getGapCountM(time, temp.getTime()) >= 5) {
-                time = temp.getTime();
-                isShowTime = true;
-            } else {
-                isShowTime = false;
-            }
-        }
-
         holderText.itemP2pchatTextLeftTx.setVisibility(View.GONE);
         holderText.itemP2pchatImageLeftIv.setVisibility(View.GONE);
         holderText.itemP2pchatFingerLeftIv.setVisibility(View.GONE);
@@ -166,7 +154,8 @@ public class P2PChatAdapter extends BaseAdapter {
                         , holderText.itemP2pchatTextHeadleftIv, MyBaseApplication.getApplication().getOptionsNot(), mListener);
 //            }
         }
-        if (isShowTime) {
+        if (Math.abs(MyTools.getGapCountM(time, temp.getTime())) >= l1 || position==0) {
+            time =  mImMessage.get(position).getTime();
             holderText.itemP2pchatTextTimeTx.setVisibility(View.VISIBLE);
             holderText.itemP2pchatTextTimeTx.setText(MyTools.convertTimeS(temp.getTime()));
         } else {
@@ -238,12 +227,12 @@ public class P2PChatAdapter extends BaseAdapter {
                 }
                 break;
             case ContentTypeInter.contentTypeAudio:
-                int w = (int)temp.getAudioDuration()* DensityUtil.dp2px(context, 180)/60;
+                int w = (int)(temp.getAudioDuration()* DensityUtil.dp2px(context, 250)/60);
                 w = (int) ((w *2 / context.getResources().getDisplayMetrics().density)*10/10);
                 if (DensityUtil.dp2px(context, w)<DensityUtil.dp2px(context, 70)) {
-                    w = 70;
-                } else if (DensityUtil.dp2px(context, w)>=DensityUtil.dp2px(context, 180)) {
-                    w = 180;
+                    w = 75;
+                } else if (DensityUtil.dp2px(context, w)>=DensityUtil.dp2px(context, 250)) {
+                    w = 250;
                 }
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(DensityUtil.dp2px(context, w)
                         , FrameLayout.LayoutParams.WRAP_CONTENT);

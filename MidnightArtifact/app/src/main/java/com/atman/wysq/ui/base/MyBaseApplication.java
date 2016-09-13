@@ -221,7 +221,7 @@ public class MyBaseApplication extends BaseApplication {
                                 , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
                                 , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                                , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , isMy, messages.get(i).getTime(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
                                 , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeImage) {
                         temp = new ImMessage(null, messages.get(i).getUuid()
@@ -229,7 +229,7 @@ public class MyBaseApplication extends BaseApplication {
                                 , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
                                 , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                                , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , isMy, messages.get(i).getTime(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
                                 , "[图片]", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
@@ -254,7 +254,7 @@ public class MyBaseApplication extends BaseApplication {
                                 , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
                                 , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                                , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , isMy, messages.get(i).getTime(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
                                 , str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeAudio) {
                         ChatAudioModel mChatAudioModel = new Gson().fromJson(messages.get(i).getAttachment().toJson(true), ChatAudioModel.class);
@@ -263,7 +263,7 @@ public class MyBaseApplication extends BaseApplication {
                                 , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
                                 , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                                , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , isMy, messages.get(i).getTime(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
                                 , "[语音]", "", "", "", "", "", "",
                                 ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
@@ -273,7 +273,7 @@ public class MyBaseApplication extends BaseApplication {
                                 , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
                                 , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
                                 , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                                , isMy, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , isMy, messages.get(i).getTime(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
                                 , "[图片]", "", "", "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", 0, 0, false, 1);

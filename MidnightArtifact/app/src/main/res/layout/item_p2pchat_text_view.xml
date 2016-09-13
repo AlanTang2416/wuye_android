@@ -182,6 +182,7 @@
                     android:id="@+id/item_p2pchat_audio_right_ll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxWidth="@dimen/dimen_dp_250"
                     android:layout_marginTop="@dimen/dimen_dp_5"
                     android:gravity="center_vertical|left"
                     android:background="@drawable/item_message_right_bg"
@@ -202,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:layout_marginRight="@dimen/dimen_dp_5"
-                        android:text="0''"
+                        android:text="10''"
                         android:textColor="@color/color_black"
                         android:textSize="@dimen/dimen_sp_15" />
 
