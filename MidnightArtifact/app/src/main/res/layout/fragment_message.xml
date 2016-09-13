@@ -5,7 +5,8 @@
 
     <ListView
         android:id="@+id/message_listview"
-        android:divider="@null"
+        android:divider="@color/color_line"
+        android:dividerHeight="@dimen/dimen_dp_1"
         android:layout_below="@+id/mall_top_title_ll"
         android:layout_marginTop="@dimen/dimen_dp_f3"
         android:layout_width="match_parent"

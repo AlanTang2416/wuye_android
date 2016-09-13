@@ -41,6 +41,7 @@ public class MessageSessionListAdapter extends BaseAdapter {
     protected LayoutInflater layoutInflater;
     private List<ImSession> dataList;
     private AdapterInterface mAdapterInterface;
+    private boolean isChange = false;
 
     public MessageSessionListAdapter(Context context, AdapterInterface mAdapterInterface) {
         this.context = context;
@@ -70,6 +71,16 @@ public class MessageSessionListAdapter extends BaseAdapter {
         return dataList.get(position);
     }
 
+    public void setChange(boolean change) {
+        isChange = change;
+    }
+
+    public void deleteItemById(int id) {
+        dataList.remove(id);
+        isChange = true;
+        notifyDataSetChanged();
+    }
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -85,7 +96,10 @@ public class MessageSessionListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        if (holder.itemSessionHeadIv.getDrawable()==null) {
+        if (holder.itemSessionHeadIv.getDrawable()==null || isChange) {
+            if (position==getCount()-1) {
+                isChange = false;
+            }
             ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(position).getIcon(), holder.itemSessionHeadIv
                     , MyBaseApplication.getApplication().getOptionsNot());
         }
@@ -99,8 +113,8 @@ public class MessageSessionListAdapter extends BaseAdapter {
             holder.itemSessionVerifyImg.setVisibility(View.VISIBLE);
             holder.itemSessionGenderIv.setVisibility(View.GONE);
         } else {
-            holder.itemSessionVerifyImg.setVisibility(View.VISIBLE);
-            holder.itemSessionGenderIv.setVisibility(View.GONE);
+            holder.itemSessionVerifyImg.setVisibility(View.GONE);
+            holder.itemSessionGenderIv.setVisibility(View.VISIBLE);
         }
 
         holder.itemSessionNickTx.setText(dataList.get(position).getNickName());

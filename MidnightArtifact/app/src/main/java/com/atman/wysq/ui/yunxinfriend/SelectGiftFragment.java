@@ -123,7 +123,8 @@ public class SelectGiftFragment extends MyBaseFragment implements AdapterInterfa
     public void onStringResponse(String data, Response response, int id) {
         super.onStringResponse(data, response, id);
         if (id == Common.NET_PAY_GIFTLIST) {
-            ((SelectGiftActivity)getActivity()).backResuilt(mAdapter.getItem(myPosition).getPic_url());
+            ((SelectGiftActivity)getActivity()).backResuilt(mAdapter.getItem(myPosition).getPic_url()
+                    , mAdapter.getItem(myPosition).getPaopao());
         }
     }
 

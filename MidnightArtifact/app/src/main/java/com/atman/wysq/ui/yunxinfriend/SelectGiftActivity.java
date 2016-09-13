@@ -241,10 +241,14 @@ public class SelectGiftActivity extends MyBaseActivity {
         }
     }
 
-    public void backResuilt (String url) {
+    public void backResuilt (String url, String text) {
         Intent mIntent = new Intent();
         mIntent.putExtra("url",url);
-        mIntent.putExtra("text",blogdetailAddcommentEt.getText().toString().trim());
+        if (blogdetailAddcommentEt.getText().toString().trim().isEmpty()) {
+            mIntent.putExtra("text", text);
+        } else {
+            mIntent.putExtra("text", blogdetailAddcommentEt.getText().toString().trim());
+        }
         setResult(RESULT_OK,mIntent);
         finish();
     }

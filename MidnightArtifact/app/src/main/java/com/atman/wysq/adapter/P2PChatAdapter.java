@@ -55,6 +55,10 @@ public class P2PChatAdapter extends BaseAdapter {
     private P2PAdapterInter mP2PAdapterInter;
     private int width;
     private long l1 = 5L;//定义一个long型变量
+    private boolean leftChange = false;
+    private boolean rightChange = false;
+    private String leftImageUrl = "";
+    private String rightImageUrl = "";
 
     public P2PChatAdapter(Context context, int width, PullToRefreshListView p2pChatLv, P2PAdapterInter mP2PAdapterInter) {
         this.context = context;
@@ -63,6 +67,24 @@ public class P2PChatAdapter extends BaseAdapter {
         this.mP2PAdapterInter = mP2PAdapterInter;
         this.width = width;
         layoutInflater = LayoutInflater.from(context);
+    }
+
+    public void setLeftImageUrl(String leftImageUrl) {
+        this.leftImageUrl = leftImageUrl;
+        notifyDataSetChanged();
+    }
+
+    public void setRightImageUrl(String rightImageUrl) {
+        this.rightImageUrl = rightImageUrl;
+        notifyDataSetChanged();
+    }
+
+    public void setLeftChange(boolean leftChange) {
+        this.leftChange = leftChange;
+    }
+
+    public void setRightChange(boolean rightChange) {
+        this.rightChange = rightChange;
     }
 
     public void clearData() {
@@ -143,17 +165,20 @@ public class P2PChatAdapter extends BaseAdapter {
         if (temp.getIsSelfSend()) {
             holderText.itemP2pchatTextHeadrightIv.setVisibility(View.VISIBLE);
             holderText.itemP2pchatTextHeadleftIv.setVisibility(View.GONE);
-//            if (holderText.itemP2pchatTextHeadrightIv.getDrawable() == null) {
-                ImageLoader.getInstance().displayImage(Common.ImageUrl + temp.getIcon()
+            if (holderText.itemP2pchatTextHeadrightIv.getDrawable() == null || rightChange) {
+                rightChange = false;
+                ImageLoader.getInstance().displayImage(Common.ImageUrl +
+                        MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
                         , holderText.itemP2pchatTextHeadrightIv, MyBaseApplication.getApplication().getOptionsNot(), mListener);
-//            }
+            }
         } else {
             holderText.itemP2pchatTextHeadrightIv.setVisibility(View.GONE);
             holderText.itemP2pchatTextHeadleftIv.setVisibility(View.VISIBLE);
-//            if (holderText.itemP2pchatTextHeadrightIv.getDrawable() == null) {
-                ImageLoader.getInstance().displayImage(Common.ImageUrl + temp.getIcon()
+            if (holderText.itemP2pchatTextHeadleftIv.getDrawable() == null || leftChange) {
+                leftChange = false;
+                ImageLoader.getInstance().displayImage(Common.ImageUrl + leftImageUrl
                         , holderText.itemP2pchatTextHeadleftIv, MyBaseApplication.getApplication().getOptionsNot(), mListener);
-//            }
+            }
         }
         if (Math.abs(MyTools.getGapCountM(time, temp.getTime())) >= l1 || position==0) {
             time =  mImMessage.get(position).getTime();
@@ -183,8 +208,6 @@ public class P2PChatAdapter extends BaseAdapter {
                     holderText.itemP2pchatTextLeftTx.setVisibility(View.VISIBLE);
                     holderText.itemP2pchatTextLeftTx.setText(SmileUtils.getEmotionContent(context
                             , holderText.itemP2pchatTextRightTx, temp.getContent()));
-                    ImageLoader.getInstance().displayImage(Common.ImageUrl + temp.getIcon()
-                            , holderText.itemP2pchatTextHeadleftIv, MyBaseApplication.getApplication().getOptionsNot(), mListener);
                 }
                 break;
             case ContentTypeInter.contentTypeImage:

@@ -283,6 +283,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             isHead = false;
             MyBaseApplication.getApplication().setFilterLock(false);
             showToast("头像修改成功");
+            MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().setIcon(mHeadImgUrl);
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mHeadImgUrl
                     , personalHeadIv, MyBaseApplication.getApplication().getOptions());
         } else if (id == Common.NET_VERIFY) {

@@ -33,7 +33,9 @@ import com.atman.wysq.model.bean.ImSession;
 import com.atman.wysq.model.event.YunXinMessageEvent;
 import com.atman.wysq.model.greendao.gen.ImMessageDao;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
+import com.atman.wysq.model.request.SeedMessageModel;
 import com.atman.wysq.model.response.ChatAudioModel;
+import com.atman.wysq.model.response.GetMessageModel;
 import com.atman.wysq.ui.PictureBrowsingActivity;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
@@ -251,10 +253,10 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         ReceiveMessageObserver(true);
         initSeedResult(true);
 
-        initListView();
-
         mImMessageDao = MyBaseApplication.getApplication().getDaoSession().getImMessageDao();
         mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
+        initListView();
+
         LogUtils.e("id："+id);
         mImMessage = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(id)).build().list();
         LogUtils.e("mImMessage.size()："+mImMessage.size());
@@ -273,6 +275,9 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         initRefreshView(PullToRefreshBase.Mode.DISABLED, p2pChatLv);
         mAdapter = new P2PChatAdapter(mContext, getmWidth(), p2pChatLv, this);
         p2pChatLv.setAdapter(mAdapter);
+        mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(id)).build().unique();
+        mAdapter.setLeftChange(true);
+        mAdapter.setLeftImageUrl(mImSession.getIcon());
     }
 
     /**
@@ -415,30 +420,31 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 LogUtils.e("messages.get(i).getMsgType():"+messages.get(i).getMsgType());
                 if (messages.get(i).getRemoteExtension()!=null) {
                     ImMessage temp = null;
-                    int messageType = Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString());
+                    GetMessageModel mGetMessageModel = new Gson().fromJson(messages.get(i).getRemoteExtension().get("extra").toString(), GetMessageModel.class);
+                    int messageType = mGetMessageModel.getContentType();
                     if (messageType == ContentTypeInter.contentTypeText) {
                         temp = new ImMessage(null, messages.get(i).getUuid()
                                 , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount()
-                                , messages.get(i).getRemoteExtension().get("nickName").toString()
-                                , messages.get(i).getRemoteExtension().get("icon").toString()
-                                , messages.get(i).getRemoteExtension().get("sex").toString()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , mGetMessageModel.getSendUser().getNickName()
+                                , mGetMessageModel.getSendUser().getIcon()
+                                , mGetMessageModel.getSendUser().getSex()
+                                , mGetMessageModel.getSendUser().getVerify_status()
                                 , false, System.currentTimeMillis()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , messageType
                                 , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeImage) {
                         temp = new ImMessage(null, messages.get(i).getUuid()
                                 , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount()
-                                , messages.get(i).getRemoteExtension().get("nickName").toString()
-                                , messages.get(i).getRemoteExtension().get("icon").toString()
-                                , messages.get(i).getRemoteExtension().get("sex").toString()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , mGetMessageModel.getSendUser().getNickName()
+                                , mGetMessageModel.getSendUser().getIcon()
+                                , mGetMessageModel.getSendUser().getSex()
+                                , mGetMessageModel.getSendUser().getVerify_status()
                                 , false, System.currentTimeMillis()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , messageType
                                 , "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
@@ -447,9 +453,8 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                             future.setCallback(callback);
                         }
                     } else if (messageType == ContentTypeInter.contentTypeFinger) {
-                        LogUtils.e("contentFinger:"+messages.get(i).getRemoteExtension().get("contentFinger"));
-                        String contentFinger = messages.get(i).getRemoteExtension().get("contentFinger").toString();
-                        int fingerValue = Integer.parseInt(messages.get(i).getRemoteExtension().get("contentFinger").toString());
+                        String contentFinger = String.valueOf(mGetMessageModel.getContentFinger());
+                        int fingerValue = mGetMessageModel.getContentFinger();
                         String str = "[石头]";
                         if (contentFinger.equals("2")) {
                             str = "[剪刀]";
@@ -462,22 +467,22 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                                 , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount()
-                                , messages.get(i).getRemoteExtension().get("nickName").toString()
-                                , messages.get(i).getRemoteExtension().get("icon").toString()
-                                , messages.get(i).getRemoteExtension().get("sex").toString()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , mGetMessageModel.getSendUser().getNickName()
+                                , mGetMessageModel.getSendUser().getIcon()
+                                , mGetMessageModel.getSendUser().getSex()
+                                , mGetMessageModel.getSendUser().getVerify_status()
                                 , false, System.currentTimeMillis()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , messageType
                                 , str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeAudio) {
                         ChatAudioModel mChatAudioModel = new Gson().fromJson(messages.get(i).getAttachment().toJson(true), ChatAudioModel.class);
                         temp = new ImMessage(null, messages.get(i).getUuid()
                                 , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
-                                , messages.get(i).getFromAccount(), messages.get(i).getRemoteExtension().get("nickName").toString()
-                                , messages.get(i).getRemoteExtension().get("icon").toString(), messages.get(i).getRemoteExtension().get("sex").toString()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
-                                , false, System.currentTimeMillis(), Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
+                                , messages.get(i).getFromAccount(), mGetMessageModel.getSendUser().getNickName()
+                                , mGetMessageModel.getSendUser().getIcon(), mGetMessageModel.getSendUser().getSex()
+                                , mGetMessageModel.getSendUser().getVerify_status()
+                                , false, System.currentTimeMillis(), messageType
                                 , "[语音]", "", "", "", "", "", "",
                                 ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
@@ -486,22 +491,22 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                                 , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount()
-                                , messages.get(i).getRemoteExtension().get("nickName").toString()
-                                , messages.get(i).getRemoteExtension().get("icon").toString()
-                                , messages.get(i).getRemoteExtension().get("sex").toString()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("verify_status").toString())
+                                , mGetMessageModel.getSendUser().getNickName()
+                                , mGetMessageModel.getSendUser().getIcon()
+                                , mGetMessageModel.getSendUser().getSex()
+                                , mGetMessageModel.getSendUser().getVerify_status()
                                 , false, System.currentTimeMillis()
-                                , Integer.parseInt(messages.get(i).getRemoteExtension().get("contentType").toString())
-                                , "", "", "", "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
-                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
-                                , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", 0, 0, false, 1);
+                                , messageType
+                                , "", "", "", "", mGetMessageModel.getContentImageSUrl()
+                                , mGetMessageModel.getContentImageSUrl()
+                                , mGetMessageModel.getContentImageSUrl(), "", "", 0, 0, false, 1);
                         if (isOriginImageHasDownloaded(messages.get(i))) {
                             AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
                             future.setCallback(callback);
                         }
                     }
                     mAdapter.addImMessageDao(temp);
-                    setSession(temp);
+                    setSession(temp, false);
                 }
             }
         }
@@ -659,8 +664,9 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     return;
                 }
                 GuessAttachment attachment = new GuessAttachment();
-                IMMessage CustomMessage = MessageBuilder.createCustomMessage(id, SessionTypeEnum.P2P, attachment.getValue().getDesc(), attachment);
-                seedMessage(CustomMessage, ContentTypeInter.contentTypeFinger, "", attachment.getValue().getDesc());
+//                IMMessage CustomMessage = MessageBuilder.createCustomMessage(id, SessionTypeEnum.P2P, attachment.getValue().getDesc(), attachment);
+                IMMessage messageF = MessageBuilder.createTextMessage(id, SessionTypeEnum.P2P, blogdetailAddcommentEt.getText().toString());
+                seedMessage(messageF, ContentTypeInter.contentTypeFinger, "", attachment.getValue().getDesc());
                 break;
         }
     }
@@ -680,15 +686,19 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     }
 
     private void seedMessage(IMMessage message, int contentType, String contentImageSUrl, String contentFinger) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("contentType", contentType);
-        map.put("contentImageSUrl", contentImageSUrl);
-        map.put("contentFinger", contentFinger);
-        map.put("nickName", MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
-        map.put("icon", MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon());
-        map.put("sex", MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex());
-        map.put("verify_status", MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status());
-        message.setRemoteExtension(map);
+        int mFinger = 0;
+        if (!contentFinger.isEmpty()) {
+            mFinger = Integer.parseInt(contentFinger);
+        }
+        SeedMessageModel mSeedMessageModel = new SeedMessageModel(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
+        GetMessageModel mGetMessageModel = new GetMessageModel(contentType, mFinger, contentImageSUrl,mSeedMessageModel);
+        Map<String, Object> mMap = new HashMap<>();
+        mMap.put("extra",mGson.toJson(mGetMessageModel));
+        message.setRemoteExtension(mMap);
+        LogUtils.e("messages.get(i).getRemoteExtension().get(\"extra\"):"+message.getRemoteExtension().get("extra"));
         NIMClient.getService(MsgService.class).sendMessage(message, true);
 
         ImMessage temp = null;
@@ -756,21 +766,35 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         }
         mAdapter.addImMessageDao(temp);
         mImMessageDao.insertOrReplace(temp);
-        setSession(temp);
+        setSession(temp, true);
     }
 
-    private void setSession(ImMessage message) {
+    private void setSession(ImMessage message, boolean isme) {
         mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(id)).build().unique();
+        if (!message.getIcon().equals(mImSession.getIcon()) && !isme) {
+            mAdapter.setLeftChange(true);
+            mAdapter.setLeftImageUrl(message.getIcon());
+        }
+        if (!isme) {
+            setBarTitleTx(message.getNickName());
+        }
         if (mImSession==null) {
             ImSession mImSessionTemp = new ImSession(id, String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
-                    , message.getContent(), nick, icon, sex, verify_status, System.currentTimeMillis(), 0);
+                    , message.getContent(), message.getNickName(), message.getIcon(), message.getSex(), message.getVerify_status(), System.currentTimeMillis(), 0);
             mImSessionDao.insertOrReplace(mImSessionTemp);
         } else {
+            if (!isme) {
+                mImSession.setNickName(message.getNickName());
+                mImSession.setSex(message.getSex());
+                mImSession.setIcon(message.getIcon());
+                mImSession.setVerify_status(message.getVerify_status());
+            }
             mImSession.setContent(message.getContent());
             mImSession.setTime(System.currentTimeMillis());
             mImSession.setUnreadNum(0);
             mImSessionDao.update(mImSession);
         }
+        EventBus.getDefault().post(new YunXinMessageEvent());
     }
 
 

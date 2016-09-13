@@ -1,5 +1,6 @@
 package com.atman.wysq.ui.message;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,8 +13,10 @@ import android.widget.RelativeLayout;
 
 import com.atman.wysq.R;
 import com.atman.wysq.adapter.MessageSessionListAdapter;
+import com.atman.wysq.model.bean.ImMessage;
 import com.atman.wysq.model.bean.ImSession;
 import com.atman.wysq.model.event.YunXinMessageEvent;
+import com.atman.wysq.model.greendao.gen.ImMessageDao;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
 import com.atman.wysq.ui.MainActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
@@ -23,6 +26,7 @@ import com.atman.wysq.ui.yunxinfriend.P2PChatActivity;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PreferenceUtil;
+import com.base.baselibs.widget.PromptDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,6 +58,10 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
 
     private List<ImSession> mImSession;
     private ImSessionDao mImSessionDao;
+    private ImMessageDao mImMessageDao;
+    private List<ImMessage> mImMessage;
+    private List<ImMessage> mImMessageDelete;
+    private ImSession mImSessionDelete;
 
     private MessageSessionListAdapter mAdapter;
 
@@ -77,6 +85,8 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
         fragmentBarRightIv.setVisibility(View.VISIBLE);
         fragmentBarRightIv.setImageResource(R.mipmap.message_top_right_ic);
 
+        mImMessageDao = MyBaseApplication.getApplication().getDaoSession().getImMessageDao();
+
         initListView();
     }
 
@@ -96,6 +106,39 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
                             , mAdapter.getItem(position).getNickName(), mAdapter.getItem(position).getSex()
                             , mAdapter.getItem(position).getIcon(), mAdapter.getItem(position).getVerify_status()));
                 }
+            }
+        });
+        messageListview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
+                PromptDialog.Builder builder = new PromptDialog.Builder(getActivity());
+                builder.setMessage("您确定要该好友从列表中删除吗？");
+                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        mImMessageDelete = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(mAdapter.getItem(position).getUserId()), ImMessageDao.Properties.LoginUserId.eq(
+                                String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().list();
+                        for (ImMessage imMessageDelete : mImMessageDelete) {
+                            mImMessageDao.delete(imMessageDelete);
+                        }
+
+                        mImSessionDelete = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(mAdapter.getItem(position).getUserId()), ImSessionDao.Properties.LoginUserId.eq(
+                                String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().unique();
+                        if (mImSessionDelete!=null) {
+                            mImSessionDao.delete(mImSessionDelete);
+                            mAdapter.deleteItemById(position);
+                        }
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+                return true;
             }
         });
     }
@@ -138,6 +181,9 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
 
     @Subscribe(threadMode = ThreadMode.MAIN) //第2步:注册一个在后台线程执行的方法,用于接收事件
     public void onMessageEvent(YunXinMessageEvent event) {//参数必须是ClassEvent类型, 否则不会调用此方法
+        if (mAdapter!=null) {
+            mAdapter.setChange(true);
+        }
         setUnreadMessageNum();
         ((MainActivity)getActivity()).countUnReadNum();
     }
