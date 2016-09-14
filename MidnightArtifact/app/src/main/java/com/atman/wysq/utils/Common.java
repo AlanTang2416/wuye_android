@@ -159,6 +159,8 @@ public class Common {
     public static String Url_Get_GiftList = hostUrl + "rest/gift/list";
     //购买礼物
     public static String Url_Pay_GiftList = hostUrl + "rest/gift/buy/";
+    //发消息扣金币
+    public static String Url_SeedMessage_Pay = hostUrl + "rest/chat/send";
     /**************************http访问路径*****************************/
 
 
@@ -292,6 +294,8 @@ public class Common {
     public static int NET_GET_GIFTLIST = 63;
     //购买礼物
     public static int NET_PAY_GIFTLIST = 64;
+    //发消息扣金币
+    public static int NET_SEEDMESSAGE_PAY = 65;
     /**************************http访问回应识别码*****************************/
 
 

@@ -134,6 +134,7 @@ public class DownloadFile extends AsyncTask<String, Void, String> {
             MyBaseApplication.mWEB_TYPE = mConfigModel.getKStartUpAdType();
             MyBaseApplication.mShop = mConfigModel.getShop();
             MyBaseApplication.mDownLoad_URL = mConfigModel.getWuyeandroid();
+            MyBaseApplication.kPrivateChatCost = mConfigModel.getkPrivateChatCost();
         }
     }
 }

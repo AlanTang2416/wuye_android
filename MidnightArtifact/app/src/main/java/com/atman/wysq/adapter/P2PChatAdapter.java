@@ -59,11 +59,13 @@ public class P2PChatAdapter extends BaseAdapter {
     private boolean rightChange = false;
     private String leftImageUrl = "";
     private String rightImageUrl = "";
+    private boolean isPay;
 
-    public P2PChatAdapter(Context context, int width, PullToRefreshListView p2pChatLv, P2PAdapterInter mP2PAdapterInter) {
+    public P2PChatAdapter(Context context, int width, PullToRefreshListView p2pChatLv, boolean isPay, P2PAdapterInter mP2PAdapterInter) {
         this.context = context;
         this.mImMessage = new ArrayList<>();
         this.p2pChatLv = p2pChatLv;
+        this.isPay = isPay;
         this.mP2PAdapterInter = mP2PAdapterInter;
         this.width = width;
         layoutInflater = LayoutInflater.from(context);
@@ -187,16 +189,16 @@ public class P2PChatAdapter extends BaseAdapter {
         } else {
             holderText.itemP2pchatTextTimeTx.setVisibility(View.INVISIBLE);
         }
-        if (temp.getIsSeedSuccess() == 0) {
-            holderText.itemP2pchatRightProgress.setVisibility(View.VISIBLE);
-        } else {
-            holderText.itemP2pchatRightProgress.setVisibility(View.GONE);
-            if (temp.getIsSeedSuccess() == 2) {
-                holderText.itemP2pchatRightAlert.setVisibility(View.VISIBLE);
-            } else {
-                holderText.itemP2pchatRightAlert.setVisibility(View.GONE);
-            }
-        }
+//        if (temp.getIsSeedSuccess() == 0) {
+//            holderText.itemP2pchatRightProgress.setVisibility(View.VISIBLE);
+//        } else {
+//            holderText.itemP2pchatRightProgress.setVisibility(View.GONE);
+//            if (temp.getIsSeedSuccess() == 2) {
+//                holderText.itemP2pchatRightAlert.setVisibility(View.VISIBLE);
+//            } else {
+//                holderText.itemP2pchatRightAlert.setVisibility(View.GONE);
+//            }
+//        }
 
         switch (type) {
             case ContentTypeInter.contentTypeText:
@@ -287,6 +289,14 @@ public class P2PChatAdapter extends BaseAdapter {
                 }
                 break;
         }
+
+        if (isPay) {
+            holderText.itemP2pchatRightPayTx.setVisibility(View.VISIBLE);
+            holderText.itemP2pchatRightPayTx.setText("-"+MyBaseApplication.kPrivateChatCost);
+        } else {
+            holderText.itemP2pchatRightPayTx.setVisibility(View.GONE);
+        }
+
         final ViewHolder finalHolderText = holderText;
         holderText.itemP2pchatAudioRightLl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -387,6 +397,8 @@ public class P2PChatAdapter extends BaseAdapter {
         ImageView itemP2pchatAudioRightIv;
         @Bind(R.id.item_p2pchat_audio_right_tx)
         TextView itemP2pchatAudioRightTx;
+        @Bind(R.id.item_p2pchat_right_pay_tx)
+        TextView itemP2pchatRightPayTx;
         @Bind(R.id.item_p2pchat_audio_right_ll)
         LinearLayout itemP2pchatAudioRightLl;
         @Bind(R.id.item_p2pchat_root_Rl)

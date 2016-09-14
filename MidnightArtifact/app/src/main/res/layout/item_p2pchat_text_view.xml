@@ -143,6 +143,17 @@
                 android:src="@mipmap/nim_ic_failed"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/item_p2pchat_right_pay_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textColor="@color/tab_text_selector"
+                android:textSize="@dimen/dimen_sp_10"
+                android:visibility="gone" />
+
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

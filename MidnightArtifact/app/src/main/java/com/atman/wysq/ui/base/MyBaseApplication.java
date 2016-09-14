@@ -97,6 +97,7 @@ public class MyBaseApplication extends BaseApplication {
     public static String mWEB_TYPE = "";
     public static String mWEB_ID = "";
     public static String mDownLoad_URL = "";
+    public static String kPrivateChatCost = "";
     public static String mHEAD_URL = "";
     public static int mUserCion = 0;
     public static List<ConfigModel.ShopEntity> mShop ;
@@ -504,6 +505,7 @@ public class MyBaseApplication extends BaseApplication {
         PreferenceUtil.savePreference(getApplicationContext(), PreferenceUtil.PARM_USER_TOKEN, "");
         PreferenceUtil.savePreference(getApplicationContext(), PreferenceUtil.PARM_USERID, "");
         PreferenceUtil.savePreference(getApplicationContext(), PreferenceUtil.PARM_YUNXIN_TOKEN, "");
+        PreferenceUtil.saveIntPreference(getApplicationContext(), PreferenceUtil.PARM_YUNXIN_WRAN, 0);
     }
 
     public String getmUserId() {

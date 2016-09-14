@@ -34,6 +34,7 @@ import com.atman.wysq.model.event.YunXinMessageEvent;
 import com.atman.wysq.model.greendao.gen.ImMessageDao;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
 import com.atman.wysq.model.request.SeedMessageModel;
+import com.atman.wysq.model.request.SeedMessagePayModel;
 import com.atman.wysq.model.response.ChatAudioModel;
 import com.atman.wysq.model.response.GetMessageModel;
 import com.atman.wysq.ui.PictureBrowsingActivity;
@@ -45,6 +46,7 @@ import com.atman.wysq.yunxin.model.ContentTypeInter;
 import com.atman.wysq.yunxin.model.GuessAttachment;
 import com.base.baselibs.iimp.EditCheckBack;
 import com.base.baselibs.iimp.MyTextWatcherTwo;
+import com.base.baselibs.net.MyStringCallback;
 import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.widget.MyCleanEditText;
@@ -70,6 +72,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.tbl.okhttputils.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -143,6 +146,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     private List<ImMessage> mImMessageUpdata;
     private P2PChatAdapter mAdapter;
     private AudioPlayer player;
+    private boolean isPay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,13 +171,32 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     public void initWidget(View... v) {
         super.initWidget(v);
 
-
         id = getIntent().getStringExtra("id");
         nick = getIntent().getStringExtra("nick");
         sex = getIntent().getStringExtra("sex");
         icon = getIntent().getStringExtra("icon");
         verify_status = getIntent().getIntExtra("verify_status", 0);
         NIMClient.getService(MsgService.class).setChattingAccount(id, SessionTypeEnum.P2P);
+
+        if (verify_status==1 && MyBaseApplication.getApplication().mGetUserIndexModel.
+                getBody().getUserDetailBean().getUserExt().getVerify_status()==0) {
+            isPay = true;
+            if (PreferenceUtil.getIntPreferences(mContext, PreferenceUtil.PARM_YUNXIN_WRAN)==0) {
+                PromptDialog.Builder builder = new PromptDialog.Builder(this);
+                builder.setTitle("付费提醒");
+                builder.setMessage("非女性认证用户，对女性认证用户发送私信，每条将扣除"+MyBaseApplication.kPrivateChatCost+"金币");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        PreferenceUtil.saveIntPreference(getApplicationContext(), PreferenceUtil.PARM_YUNXIN_WRAN, 1);
+                    }
+                });
+                builder.show();
+            }
+        } else {
+            isPay = false;
+        }
 
         player = new AudioPlayer(mContext);
         setBarTitleTx(nick);
@@ -277,7 +300,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
 
     private void initListView() {
         initRefreshView(PullToRefreshBase.Mode.DISABLED, p2pChatLv);
-        mAdapter = new P2PChatAdapter(mContext, getmWidth(), p2pChatLv, this);
+        mAdapter = new P2PChatAdapter(mContext, getmWidth(), p2pChatLv, isPay, this);
         p2pChatLv.setAdapter(mAdapter);
         mAdapter.setLeftChange(true);
         mAdapter.setLeftImageUrl(icon);
@@ -547,11 +570,21 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     @Override
     public void onStringResponse(String data, Response response, int id) {
         super.onStringResponse(data, response, id);
+        if (id == Common.NET_SEEDMESSAGE_PAY) {
+            int price = Integer.parseInt(MyBaseApplication.kPrivateChatCost);
+            int myCion = MyBaseApplication.getApplication().mGetUserIndexModel
+                    .getBody().getUserDetailBean().getUserExt().getGold_coin();
+            if (myCion-price>=0) {
+                MyBaseApplication.getApplication().mGetUserIndexModel
+                        .getBody().getUserDetailBean().getUserExt().setGold_coin(myCion-price);
+            }
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        OkHttpUtils.getInstance().cancelTag(Common.NET_SEEDMESSAGE_PAY);
         ReceiveMessageObserver(false);
         initSeedResult(false);
     }
@@ -772,6 +805,19 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         mAdapter.addImMessageDao(temp);
         mImMessageDao.insertOrReplace(temp);
         setSession(temp, true);
+        payCion(temp);
+    }
+
+    private void payCion(ImMessage temp) {
+        if (temp.getContentType()==ContentTypeInter.contentTypeImageSmall) {
+            return;
+        }
+        SeedMessagePayModel mSeedMessagePayModel = new SeedMessagePayModel(Long.parseLong(id), temp.getContent());
+        OkHttpUtils.postString().addHeader("cookie", MyBaseApplication.getApplication().getCookie())
+                .mediaType(Common.JSON)
+                .url(Common.Url_SeedMessage_Pay).tag(Common.NET_SEEDMESSAGE_PAY).id(Common.NET_SEEDMESSAGE_PAY)
+                .content(mGson.toJson(mSeedMessagePayModel))
+                .build().execute(new MyStringCallback(mContext, this, false));
     }
 
     private void setSession(ImMessage message, boolean isme) {

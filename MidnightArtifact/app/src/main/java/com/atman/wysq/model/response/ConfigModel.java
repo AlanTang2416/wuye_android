@@ -43,6 +43,15 @@ public class ConfigModel  {
     private String kStartUpAdType;
     private String kStartUpAdWebUrl;
     private String kGoldenOrderShow;
+    private String kPrivateChatCost;
+
+    public String getkPrivateChatCost() {
+        return kPrivateChatCost;
+    }
+
+    public void setkPrivateChatCost(String kPrivateChatCost) {
+        this.kPrivateChatCost = kPrivateChatCost;
+    }
 
     public String getWuyeandroid() {
         return wuyeandroid;

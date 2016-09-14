@@ -208,6 +208,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalTaskIv.setVisibility(View.INVISIBLE);
         personalHeadVerifyImg.setVisibility(View.INVISIBLE);
         personalNameTx.setText("请点击登录");
+        personalNameTx.setTextColor(getResources().getColor(R.color.color_7F2505));
         personalGuardianOneRl.setVisibility(View.GONE);
         personalVisitorNumTx.setVisibility(View.GONE);
         personalGuardianTwoRl.setVisibility(View.GONE);
