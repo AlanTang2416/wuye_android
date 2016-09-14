@@ -400,16 +400,15 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     }
 
     private List<GetUserIndexModel.BodyEntity.VisitorMapEntity.VisitorListEntity> dataList = new ArrayList<>();
+    private int num;
     private void initVisitorIV() {
-        int num = mGetUserIndexModel.getBody().getVisitorMap().getVisitorSize();
-        LogUtils.e("num:"+num);
+        num = mGetUserIndexModel.getBody().getVisitorMap().getVisitorSize();
         dataList.clear();
         for (int i=0;i<mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();i++) {
             if (mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i).getUser_id()!=
                     MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                 dataList.add(mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i));
             } else {
-                LogUtils.e(">>>>i:"+i);
                 num -= 1;
             }
         }
@@ -472,7 +471,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
                     return;
                 }
                 startActivity(HisVisitorActivity.buildIntent(getActivity()
-                        , mGetUserIndexModel.getBody().getUserDetailBean().getUserId(), "我的访客"));
+                        , mGetUserIndexModel.getBody().getUserDetailBean().getUserId(), "我的访客", num));
                 break;
             case R.id.personal_myorder_ll:
                 if (!isLogin()) {
@@ -604,7 +603,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         if (requestCode == Common.toMyInfo) {
             if (!isLogin()) {
                 hitSetring();
-                toLogin();
+//                toLogin();
             }
         } else if (requestCode == Common.toLogin) {
 //            LogUtils.e("Common.toLogin:"+Common.toLogin);

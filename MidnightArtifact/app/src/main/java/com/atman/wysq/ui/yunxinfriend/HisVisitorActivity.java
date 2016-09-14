@@ -50,13 +50,14 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
     private View headView;
     private TextView headViewNumTx;
     private int mPage = 1;
-    private long id;
+    private long userId;
     private GetUserBrowseModel mGetUserBrowseModel;
 
     private GetHisVisitorAdapter mAdapter;
     private View mEmpty;
     private TextView mEmptyTX;
     private String title;
+    private int num;
     private List<GetUserBrowseModel.BodyEntity.DataListEntity> dataList = new ArrayList<>();
 
     @Override
@@ -66,10 +67,11 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
         ButterKnife.bind(this);
     }
 
-    public static Intent buildIntent(Context context, long id, String title){
+    public static Intent buildIntent(Context context, long id, String title, int num){
         Intent intent = new Intent(context, HisVisitorActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("title", title);
+        intent.putExtra("num", num);
         return intent;
     }
 
@@ -77,12 +79,14 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
     public void initWidget(View... v) {
         super.initWidget(v);
 
-        id = getIntent().getLongExtra("id", id);
+        userId = getIntent().getLongExtra("id", 0);
         title = getIntent().getStringExtra("title");
+        num = getIntent().getIntExtra("num", 0);
         setBarTitleTx(title);
 
         headView = LayoutInflater.from(mContext).inflate(R.layout.part_visitor_head_view, null);
         headViewNumTx = (TextView) headView.findViewById(R.id.othervisitor_num_tx);
+        headViewNumTx.setText(""+num);
 
         initListView();
     }
@@ -151,7 +155,7 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
     }
 
     private void dohttp(boolean b) {
-        OkHttpUtils.get().url(Common.Url_Get_Browse + id + "/" + mPage).id(Common.NET_GET_BROWSE)
+        OkHttpUtils.get().url(Common.Url_Get_Browse + userId + "/" + mPage).id(Common.NET_GET_BROWSE)
                 .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_BROWSE).build().execute(new MyStringCallback(mContext, this, b));
     }
@@ -178,13 +182,11 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
                 }
                 dataList.clear();
                 for (int i=0;i<mGetUserBrowseModel.getBody().getDataList().size();i++) {
-                    if (mGetUserBrowseModel.getBody().getDataList().get(i).getUser_id()!=
-                            MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                    if (mGetUserBrowseModel.getBody().getDataList().get(i).getUser_id() != userId) {
                         dataList.add(mGetUserBrowseModel.getBody().getDataList().get(i));
                     }
                 }
                 mAdapter.addBody(dataList);
-                headViewNumTx.setText(""+mAdapter.getShop().size());
             }
         }
     }

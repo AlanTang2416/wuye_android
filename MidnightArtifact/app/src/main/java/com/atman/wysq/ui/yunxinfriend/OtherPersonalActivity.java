@@ -31,6 +31,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tbl.okhttputils.OkHttpUtils;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.Response;
@@ -269,12 +272,16 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
         }
     }
 
+    private List<GetUserIndexModel.BodyEntity.VisitorMapEntity.VisitorListEntity> dataList = new ArrayList<>();
+    private int num;
     private void initVisitorIV() {
-        int num = 0;
+        num = mGetUserIndexModel.getBody().getVisitorMap().getVisitorSize();
+        dataList.clear();
         for (int i=0;i<mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();i++) {
-            if (mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i).getUser_id()!=
-                    MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
-                num += 1;
+            if (mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i).getUser_id()!= id) {
+                dataList.add(mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i));
+            } else {
+                num -= 1;
             }
         }
         otherpersonalVisitorNumTx.setText(""+num);
@@ -282,25 +289,25 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             otherpersonalVisitorOneIv.setVisibility(View.GONE);
             otherpersonalVisitorTwoIv.setVisibility(View.GONE);
             otherpersonalVisitorThreeIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(0).getIcon()
                     ,otherpersonalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==2) {
             otherpersonalVisitorOneIv.setVisibility(View.GONE);
             otherpersonalVisitorTwoIv.setVisibility(View.VISIBLE);
             otherpersonalVisitorThreeIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(0).getIcon()
                     ,otherpersonalVisitorTwoIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(1).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(1).getIcon()
                     ,otherpersonalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num>=3) {
             otherpersonalVisitorOneIv.setVisibility(View.VISIBLE);
             otherpersonalVisitorTwoIv.setVisibility(View.VISIBLE);
             otherpersonalVisitorThreeIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(0).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(0).getIcon()
                     ,otherpersonalVisitorOneIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(1).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(1).getIcon()
                     ,otherpersonalVisitorTwoIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(2).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(2).getIcon()
                     ,otherpersonalVisitorThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         }
     }
@@ -402,7 +409,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     showWraning("VIP.1以上用户才有权限查看");
                     return;
                 }
-                startActivity(HisVisitorActivity.buildIntent(mContext, id, "TA的访客"));
+                startActivity(HisVisitorActivity.buildIntent(mContext, id, "TA的访客", num));
                 break;
             case R.id.otherpersonal_friends_ll:
                 if (!isLogin() || MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<2) {

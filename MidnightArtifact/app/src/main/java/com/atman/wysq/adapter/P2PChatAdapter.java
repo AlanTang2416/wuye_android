@@ -252,13 +252,7 @@ public class P2PChatAdapter extends BaseAdapter {
                 }
                 break;
             case ContentTypeInter.contentTypeAudio:
-                int w = (int)(temp.getAudioDuration()* DensityUtil.dp2px(context, 250)/60);
-                w = (int) ((w *2 / context.getResources().getDisplayMetrics().density)*10/10);
-                if (DensityUtil.dp2px(context, w)<DensityUtil.dp2px(context, 70)) {
-                    w = 75;
-                } else if (DensityUtil.dp2px(context, w)>=DensityUtil.dp2px(context, 250)) {
-                    w = 250;
-                }
+                int w = (int) ((175/60*temp.getAudioDuration()) + 75);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(DensityUtil.dp2px(context, w)
                         , FrameLayout.LayoutParams.WRAP_CONTENT);
                 if (temp.getIsSelfSend()) {

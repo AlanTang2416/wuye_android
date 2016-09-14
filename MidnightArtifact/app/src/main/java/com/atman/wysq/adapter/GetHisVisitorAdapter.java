@@ -130,6 +130,11 @@ public class GetHisVisitorAdapter extends BaseAdapter {
                     holder.itemBrowseVipTx.setText("VIP." + mBodyEntity.getVip_level());
                 }
             }
+            if (mBodyEntity.getVip_level()>=3) {
+                holder.itemBrowseNameTx.setTextColor(context.getResources().getColor(R.color.color_red));
+            } else {
+                holder.itemBrowseNameTx.setTextColor(context.getResources().getColor(R.color.color_484848));
+            }
             holder.itemBrowseTimeTx.setText("到访时间：" + MyTools.convertTimeS(mBodyEntity.getCreate_time()));
 
             holder.itemBrowseRootRl.setOnClickListener(new View.OnClickListener() {
