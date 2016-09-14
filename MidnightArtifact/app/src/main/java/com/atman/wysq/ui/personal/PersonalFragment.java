@@ -188,7 +188,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
 
     }
 
-    public void doHttp() {
+    public void doHttp(boolean b) {
         LogUtils.e("!isLogin():"+(!isLogin()));
         if (!isLogin()) {
             hitSetring();
@@ -196,7 +196,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             OkHttpUtils.get().url(Common.Url_Get_UserIndex + "/" + PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID))
                     .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_USERINDEX).id(Common.NET_GET_USERINDEX).build()
-                    .execute(new MyStringCallback(getActivity(), this, true));
+                    .execute(new MyStringCallback(getActivity(), this, b));
         }
     }
 
@@ -209,6 +209,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalHeadVerifyImg.setVisibility(View.INVISIBLE);
         personalNameTx.setText("请点击登录");
         personalGuardianOneRl.setVisibility(View.GONE);
+        personalVisitorNumTx.setVisibility(View.GONE);
         personalGuardianTwoRl.setVisibility(View.GONE);
         personalGuardianThreeRl.setVisibility(View.GONE);
 
@@ -225,7 +226,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
-        doHttp();
+        doHttp(false);
         if (!isHead) {
             MyBaseApplication.getApplication().setFilterLock(false);
         }
@@ -400,15 +401,19 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
 
     private List<GetUserIndexModel.BodyEntity.VisitorMapEntity.VisitorListEntity> dataList = new ArrayList<>();
     private void initVisitorIV() {
-        int num = 0;
+        int num = mGetUserIndexModel.getBody().getVisitorMap().getVisitorSize();
+        LogUtils.e("num:"+num);
         dataList.clear();
         for (int i=0;i<mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();i++) {
             if (mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i).getUser_id()!=
                     MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
-                num += 1;
                 dataList.add(mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i));
+            } else {
+                LogUtils.e(">>>>i:"+i);
+                num -= 1;
             }
         }
+        personalVisitorNumTx.setVisibility(View.VISIBLE);
         personalVisitorNumTx.setText(""+num);
         if (num==1) {
             personalVisitorOneIv.setVisibility(View.GONE);
@@ -454,10 +459,18 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.personal_friends_ll:
+                if (!isLogin()) {
+                    showLogin();
+                    return;
+                }
                 startActivity(HisGuardianActivity.buildIntent(getActivity()
                         , mGetUserIndexModel.getBody().getUserDetailBean().getUserId(), "我的守护者"));
                 break;
             case R.id.personal_visitor_ll:
+                if (!isLogin()) {
+                    showLogin();
+                    return;
+                }
                 startActivity(HisVisitorActivity.buildIntent(getActivity()
                         , mGetUserIndexModel.getBody().getUserDetailBean().getUserId(), "我的访客"));
                 break;

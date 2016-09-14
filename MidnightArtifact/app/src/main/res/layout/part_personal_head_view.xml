@@ -65,7 +65,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/personal_name_tx"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/dimen_dp_5"
             android:paddingLeft="@dimen/dimen_dp_5"
             android:paddingRight="@dimen/dimen_dp_5"
             android:background="@drawable/level_red_bg"
@@ -80,7 +79,6 @@
             android:layout_below="@+id/personal_name_tx"
             android:layout_centerHorizontal="true"
             android:visibility="gone"
-            android:layout_marginTop="@dimen/dimen_dp_5"
             android:src="@mipmap/other_svip_ic" />
 
     </RelativeLayout>

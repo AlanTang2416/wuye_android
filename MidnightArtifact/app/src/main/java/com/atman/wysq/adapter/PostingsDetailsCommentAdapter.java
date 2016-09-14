@@ -175,45 +175,46 @@ public class PostingsDetailsCommentAdapter extends BaseAdapter {
             }
 
             if (shop.get(position).getUser_id() == blogUserId) {
-                if (isAnonymity) {
-                    ImageLoader.getInstance().displayImage(anonymityImg,
-                            holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
-                    holder.itemPostingsdetailCommentLevelTx.setVisibility(View.GONE);
-                    holder.itemPostingsdetailCommentNameTv.setText("匿名用户");
-                    holder.itemPostingsdetailCommentGenderIv.setVisibility(View.GONE);
-                    holder.itemPostingsdetailCommentVerifyImg.setVisibility(View.GONE);
-                    holder.itemPostingsdetailCommentVipTx.setVisibility(View.GONE);
-                    holder.itemPostingsdetailCommentSvipIv.setVisibility(View.GONE);
-                    holder.itemPostingsdetailCommentNameTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
-                    holder.itemPostingsdetailCommentContentTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
-                } else {
-                    ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon(),
-                            holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
-                    holder.itemPostingsdetailCommentLevelTx.setVisibility(View.VISIBLE);
-                    holder.itemPostingsdetailCommentNameTv.setText(shop.get(position).getUser_name());
-                    if (shop.get(position).getVerify_status() == 1) {
-                        holder.itemPostingsdetailCommentVerifyImg.setVisibility(View.VISIBLE);
-                        holder.itemPostingsdetailCommentGenderIv.setVisibility(View.GONE);
-                    } else {
-                        holder.itemPostingsdetailCommentVerifyImg.setVisibility(View.GONE);
-                        holder.itemPostingsdetailCommentGenderIv.setVisibility(View.VISIBLE);
-                    }
-                    if (shop.get(position).getVip_level()>=3) {
-                        holder.itemPostingsdetailCommentNameTv.setTextColor(context.getResources().getColor(R.color.color_red));
-                        if (shop.get(position).getVip_level()>=4) {
-                            holder.itemPostingsdetailCommentContentTv.setTextColor(context.getResources().getColor(R.color.color_red));
-                        } else {
-                            holder.itemPostingsdetailCommentContentTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
-                        }
-                    } else {
-                        holder.itemPostingsdetailCommentNameTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
-                    }
-                }
                 holder.itemPostingsdetailHostTx.setVisibility(View.VISIBLE);
             } else {
                 ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon(),
                         holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
                 holder.itemPostingsdetailHostTx.setVisibility(View.INVISIBLE);
+            }
+
+            if (isAnonymity) {
+                ImageLoader.getInstance().displayImage(anonymityImg,
+                        holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
+                holder.itemPostingsdetailCommentLevelTx.setVisibility(View.GONE);
+                holder.itemPostingsdetailCommentNameTv.setText("匿名用户");
+                holder.itemPostingsdetailCommentGenderIv.setVisibility(View.GONE);
+                holder.itemPostingsdetailCommentVerifyImg.setVisibility(View.GONE);
+                holder.itemPostingsdetailCommentVipTx.setVisibility(View.GONE);
+                holder.itemPostingsdetailCommentSvipIv.setVisibility(View.GONE);
+                holder.itemPostingsdetailCommentNameTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
+                holder.itemPostingsdetailCommentContentTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl + shop.get(position).getIcon(),
+                        holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
+                holder.itemPostingsdetailCommentLevelTx.setVisibility(View.VISIBLE);
+                holder.itemPostingsdetailCommentNameTv.setText(shop.get(position).getUser_name());
+                if (shop.get(position).getVerify_status() == 1) {
+                    holder.itemPostingsdetailCommentVerifyImg.setVisibility(View.VISIBLE);
+                    holder.itemPostingsdetailCommentGenderIv.setVisibility(View.GONE);
+                } else {
+                    holder.itemPostingsdetailCommentVerifyImg.setVisibility(View.GONE);
+                    holder.itemPostingsdetailCommentGenderIv.setVisibility(View.VISIBLE);
+                }
+                if (shop.get(position).getVip_level()>=3) {
+                    holder.itemPostingsdetailCommentNameTv.setTextColor(context.getResources().getColor(R.color.color_red));
+                    if (shop.get(position).getVip_level()>=4) {
+                        holder.itemPostingsdetailCommentContentTv.setTextColor(context.getResources().getColor(R.color.color_red));
+                    } else {
+                        holder.itemPostingsdetailCommentContentTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
+                    }
+                } else {
+                    holder.itemPostingsdetailCommentNameTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
+                }
             }
 
             if (shop.get(position).getBlogCommentList() != null
@@ -223,15 +224,18 @@ public class PostingsDetailsCommentAdapter extends BaseAdapter {
                 holder.itemPostingsdetailCommentChildrenContentTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
                 holder.itemPostingsdetailCommentChildrenNameTx.setTextColor(context.getResources().getColor(R.color.color_DF9E37));
             } else {
-                if (shop.get(position).getVip_level()>=3) {
+                if (shop.get(position).getBlogCommentList() != null
+                        && shop.get(position).getBlogCommentList().size() > 0
+                        && shop.get(position).getBlogCommentList().get(0).getVip_level()>=3) {
                     holder.itemPostingsdetailCommentChildrenNameTx.setTextColor(context.getResources().getColor(R.color.color_red));
-                    if (shop.get(position).getVip_level()>=4) {
+                    if (shop.get(position).getBlogCommentList().get(0).getVip_level()>=4) {
                         holder.itemPostingsdetailCommentChildrenContentTv.setTextColor(context.getResources().getColor(R.color.color_red));
                     } else {
                         holder.itemPostingsdetailCommentChildrenContentTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
                     }
                 } else {
                     holder.itemPostingsdetailCommentChildrenNameTx.setTextColor(context.getResources().getColor(R.color.color_DF9E37));
+                    holder.itemPostingsdetailCommentChildrenContentTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
                 }
             }
         }

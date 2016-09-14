@@ -443,7 +443,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     return;
                 }
                 if (which == 0) {//举报
-                    startActivity(ReportActivity.buildIntent(mContext, id));
+                    startActivity(ReportActivity.buildIntent(mContext, id, 1));
                 } else if (which == 1) {//把TA加入黑名单
                     if (MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id() == id) {
                         showToast("不能将自己加入黑名单");

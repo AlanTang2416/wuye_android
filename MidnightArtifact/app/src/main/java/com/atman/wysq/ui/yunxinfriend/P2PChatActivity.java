@@ -67,6 +67,7 @@ import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -125,7 +126,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
 
     private final int CHOOSE_BIG_PICTURE = 444;
     private final int TAKE_BIG_PICTURE = 555;
-    private final int maxDuration = 60;
+    private final int maxDuration = 61;
     private Uri imageUri;
     private String path;
     protected AudioRecorder audioMessageHelper;
@@ -165,11 +166,14 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     @Override
     public void initWidget(View... v) {
         super.initWidget(v);
+
+
         id = getIntent().getStringExtra("id");
         nick = getIntent().getStringExtra("nick");
         sex = getIntent().getStringExtra("sex");
         icon = getIntent().getStringExtra("icon");
         verify_status = getIntent().getIntExtra("verify_status", 0);
+        NIMClient.getService(MsgService.class).setChattingAccount(id, SessionTypeEnum.P2P);
 
         player = new AudioPlayer(mContext);
         setBarTitleTx(nick);
@@ -275,9 +279,8 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         initRefreshView(PullToRefreshBase.Mode.DISABLED, p2pChatLv);
         mAdapter = new P2PChatAdapter(mContext, getmWidth(), p2pChatLv, this);
         p2pChatLv.setAdapter(mAdapter);
-        mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(id)).build().unique();
         mAdapter.setLeftChange(true);
-        mAdapter.setLeftImageUrl(mImSession.getIcon());
+        mAdapter.setLeftImageUrl(icon);
     }
 
     /**
@@ -342,7 +345,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         timer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(Chronometer chronometer) {
-                if ("1:00".equals(chronometer.getText().toString())) {
+                if ("01:00".equals(chronometer.getText().toString())) {
                     Message message = new Message();
                     message.what = 1;
                     hand.sendMessage(message);
@@ -698,8 +701,10 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         Map<String, Object> mMap = new HashMap<>();
         mMap.put("extra",mGson.toJson(mGetMessageModel));
         message.setRemoteExtension(mMap);
-        LogUtils.e("messages.get(i).getRemoteExtension().get(\"extra\"):"+message.getRemoteExtension().get("extra"));
-        NIMClient.getService(MsgService.class).sendMessage(message, true);
+        CustomMessageConfig config = new CustomMessageConfig();
+        config.enableRoaming  = false; // 该消息不漫游
+        message.setConfig(config);
+        NIMClient.getService(MsgService.class).sendMessage(message, false);
 
         ImMessage temp = null;
         if (contentType==ContentTypeInter.contentTypeText) {
@@ -771,7 +776,11 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
 
     private void setSession(ImMessage message, boolean isme) {
         mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(id)).build().unique();
-        if (!message.getIcon().equals(mImSession.getIcon()) && !isme) {
+        if (mImSession!=null && !message.getIcon().equals(mImSession.getIcon()) && !isme) {
+            mAdapter.setLeftChange(true);
+            mAdapter.setLeftImageUrl(message.getIcon());
+        }
+        if (!message.getIcon().equals(icon) && !isme) {
             mAdapter.setLeftChange(true);
             mAdapter.setLeftImageUrl(message.getIcon());
         }
@@ -780,7 +789,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         }
         if (mImSession==null) {
             ImSession mImSessionTemp = new ImSession(id, String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
-                    , message.getContent(), message.getNickName(), message.getIcon(), message.getSex(), message.getVerify_status(), System.currentTimeMillis(), 0);
+                    , message.getContent(), nick, icon, sex, verify_status, System.currentTimeMillis(), 0);
             mImSessionDao.insertOrReplace(mImSessionTemp);
         } else {
             if (!isme) {

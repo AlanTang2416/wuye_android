@@ -46,6 +46,7 @@ public class ReportActivity extends MyBaseActivity {
 
     private long id;
     private String str = "";
+    private int reportId;
 
     Handler handler = new Handler(){
         public void handleMessage(Message msg) {
@@ -66,9 +67,10 @@ public class ReportActivity extends MyBaseActivity {
         ButterKnife.bind(this);
     }
 
-    public static Intent buildIntent(Context context, long id) {
+    public static Intent buildIntent(Context context, long id, int reportId) {
         Intent intent = new Intent(context, ReportActivity.class);
         intent.putExtra("id", id);
+        intent.putExtra("reportId", reportId);
         return intent;
     }
 
@@ -77,6 +79,7 @@ public class ReportActivity extends MyBaseActivity {
         super.initWidget(v);
 
         id = getIntent().getLongExtra("id", -1);
+        reportId = getIntent().getIntExtra("reportId", 1);
 
         setBarTitleTx("举报");
         setBarRightIv(R.mipmap.bt_create_ok);
@@ -105,7 +108,7 @@ public class ReportActivity extends MyBaseActivity {
             }
         }, 2000);
         mRelativeLayout.setClickable(false);
-        ReportModel mReportModel = new ReportModel(str, 1, id);
+        ReportModel mReportModel = new ReportModel(str, reportId, id);
         OkHttpUtils.postString().url(Common.Url_RePort).mediaType(Common.JSON)
                 .content(mGson.toJson(mReportModel))
                 .addHeader("cookie", MyBaseApplication.getApplication().getCookie())

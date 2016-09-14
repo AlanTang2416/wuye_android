@@ -83,7 +83,7 @@ public class SelectGiftActivity extends MyBaseActivity {
     private GiftListModel mGiftListModel;
     private Adapter adapter;
     private List<ImageView> pointViews;
-    private long myCion;
+    private int myCion;
     private String id;
 
     @Override
@@ -241,7 +241,11 @@ public class SelectGiftActivity extends MyBaseActivity {
         }
     }
 
-    public void backResuilt (String url, String text) {
+    public void backResuilt (String url, String text, int price) {
+        if (myCion-price>=0) {
+            MyBaseApplication.getApplication().mGetUserIndexModel
+                    .getBody().getUserDetailBean().getUserExt().setGold_coin(myCion-price);
+        }
         Intent mIntent = new Intent();
         mIntent.putExtra("url",url);
         if (blogdetailAddcommentEt.getText().toString().trim().isEmpty()) {

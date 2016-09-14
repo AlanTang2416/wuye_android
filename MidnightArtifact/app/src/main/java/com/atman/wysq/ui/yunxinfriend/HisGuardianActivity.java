@@ -163,7 +163,7 @@ public class HisGuardianActivity extends MyBaseActivity implements AdapterInterf
             mGetHisGuardModel = mGson.fromJson(data, GetHisGuardModel.class);
 
             if (mGetHisGuardModel.getBody().getDataList() == null || mGetHisGuardModel.getBody().getDataList().size() == 0) {
-                if (mAdapter != null && mAdapter.getCount() > 0) {
+                if (mAdapter != null && mAdapter.getShop().size() > 0) {
                     showToast("没有更多");
                 }
                 onLoad(PullToRefreshBase.Mode.PULL_FROM_START, pullToRefreshListView);

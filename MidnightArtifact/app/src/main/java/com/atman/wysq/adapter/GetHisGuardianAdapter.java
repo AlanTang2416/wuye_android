@@ -94,6 +94,7 @@ public class GetHisGuardianAdapter extends BaseAdapter {
         }
 
         if (shop.size()>0) {
+            holder.itemBrowseRootRl.setVisibility(View.VISIBLE);
             GetHisGuardModel.BodyEntity.DataListEntity mBodyEntity = shop.get(position);
 
             holder.itemBrowseCharmTx.setText("");
@@ -148,6 +149,8 @@ public class GetHisGuardianAdapter extends BaseAdapter {
                     mAdapterInterface.onItemClick(v, position);
                 }
             });
+        } else {
+            holder.itemBrowseRootRl.setVisibility(View.GONE);
         }
 
         return convertView;

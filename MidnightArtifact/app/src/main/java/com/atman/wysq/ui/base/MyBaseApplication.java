@@ -33,6 +33,7 @@ import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PhoneInfo;
 import com.base.baselibs.util.PreferenceUtil;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -208,16 +209,24 @@ public class MyBaseApplication extends BaseApplication {
         public void onEvent(List<IMMessage> messages) {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
             for (int i=0;i<messages.size();i++) {
-                if (messages.get(i).getRemoteExtension()!=null) {
+                if (messages.get(i).getRemoteExtension()!=null && messages.get(i).getRemoteExtension().get("extra")!=null) {
                     ImMessage temp = null;
                     boolean isMy = false;
                     if (messages.get(i).getFromAccount().equals(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID))) {
                         isMy = true;
                     }
-                    LogUtils.e("messages.get(i).getContent():"+messages.get(i).getContent());
-                    LogUtils.e("messages.get(i).getRemoteExtension():"+messages.get(i).getRemoteExtension());
-                    LogUtils.e("messages.get(i).getRemoteExtension().get(\"extra\"):"+messages.get(i).getRemoteExtension().get("extra"));
-                    GetMessageModel mGetMessageModel = new Gson().fromJson(messages.get(i).getRemoteExtension().get("extra").toString(), GetMessageModel.class);
+                    String data = new Gson().toJson(messages.get(i).getRemoteExtension().get("extra"));
+                    data = data.replace("\\","").replace("u003d",":").replace("u0027","\"").replace("\"{","{").replace("}\"","}")
+                            .replace("\"contentFinger\":\"\"","\"contentFinger\":0").replace("\"fingerValue\":\"\"","\"fingerValue\":0");
+                    GetMessageModel mGetMessageModel = null;
+                    try {
+                        mGetMessageModel = new Gson().fromJson(data, GetMessageModel.class);
+                    } catch (JsonSyntaxException e){
+                        LogUtils.e("e:"+e.toString());
+                    }
+                    if (mGetMessageModel == null) {
+                        continue;
+                    }
                     int messageType = mGetMessageModel.getContentType();
                     if (messageType == ContentTypeInter.contentTypeText) {
                         temp = new ImMessage(null, messages.get(i).getUuid()

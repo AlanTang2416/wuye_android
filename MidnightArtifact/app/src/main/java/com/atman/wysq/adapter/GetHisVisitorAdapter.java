@@ -94,6 +94,7 @@ public class GetHisVisitorAdapter extends BaseAdapter {
         }
 
         if (shop.size()>0) {
+            holder.itemBrowseRootRl.setVisibility(View.VISIBLE);
             GetUserBrowseModel.BodyEntity.DataListEntity mBodyEntity = shop.get(position);
 
             if (mBodyEntity.getSex().equals("M")) {
@@ -137,6 +138,8 @@ public class GetHisVisitorAdapter extends BaseAdapter {
                     mAdapterInterface.onItemClick(v, position);
                 }
             });
+        } else {
+            holder.itemBrowseRootRl.setVisibility(View.GONE);
         }
 
         return convertView;

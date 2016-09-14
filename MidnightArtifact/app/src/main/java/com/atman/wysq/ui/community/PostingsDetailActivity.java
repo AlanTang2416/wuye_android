@@ -706,7 +706,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                         showLogin();
                         return;
                     }
-                    startActivity(ReportActivity.buildIntent(mContext, (long) bolgId));
+                    startActivity(ReportActivity.buildIntent(mContext, (long) bolgId, 2));
                 } else if (which == 3) {//把TA加入黑名单
                     if (!isLogin()) {
                         showLogin();

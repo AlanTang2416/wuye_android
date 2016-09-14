@@ -219,7 +219,8 @@ public class P2PChatAdapter extends BaseAdapter {
                     } else {
                         File mFile = new File(temp.getImageFilePath());
                         if (mFile.exists()) {
-                            ImageLoader.getInstance().displayImage("file://" + temp.getImageFilePath(), holderText.itemP2pchatImageRightIv);
+                            ImageLoader.getInstance().displayImage("file://" + temp.getImageFilePath(), holderText.itemP2pchatImageRightIv
+                                    , MyBaseApplication.getApplication().getOptionsNot());
                         } else {
                             ImageLoader.getInstance().displayImage(temp.getImageUrl(), holderText.itemP2pchatImageRightIv
                                     , MyBaseApplication.getApplication().getOptionsNot(), mListener);

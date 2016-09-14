@@ -43,6 +43,9 @@ import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.widget.NoSwipeViewPager;
 import com.base.baselibs.widget.PromptDialog;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.tbl.okhttputils.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -210,7 +213,15 @@ public class MainActivity extends MyBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_ALL, SessionTypeEnum.None);
         countUnReadNum();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE, SessionTypeEnum.None);
+        NIMClient.toggleNotification(true);
     }
 
     private void initBottomBar() {

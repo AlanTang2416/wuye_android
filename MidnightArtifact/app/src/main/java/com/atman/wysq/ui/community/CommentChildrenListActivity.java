@@ -210,30 +210,35 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
         initListView();
 
         if (blogUserId == ueseID) {
-            if (isAnonymity) {
-                childrencommentLevelTx.setVisibility(View.GONE);
-                childrencommentGenderImg.setVisibility(View.GONE);
-                childrencommentVerifyImg.setVisibility(View.GONE);
-                childrencommentVerifyImg.setVisibility(View.GONE);
-                childrencommentGenderImg.setVisibility(View.GONE);
-                childrencommentNameTx.setText("匿名用户");
-                ImageLoader.getInstance().displayImage(anonymityImg, childrencommentHeadImg
-                        , MyBaseApplication.getApplication().getOptionsNot());
-            } else {
-                if (vipLevel>=3) {
-                    childrencommentNameTx.setTextColor(getResources().getColor(R.color.color_red));
-                } else {
-                    childrencommentNameTx.setTextColor(getResources().getColor(R.color.color_333333));
-                }
-                childrencommentNameTx.setText(name);
-                ImageLoader.getInstance().displayImage(Common.ImageUrl+headUrl, childrencommentHeadImg
-                        , MyBaseApplication.getApplication().getOptionsNot());
-            }
             childrencommentHostTx.setVisibility(View.VISIBLE);
         } else {
             ImageLoader.getInstance().displayImage(Common.ImageUrl+headUrl, childrencommentHeadImg
                     , MyBaseApplication.getApplication().getOptionsNot());
             childrencommentHostTx.setVisibility(View.INVISIBLE);
+        }
+        if (isAnonymity) {
+            childrencommentLevelTx.setVisibility(View.GONE);
+            childrencommentGenderImg.setVisibility(View.GONE);
+            childrencommentVerifyImg.setVisibility(View.GONE);
+            childrencommentVerifyImg.setVisibility(View.GONE);
+            childrencommentGenderImg.setVisibility(View.GONE);
+            childrencommentNameTx.setText("匿名用户");
+            ImageLoader.getInstance().displayImage(anonymityImg, childrencommentHeadImg
+                    , MyBaseApplication.getApplication().getOptionsNot());
+        } else {
+            if (vipLevel>=3) {
+                if (vipLevel>=4) {
+                    childrencommentCommentTx.setTextColor(getResources().getColor(R.color.color_red));
+                } else {
+                    childrencommentCommentTx.setTextColor(getResources().getColor(R.color.color_333333));
+                }
+                childrencommentNameTx.setTextColor(getResources().getColor(R.color.color_red));
+            } else {
+                childrencommentNameTx.setTextColor(getResources().getColor(R.color.color_333333));
+            }
+            childrencommentNameTx.setText(name);
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+headUrl, childrencommentHeadImg
+                    , MyBaseApplication.getApplication().getOptionsNot());
         }
 
         blogdetailSendBt.setOnTouchListener(this);

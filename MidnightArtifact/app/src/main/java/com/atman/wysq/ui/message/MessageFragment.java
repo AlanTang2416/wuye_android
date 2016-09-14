@@ -177,6 +177,7 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        LogUtils.e("setUserVisibleHint");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) //第2步:注册一个在后台线程执行的方法,用于接收事件
