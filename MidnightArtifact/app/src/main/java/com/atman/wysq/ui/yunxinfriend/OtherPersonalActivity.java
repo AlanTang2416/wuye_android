@@ -11,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atman.wysq.R;
+import com.atman.wysq.model.bean.AddFriendRecord;
+import com.atman.wysq.model.greendao.gen.AddFriendRecordDao;
 import com.atman.wysq.model.response.GetUserIndexModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
@@ -22,6 +24,7 @@ import com.atman.wysq.utils.Tools;
 import com.atman.wysq.widget.ShareDialog;
 import com.base.baselibs.net.MyStringCallback;
 import com.base.baselibs.util.LogUtils;
+import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.widget.BottomDialog;
 import com.base.baselibs.widget.CustomImageView;
 import com.base.baselibs.widget.PromptDialog;
@@ -53,6 +56,8 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     private Context mContext = OtherPersonalActivity.this;
     private long id;
     private GetUserIndexModel mGetUserIndexModel;
+    private List<AddFriendRecord> mAddFriendRecord;
+    private AddFriendRecordDao mAddFriendRecordDao;
 
     private LinearLayout otherpersonalBackLl;
     private LinearLayout otherpersonalMoreLl;
@@ -100,6 +105,10 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
         id = getIntent().getLongExtra("id", -1);
 //        id = 450000168;
         LogUtils.e("id:"+id);
+
+        mAddFriendRecordDao = MyBaseApplication.getApplication().getDaoSession().getAddFriendRecordDao();
+        mAddFriendRecord = mAddFriendRecordDao.queryBuilder().where(AddFriendRecordDao.Properties.ToRequest.eq(id)
+                , AddFriendRecordDao.Properties.FromRequest.eq(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID))).build().list();
 
         LinearLayout.LayoutParams localObject = new LinearLayout.LayoutParams(getmWidth(), (int) (9.0F * (getmWidth() / 17.0F)));
         otherpersonalScrollview.setHeaderLayoutParams(localObject);
@@ -230,7 +239,11 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             otherpersonalRelationshipBt.setText("删除");
             otherpersonalRelationshipTv.setText("好友");
         } else {
-            otherpersonalRelationshipBt.setText("加好友");
+            if (mAddFriendRecord.size()>0) {
+                otherpersonalRelationshipBt.setText("等待验证");
+            } else {
+                otherpersonalRelationshipBt.setText("加好友");
+            }
             otherpersonalRelationshipTv.setText("陌生人");
         }
 
@@ -374,6 +387,10 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     showLogin();
                     return;
                 }
+                if (id==MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                    showWraning("亲，这是你自己哦！");
+                    return;
+                }
                 if (mGetUserIndexModel.getBody().isFriend()) {
                     PromptDialog.Builder builder = new PromptDialog.Builder(this);
                     builder.setMessage("您确定要删除好友吗？");
@@ -395,10 +412,19 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     });
                     builder.show();
                 } else {
-                    OkHttpUtils.postString().url(Common.Url_Add_Friends+id).content("").mediaType(Common.JSON)
-                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
-                            .tag(Common.NET_ADD_FRIEND).id(Common.NET_ADD_FRIEND).build()
-                            .execute(new MyStringCallback(mContext, this, true));
+                    if (otherpersonalRelationshipBt.getText().toString().equals("等待验证")) {
+                        showToast("已请求添加\""+mGetUserIndexModel.getBody().getUserDetailBean().getNickName()+"\"为好友");
+                        return;
+                    }
+                    showToast("添加好友请求已发出");
+                    AddFriendRecord temp = new AddFriendRecord(null, String.valueOf(id)
+                            , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID));
+                    mAddFriendRecordDao.insertOrReplace(temp);
+                    otherpersonalRelationshipBt.setText("等待验证");
+//                    OkHttpUtils.postString().url(Common.Url_Add_Friends+id).content("").mediaType(Common.JSON)
+//                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
+//                            .tag(Common.NET_ADD_FRIEND).id(Common.NET_ADD_FRIEND).build()
+//                            .execute(new MyStringCallback(mContext, this, true));
                 }
                 break;
             case R.id.otherpersonal_back_ll:
@@ -427,6 +453,10 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             case R.id.otherpersonal_chat_iv:
                 if (!isLogin()) {
                     showLogin();
+                    return;
+                }
+                if (id==MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                    showWraning("亲，这是你自己哦！");
                     return;
                 }
                 startActivity(P2PChatActivity.buildIntent(mContext, String.valueOf(id)

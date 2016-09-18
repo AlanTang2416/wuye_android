@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/item_message_left_bg"
-                android:maxWidth="@dimen/dimen_dp_70"
+                android:maxWidth="@dimen/dimen_dp_100"
                 android:layout_marginTop="@dimen/dimen_dp_5"
                 android:visibility="gone" />
 
@@ -179,7 +179,7 @@
                     android:background="@drawable/item_message_right_bg"
                     android:scaleType="centerInside"
                     android:layout_marginTop="@dimen/dimen_dp_5"
-                    android:maxWidth="@dimen/dimen_dp_70"
+                    android:maxWidth="@dimen/dimen_dp_100"
                     android:visibility="gone" />
 
                 <ImageView

@@ -328,6 +328,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                 body.setUser_name(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getNick_name());
                 body.setUser_id(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id());
                 body.setBlog_comment_id(mAddCommentResultModel.getBody());
+                body.setVip_level(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level());
                 body.setBlog_id(bolgId);
                 mAdapter.addBody(body);
             }
@@ -607,20 +608,6 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                     blogdetailContentLl.addView(mTextView);
                 }
             }
-
-//            String customHtml = getHtmlData(mContent);
-//            blogdetailContentWb.getSettings().setDefaultTextEncodingName("utf-8");
-//            blogdetailContentWb.getSettings().setBlockNetworkImage(false);
-//            blogdetailContentWb.getSettings().setJavaScriptEnabled(true);
-//            blogdetailContentWb.addJavascriptInterface(new MyJSInterface(PostingsDetailActivity.this), "imagelistner");
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                blogdetailContentWb.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
-//            } else {
-//                blogdetailContentWb.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
-//            }
-//            blogdetailContentWb.loadData(customHtml, "text/html; charset=utf-8", "UTF-8");
-//            blogdetailContentLl.setVisibility(View.GONE);
-//            blogdetailContentWb.setVisibility(View.VISIBLE);
         } else {
             View mTextView = LayoutInflater.from(mContext).inflate(R.layout.part_postingsdetail_textview, null);
             TextView mTx = (TextView) mTextView.findViewById(R.id.part_posting_tx);

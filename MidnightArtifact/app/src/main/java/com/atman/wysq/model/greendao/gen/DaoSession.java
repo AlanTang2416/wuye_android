@@ -8,9 +8,11 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.atman.wysq.model.bean.AddFriendRecord;
 import com.atman.wysq.model.bean.ImMessage;
 import com.atman.wysq.model.bean.ImSession;
 
+import com.atman.wysq.model.greendao.gen.AddFriendRecordDao;
 import com.atman.wysq.model.greendao.gen.ImMessageDao;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
 
@@ -23,9 +25,11 @@ import com.atman.wysq.model.greendao.gen.ImSessionDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig addFriendRecordDaoConfig;
     private final DaoConfig imMessageDaoConfig;
     private final DaoConfig imSessionDaoConfig;
 
+    private final AddFriendRecordDao addFriendRecordDao;
     private final ImMessageDao imMessageDao;
     private final ImSessionDao imSessionDao;
 
@@ -33,22 +37,32 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
+        addFriendRecordDaoConfig = daoConfigMap.get(AddFriendRecordDao.class).clone();
+        addFriendRecordDaoConfig.initIdentityScope(type);
+
         imMessageDaoConfig = daoConfigMap.get(ImMessageDao.class).clone();
         imMessageDaoConfig.initIdentityScope(type);
 
         imSessionDaoConfig = daoConfigMap.get(ImSessionDao.class).clone();
         imSessionDaoConfig.initIdentityScope(type);
 
+        addFriendRecordDao = new AddFriendRecordDao(addFriendRecordDaoConfig, this);
         imMessageDao = new ImMessageDao(imMessageDaoConfig, this);
         imSessionDao = new ImSessionDao(imSessionDaoConfig, this);
 
+        registerDao(AddFriendRecord.class, addFriendRecordDao);
         registerDao(ImMessage.class, imMessageDao);
         registerDao(ImSession.class, imSessionDao);
     }
     
     public void clear() {
+        addFriendRecordDaoConfig.clearIdentityScope();
         imMessageDaoConfig.clearIdentityScope();
         imSessionDaoConfig.clearIdentityScope();
+    }
+
+    public AddFriendRecordDao getAddFriendRecordDao() {
+        return addFriendRecordDao;
     }
 
     public ImMessageDao getImMessageDao() {

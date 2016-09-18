@@ -142,7 +142,6 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
         super.onStringResponse(data, response, id);
         if (id == Common.NET_LOGIN_ID) {
             mLoginResultModel = mGson.fromJson(data, LoginResultModel.class);
-
             OkHttpUtils.get().url(Common.Url_Get_ChatToken)
                     .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_CHATTOKEN).id(Common.NET_GET_CHATTOKEN).build()
@@ -150,7 +149,7 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
         } else if (id == Common.NET_GET_USERINDEX) {
             GetUserIndexModel mGetUserIndexModel = mGson.fromJson(data, GetUserIndexModel.class);
             MyBaseApplication.mGetUserIndexModel = mGetUserIndexModel;
-            MyBaseApplication.getApplication().initObserver();
+            MyBaseApplication.getApplication().initObserver(true);
             Intent mIntent = new Intent();
             setResult(RESULT_OK,mIntent);
             finish();

@@ -345,6 +345,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
                 body.setUserLevel(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUserLevel());
                 body.setUser_name(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getNick_name());
                 body.setUser_id(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id());
+                body.setVip_level(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level());
                 mAdapter.addBody(body);
             }
             blogdetailAddcommentEt.setText("");

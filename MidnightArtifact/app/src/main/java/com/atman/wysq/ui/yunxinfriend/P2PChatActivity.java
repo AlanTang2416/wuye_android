@@ -176,6 +176,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         sex = getIntent().getStringExtra("sex");
         icon = getIntent().getStringExtra("icon");
         verify_status = getIntent().getIntExtra("verify_status", 0);
+        LogUtils.e("id:"+id);
         NIMClient.getService(MsgService.class).setChattingAccount(id, SessionTypeEnum.P2P);
 
         if (verify_status==1 && MyBaseApplication.getApplication().mGetUserIndexModel.
@@ -443,8 +444,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         public void onEvent(List<IMMessage> messages) {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
             for (int i=0;i<messages.size();i++) {
-                LogUtils.e("messages.get(i).getMsgType():"+messages.get(i).getMsgType());
-                if (messages.get(i).getRemoteExtension()!=null) {
+                if (messages.get(i).getRemoteExtension()!=null && messages.get(i).getFromAccount().equals(id)) {
                     ImMessage temp = null;
                     GetMessageModel mGetMessageModel = new Gson().fromJson(messages.get(i).getRemoteExtension().get("extra").toString(), GetMessageModel.class);
                     int messageType = mGetMessageModel.getContentType();
@@ -737,6 +737,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         CustomMessageConfig config = new CustomMessageConfig();
         config.enableRoaming  = false; // 该消息不漫游
         message.setConfig(config);
+        LogUtils.e(">>>>>>>send");
         NIMClient.getService(MsgService.class).sendMessage(message, false);
 
         ImMessage temp = null;

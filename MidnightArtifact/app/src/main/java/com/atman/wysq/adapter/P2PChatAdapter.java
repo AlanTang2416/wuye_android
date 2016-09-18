@@ -164,6 +164,7 @@ public class P2PChatAdapter extends BaseAdapter {
         holderText.itemP2pchatImageRightIv.setVisibility(View.GONE);
         holderText.itemP2pchatFingerRightIv.setVisibility(View.GONE);
         holderText.itemP2pchatAudioRightLl.setVisibility(View.GONE);
+        holderText.itemP2pchatRightPayTx.setVisibility(View.GONE);
         if (temp.getIsSelfSend()) {
             holderText.itemP2pchatTextHeadrightIv.setVisibility(View.VISIBLE);
             holderText.itemP2pchatTextHeadleftIv.setVisibility(View.GONE);

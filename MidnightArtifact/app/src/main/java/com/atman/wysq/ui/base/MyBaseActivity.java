@@ -431,6 +431,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
             }, 2000); // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
 
         } else {
+            MyBaseApplication.getApplication().initObserver(false);
             finish();
             System.exit(0);
         }

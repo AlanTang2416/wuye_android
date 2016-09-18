@@ -171,19 +171,19 @@ public class MyBaseApplication extends BaseApplication {
         NIMClient.init(this, loginInfo(), options());
 
         if (isLogined()) {
-            initObserver();
+            initObserver(true);
         }
     }
 
-    public void initObserver() {
+    public void initObserver(boolean b) {
         // ... your codes
         if (inMainProcess()) {
             // 注意：以下操作必须在主进程中进行
             // 1、UI相关初始化操作
             // 2、相关Service调用
-            setAuthServiceObserver();//监听用户在线状态
-            ReceiveMessageObserver(true);
-            setTouChuanMessageObserver(true);
+            setAuthServiceObserver(b);//监听用户在线状态
+            ReceiveMessageObserver(b);
+            setTouChuanMessageObserver(b);
         }
     }
 
@@ -205,7 +205,7 @@ public class MyBaseApplication extends BaseApplication {
     String sex = "F";
     String icon = "";
     String verify_status = "0";
-    Observer<List<IMMessage>> incomingMessageObserver = new Observer<List<IMMessage>>() {
+    Observer<List<IMMessage>> rootMessageObserver = new Observer<List<IMMessage>>() {
         @Override
         public void onEvent(List<IMMessage> messages) {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
@@ -310,7 +310,7 @@ public class MyBaseApplication extends BaseApplication {
                         if (mImSession==null) {
                             ImSession mImSessionTemp = new ImSession(messages.get(i).getSessionId()
                                     , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID), temp.getContent()
-                                    , nick, icon, sex, Integer.parseInt(verify_status), System.currentTimeMillis(), 0);
+                                    , nick, icon, sex, Integer.parseInt(verify_status), System.currentTimeMillis(), 1);
                             mDaoSession.getImSessionDao().insertOrReplace(mImSessionTemp);
                         } else {
                             mImSession.setContent(temp.getContent());
@@ -357,7 +357,7 @@ public class MyBaseApplication extends BaseApplication {
     };
 
     public void ReceiveMessageObserver(boolean b) {
-        NIMClient.getService(MsgServiceObserve.class).observeReceiveMessage(incomingMessageObserver, b);
+        NIMClient.getService(MsgServiceObserve.class).observeReceiveMessage(rootMessageObserver, b);
     }
 
     public boolean inMainProcess() {
@@ -506,6 +506,9 @@ public class MyBaseApplication extends BaseApplication {
         PreferenceUtil.savePreference(getApplicationContext(), PreferenceUtil.PARM_USERID, "");
         PreferenceUtil.savePreference(getApplicationContext(), PreferenceUtil.PARM_YUNXIN_TOKEN, "");
         PreferenceUtil.saveIntPreference(getApplicationContext(), PreferenceUtil.PARM_YUNXIN_WRAN, 0);
+        getDaoSession().getImMessageDao().deleteAll();
+        getDaoSession().getImSessionDao().deleteAll();
+        initObserver(false);
     }
 
     public String getmUserId() {
@@ -685,7 +688,7 @@ public class MyBaseApplication extends BaseApplication {
         ImageLoader.getInstance().init(config);
     }
 
-    public void setAuthServiceObserver(){
+    public void setAuthServiceObserver(boolean b){
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(
                 new Observer<StatusCode>() {
                     public void onEvent(StatusCode status) {
@@ -697,7 +700,7 @@ public class MyBaseApplication extends BaseApplication {
                             EventBus.getDefault().post(new YunXinAuthOutEvent());
                         }
                     }
-                }, true);
+                }, b);
     }
 
     @Override
