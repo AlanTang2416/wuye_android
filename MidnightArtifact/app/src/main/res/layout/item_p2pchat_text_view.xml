@@ -60,7 +60,7 @@
                 android:background="@drawable/item_message_left_bg"
                 android:maxWidth="@dimen/dimen_dp_250"
                 android:text="sadcasc"
-                android:gravity="center"
+                android:gravity="left"
                 android:textColor="@color/color_black"
                 android:layout_marginTop="@dimen/dimen_dp_5"
                 android:textSize="@dimen/dimen_sp_15"
@@ -167,7 +167,7 @@
                     android:background="@drawable/item_message_right_bg"
                     android:layout_marginTop="@dimen/dimen_dp_5"
                     android:maxWidth="@dimen/dimen_dp_250"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:textColor="@color/color_black"
                     android:textSize="@dimen/dimen_sp_15"
                     android:visibility="gone" />

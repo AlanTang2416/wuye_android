@@ -59,9 +59,18 @@ public class GetGoodsCommentResponseModel {
         private String icon;
         private String sex;
         private int userLevel;
+        private int vip_level;
         private int like_count;
         private int isLike;
         private int total;
+
+        public int getVip_level() {
+            return vip_level;
+        }
+
+        public void setVip_level(int vip_level) {
+            this.vip_level = vip_level;
+        }
 
         public int getGoods_comment_id() {
             return goods_comment_id;

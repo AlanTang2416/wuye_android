@@ -34,7 +34,6 @@ import com.atman.wysq.ui.yunxinfriend.HisVisitorActivity;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.UiHelper;
 import com.base.baselibs.net.MyStringCallback;
-import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.util.StringUtils;
 import com.base.baselibs.widget.BottomDialog;
@@ -189,7 +188,6 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     }
 
     public void doHttp(boolean b) {
-        LogUtils.e("!isLogin():"+(!isLogin()));
         if (!isLogin()) {
             hitSetring();
         } else {
@@ -227,6 +225,9 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
+        if (isLogin() && MyBaseApplication.mGetUserIndexModel!=null) {
+            changView();
+        }
         doHttp(false);
         if (!isHead) {
             MyBaseApplication.getApplication().setFilterLock(false);
@@ -607,14 +608,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
 //                toLogin();
             }
         } else if (requestCode == Common.toLogin) {
-//            LogUtils.e("Common.toLogin:"+Common.toLogin);
-//            doHttp();
-            mGetUserIndexModel = MyBaseApplication.mGetUserIndexModel;
-            UpDateUI();
-            OkHttpUtils.get().url(Common.Url_Get_Task)
-                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
-                    .tag(Common.NET_GET_RASK).id(Common.NET_GET_RASK).build()
-                    .execute(new MyStringCallback(getActivity(), this, true));
+            changView();
         } else if (requestCode == CHOOSE_BIG_PICTURE) {//选择照片
             imageUri = data.getData();
             cropImageUri(imageUri, outputX, outputX, CROP_BIG_PICTURE);
@@ -632,7 +626,6 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             }
         } else if (requestCode == PICK_FROM_CAMERA) {
             imageUri = Uri.parse("file:///" + path);
-            LogUtils.e("imageUri:"+imageUri);
             if (imageUri != null) {
                 OkHttpUtils.post().url(Common.Url_Reset_Head)
                         .addHeader("cookie",MyBaseApplication.getApplication().getCookie())
@@ -642,6 +635,15 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
                         .tag(Common.NET_RESET_HEAD_TWO).build().execute(new MyStringCallback(getActivity(), this, true));
             }
         }
+    }
+
+    private void changView() {
+        mGetUserIndexModel = MyBaseApplication.mGetUserIndexModel;
+        UpDateUI();
+        OkHttpUtils.get().url(Common.Url_Get_Task)
+                .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
+                .tag(Common.NET_GET_RASK).id(Common.NET_GET_RASK).build()
+                .execute(new MyStringCallback(getActivity(), this, true));
     }
 
     //裁减照片

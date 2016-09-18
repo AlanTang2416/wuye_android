@@ -469,7 +469,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                                 , mGetMessageModel.getSendUser().getVerify_status()
                                 , false, System.currentTimeMillis()
                                 , messageType
-                                , "", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
+                                , "[图片]", ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 1);
                         if (isOriginImageHasDownloaded(messages.get(i))) {
@@ -521,9 +521,9 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                                 , mGetMessageModel.getSendUser().getVerify_status()
                                 , false, System.currentTimeMillis()
                                 , messageType
-                                , "", "", "", "", mGetMessageModel.getContentImageSUrl()
-                                , mGetMessageModel.getContentImageSUrl()
-                                , mGetMessageModel.getContentImageSUrl(), "", "", 0, 0, false, 1);
+                                , "[图片]", "", "", "", ((FileAttachment)messages.get(i).getAttachment()).getUrl()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), "", "", 0, 0, false, 1);
                         if (isOriginImageHasDownloaded(messages.get(i))) {
                             AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
                             future.setCallback(callback);
@@ -878,7 +878,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
             String text = data.getStringExtra("text");
             File file = ImageLoader.getInstance().getDiskCache().get(Common.ImageUrl+data.getStringExtra("url"));
             IMMessage message = MessageBuilder.createImageMessage(id, SessionTypeEnum.P2P, file, "");
-            seedMessage(message, ContentTypeInter.contentTypeImageSmall, "", "");
+            seedMessage(message, ContentTypeInter.contentTypeImageSmall, file.getPath(), "");
             if (!text.isEmpty() && !TextUtils.isEmpty(text)) {
                 IMMessage messagetext = MessageBuilder.createTextMessage(id, SessionTypeEnum.P2P
                         , text.toString());

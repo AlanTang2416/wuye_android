@@ -18,6 +18,7 @@ import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.MyTools;
 import com.base.baselibs.iimp.AdapterInterface;
+import com.base.baselibs.widget.CustomImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -92,6 +93,18 @@ public class GoodsDetailOneAdapter extends BaseAdapter {
                 }
             }
         });
+        if (shop.get(position).getVip_level()>=4) {
+            holder.itemGoodsdetailCommentVipTx.setVisibility(View.GONE);
+            holder.itemGoodsdetailCommentSvipIv.setVisibility(View.VISIBLE);
+        } else {
+            holder.itemGoodsdetailCommentSvipIv.setVisibility(View.GONE);
+            if (shop.get(position).getVip_level()==0) {
+                holder.itemGoodsdetailCommentVipTx.setVisibility(View.GONE);
+            } else {
+                holder.itemGoodsdetailCommentVipTx.setText("VIP."+shop.get(position).getVip_level());
+                holder.itemGoodsdetailCommentVipTx.setVisibility(View.VISIBLE);
+            }
+        }
         Drawable drawable = null;
         if (shop.get(position).getIsLike() == 1) {
             drawable = context.getResources().getDrawable(R.mipmap.btn_like_icon_gray);
@@ -100,9 +113,27 @@ public class GoodsDetailOneAdapter extends BaseAdapter {
             drawable = context.getResources().getDrawable(R.mipmap.btn_like_icon);
             holder.itemGoodsdetailLikeTv.setTextColor(context.getResources().getColor(R.color.postingsdetails_like_nomal_tx));
         }
+//        if (shop.get(position).getVerify_status() == 1) {
+//            holder.itemGoodsdetailVerifyImg.setVisibility(View.VISIBLE);
+//            holder.itemGoodsdetailGenderIv.setVisibility(View.GONE);
+//        } else {
+            holder.itemGoodsdetailVerifyImg.setVisibility(View.GONE);
+            holder.itemGoodsdetailGenderIv.setVisibility(View.VISIBLE);
+//        }
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         holder.itemGoodsdetailLikeTv.setCompoundDrawables(null, null, drawable, null);
         holder.itemGoodsdetailTimeTv.setText("第"+(position+1)+"楼 "+ MyTools.convertTimeTwo(shop.get(position).getCreate_time()));
+
+        if (shop.get(position).getVip_level()>=3) {
+            holder.itemGoodsdetailNameTv.setTextColor(context.getResources().getColor(R.color.color_red));
+            if (shop.get(position).getVip_level()>=4) {
+                holder.itemGoodsdetailContentTv.setTextColor(context.getResources().getColor(R.color.color_red));
+            } else {
+                holder.itemGoodsdetailContentTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
+            }
+        } else {
+            holder.itemGoodsdetailNameTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
+        }
 
         return convertView;
     }
@@ -125,9 +156,13 @@ public class GoodsDetailOneAdapter extends BaseAdapter {
 
     static class ViewHolder {
         @Bind(R.id.item_goodsdetail_head_iv)
-        ImageView itemGoodsdetailHeadIv;
+        CustomImageView itemGoodsdetailHeadIv;
+        @Bind(R.id.item_goodsdetail_verify_img)
+        CustomImageView itemGoodsdetailVerifyImg;
         @Bind(R.id.item_goodsdetail_gender_iv)
         ImageView itemGoodsdetailGenderIv;
+        @Bind(R.id.item_goodsdetail_comment_svip_iv)
+        ImageView itemGoodsdetailCommentSvipIv;
         @Bind(R.id.item_goodsdetail_head_rl)
         RelativeLayout itemGoodsdetailHeadRl;
         @Bind(R.id.item_goodsdetail_name_tv)
@@ -138,6 +173,8 @@ public class GoodsDetailOneAdapter extends BaseAdapter {
         LinearLayout itemGoodsdetailNameLl;
         @Bind(R.id.item_goodsdetail_time_tv)
         TextView itemGoodsdetailTimeTv;
+        @Bind(R.id.item_goodsdetail_comment_vip_tx)
+        TextView itemGoodsdetailCommentVipTx;
         @Bind(R.id.item_goodsdetail_like_tv)
         TextView itemGoodsdetailLikeTv;
         @Bind(R.id.item_goodsdetail_content_tv)

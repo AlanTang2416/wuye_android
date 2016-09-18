@@ -209,6 +209,7 @@ public class MyBaseApplication extends BaseApplication {
         @Override
         public void onEvent(List<IMMessage> messages) {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
+            LogUtils.e("messages.size():"+messages.size());
             for (int i=0;i<messages.size();i++) {
                 if (messages.get(i).getRemoteExtension()!=null && messages.get(i).getRemoteExtension().get("extra")!=null) {
                     ImMessage temp = null;
@@ -287,9 +288,9 @@ public class MyBaseApplication extends BaseApplication {
                                 , mGetMessageModel.getSendUser().getIcon(), mGetMessageModel.getSendUser().getSex()
                                 , mGetMessageModel.getSendUser().getVerify_status()
                                 , isMy, messages.get(i).getTime(), messageType
-                                , "[图片]", "", "", "", mGetMessageModel.getContentImageSUrl()
-                                , mGetMessageModel.getContentImageSUrl()
-                                , mGetMessageModel.getContentImageSUrl(), "", "", 0, 0, false, 1);
+                                , "[图片]", "", "", "", ((FileAttachment)messages.get(i).getAttachment()).getUrl()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
+                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), "", "", 0, 0, false, 1);
                         if (isOriginImageHasDownloaded(messages.get(i))) {
                             AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
                             future.setCallback(callback);
@@ -301,7 +302,7 @@ public class MyBaseApplication extends BaseApplication {
                         ImSession mImSession = mDaoSession.getImSessionDao().queryBuilder().where(ImSessionDao.Properties.UserId.eq(messages.get(i).getSessionId())
                                 , ImSessionDao.Properties.LoginUserId.eq(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID))).build().unique();
                         if (!messages.get(i).getFromAccount().equals(String.valueOf(
-                                mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id()))) {
+                                PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID)))) {
                             nick = mGetMessageModel.getSendUser().getNickName();
                             sex = mGetMessageModel.getSendUser().getSex();
                             icon = mGetMessageModel.getSendUser().getIcon();
