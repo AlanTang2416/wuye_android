@@ -49,34 +49,16 @@ import okhttp3.Response;
  */
 public class SelectGiftActivity extends MyBaseActivity {
 
-    @Bind(R.id.selectgift_top_view)
-    View selectgiftTopView;
-    @Bind(R.id.blogdetail_addemol_iv)
-    ImageView blogdetailAddemolIv;
     @Bind(R.id.blogdetail_addcomment_et)
     MyCleanEditText blogdetailAddcommentEt;
-    @Bind(R.id.blogdetail_send_bt)
-    Button blogdetailSendBt;
-    @Bind(R.id.ll1)
-    LinearLayout ll1;
     @Bind(R.id.main_viewpager)
     NoSwipeViewPager mainViewpager;
-    @Bind(R.id.vp_contains)
-    ViewPager vpContains;
-    @Bind(R.id.iv_image)
-    LinearLayout ivImage;
     @Bind(R.id.ll_facechoose)
     RelativeLayout llFacechoose;
-    @Bind(R.id.FaceRelativeLayout)
-    com.atman.wysq.widget.face.FaceRelativeLayout FaceRelativeLayout;
     @Bind(R.id.selectgift_mycion_tx)
     TextView selectgiftMycionTx;
-    @Bind(R.id.gift_one_ll)
-    LinearLayout giftOneLl;
     @Bind(R.id.gift_dot_ll)
     LinearLayout giftDotLl;
-    @Bind(R.id.gift_ll)
-    RelativeLayout giftLl;
 
     private Context mContext = SelectGiftActivity.this;
     private List<GiftListModel.BodyEntity> mGiftList = new ArrayList<>();

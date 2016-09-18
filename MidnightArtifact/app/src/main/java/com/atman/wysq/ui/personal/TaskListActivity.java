@@ -87,8 +87,7 @@ public class TaskListActivity extends MyBaseActivity implements AdapterInterface
             GetTaskAllModel mGetTaskAllModel = mGson.fromJson(data, GetTaskAllModel.class);
             List<GetTaskAllModel.BodyEntity> body = new ArrayList<>();
             for(int i=0;i<mGetTaskAllModel.getBody().size();i++) {
-                if (mGetTaskAllModel.getBody().get(i).getTask_type() != 8
-                        && mGetTaskAllModel.getBody().get(i).getTask_type() != 9
+                if (mGetTaskAllModel.getBody().get(i).getTask_type() != 9
                         && mGetTaskAllModel.getBody().get(i).getTask_type() != 10
                         && mGetTaskAllModel.getBody().get(i).getTask_type() != 11) {
                     body.add(mGetTaskAllModel.getBody().get(i));

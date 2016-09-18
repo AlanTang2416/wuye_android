@@ -31,6 +31,7 @@ import com.atman.wysq.ui.community.PostingsDetailActivity;
 import com.atman.wysq.ui.login.LoginActivity;
 import com.atman.wysq.ui.mall.order.ConfirmationOrderActivity;
 import com.atman.wysq.ui.yunxinfriend.P2PChatActivity;
+import com.atman.wysq.ui.yunxinfriend.SelectGiftActivity;
 import com.atman.wysq.utils.ScreenObserver;
 import com.base.baselibs.base.BaseAppCompatActivity;
 import com.base.baselibs.util.LogUtils;
@@ -364,6 +365,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
                     && !(mAty instanceof CommentChildrenListActivity)
                     && !(mAty instanceof PostActivity)
                     && !(mAty instanceof PostingsDetailActivity)
+                    && !(mAty instanceof SelectGiftActivity)
                     && !(mAty instanceof P2PChatActivity)
                     && isFastDoubleClick()) {
                 return true;

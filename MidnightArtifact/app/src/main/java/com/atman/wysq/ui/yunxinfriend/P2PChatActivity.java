@@ -147,6 +147,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     private P2PChatAdapter mAdapter;
     private AudioPlayer player;
     private boolean isPay = false;
+    private boolean isToLimit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -285,15 +286,11 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
         initListView();
 
-        LogUtils.e("id："+id);
         mImMessage = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(id)).build().list();
-        LogUtils.e("mImMessage.size()："+mImMessage.size());
         mAdapter.addImMessageDao(mImMessage);
         p2pChatLv.getRefreshableView().post(new Runnable() {
             @Override
             public void run() {
-                // Select the last row so it will scroll into view...
-//                p2pChatLv.getRefreshableView().smoothScrollToPosition(mAdapter.getCount() - 1);
                 p2pChatLv.getRefreshableView().setSelection(mAdapter.getCount());
             }
         });
@@ -301,7 +298,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
 
     private void initListView() {
         initRefreshView(PullToRefreshBase.Mode.DISABLED, p2pChatLv);
-        mAdapter = new P2PChatAdapter(mContext, getmWidth(), p2pChatLv, isPay, this);
+        mAdapter = new P2PChatAdapter(mContext, getmWidth(), p2pChatLv, isPay, handler, runnable, this);
         p2pChatLv.setAdapter(mAdapter);
         mAdapter.setLeftChange(true);
         mAdapter.setLeftImageUrl(icon);
@@ -348,7 +345,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
             showToast("初始化录音失败");
             return;
         }
-
+        isToLimit = false;
         if (!touched) {
             return;
         }
@@ -384,6 +381,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 case 1:
                     touched = false;
                     onEndAudioRecord(false);
+                    isToLimit = true;
                     break;
             }
             super.handleMessage(msg);
@@ -737,7 +735,6 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         CustomMessageConfig config = new CustomMessageConfig();
         config.enableRoaming  = false; // 该消息不漫游
         message.setConfig(config);
-        LogUtils.e(">>>>>>>send");
         NIMClient.getService(MsgService.class).sendMessage(message, false);
 
         ImMessage temp = null;
@@ -782,6 +779,12 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     , true, System.currentTimeMillis(), contentType, str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 0);
         } else if (contentType==ContentTypeInter.contentTypeAudio) {
             ChatAudioModel mChatAudioModel = new Gson().fromJson(message.getAttachment().toJson(true), ChatAudioModel.class);
+            long audioDuration;
+            if (isToLimit) {
+                audioDuration = 60;
+            } else {
+                audioDuration = mChatAudioModel.getDur();
+            }
             temp = new ImMessage(null, message.getUuid()
                     , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()), id
                     , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
@@ -790,7 +793,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
                     , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, "[语音]", "", "", "", "", "", "", ((FileAttachment)message.getAttachment()).getPathForSave()
-                    , ((FileAttachment)message.getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 0);
+                    , ((FileAttachment)message.getAttachment()).getUrl(), audioDuration, 0, false, 0);
         } else if (contentType==ContentTypeInter.contentTypeImageSmall) {
             temp = new ImMessage(null, message.getUuid()
                     , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()), id
@@ -947,11 +950,6 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         public void onSuccess(List<IMMessage> imMessages) {
             if (imMessages!=null) {
                 for (int i=0;i<imMessages.size();i++) {
-//                    LogUtils.e("p2p>>>>image>>>>getPath:"+((FileAttachment)imMessages.get(i).getAttachment()).getPath());
-//                    LogUtils.e("p2p>>>>image>>>>getPathForSave:"+((FileAttachment)imMessages.get(i).getAttachment()).getPathForSave());
-//                    LogUtils.e("p2p>>>>image>>>>getThumbPath:"+((FileAttachment)imMessages.get(i).getAttachment()).getThumbPath());
-//                    LogUtils.e("p2p>>>>image>>>>getThumbPathForSave:"+((FileAttachment)imMessages.get(i).getAttachment()).getThumbPathForSave());
-//                    LogUtils.e("p2p>>>>image>>>>getUrl:"+((FileAttachment)imMessages.get(i).getAttachment()).getUrl());
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.atman.wysq.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,14 +61,19 @@ public class P2PChatAdapter extends BaseAdapter {
     private String leftImageUrl = "";
     private String rightImageUrl = "";
     private boolean isPay;
+    private Handler handler;
+    private Runnable runnable;
 
-    public P2PChatAdapter(Context context, int width, PullToRefreshListView p2pChatLv, boolean isPay, P2PAdapterInter mP2PAdapterInter) {
+    public P2PChatAdapter(Context context, int width, PullToRefreshListView p2pChatLv, boolean isPay
+            , Handler handler, Runnable runnable, P2PAdapterInter mP2PAdapterInter) {
         this.context = context;
         this.mImMessage = new ArrayList<>();
         this.p2pChatLv = p2pChatLv;
         this.isPay = isPay;
         this.mP2PAdapterInter = mP2PAdapterInter;
         this.width = width;
+        this.handler = handler;
+        this.runnable = runnable;
         layoutInflater = LayoutInflater.from(context);
     }
 
@@ -354,8 +360,7 @@ public class P2PChatAdapter extends BaseAdapter {
         public void onLoadingComplete(String s, View view, Bitmap bitmap) {
             if (!isBottom) {
                 isBottom = true;
-//                p2pChatLv.getRefreshableView().smoothScrollToPosition(p2pChatLv.getRefreshableView().getBottom());
-                p2pChatLv.getRefreshableView().setSelection(p2pChatLv.getRefreshableView().getBottom());
+                handler.postDelayed(runnable, 500);
             }
         }
 

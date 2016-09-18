@@ -192,11 +192,11 @@ public class MyBaseApplication extends BaseApplication {
             @Override
             public void onEvent(CustomNotification message) {
                 // 在这里处理自定义通知。
-                LogUtils.e("touchuan>>>>getContent:"+message.getContent());
-                LogUtils.e("touchuan>>>>getApnsText:"+message.getApnsText());
-                LogUtils.e("touchuan>>>>getConfig:"+message.getConfig().toString());
-                LogUtils.e("touchuan>>>>getPushPayload:"+message.getPushPayload().toString());
-                LogUtils.e("touchuan>>>>getSessionType:"+message.getSessionType());
+//                LogUtils.e("touchuan>>>>getContent:"+message.getContent());
+//                LogUtils.e("touchuan>>>>getApnsText:"+message.getApnsText());
+//                LogUtils.e("touchuan>>>>getConfig:"+message.getConfig().toString());
+//                LogUtils.e("touchuan>>>>getPushPayload:"+message.getPushPayload());
+//                LogUtils.e("touchuan>>>>getSessionType:"+message.getSessionType());
             }
         }, b);
     }
