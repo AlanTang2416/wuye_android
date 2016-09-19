@@ -17,11 +17,7 @@ import com.atman.wysq.model.response.GetUserIndexModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.community.ReportActivity;
-import com.atman.wysq.ui.login.LoginActivity;
 import com.atman.wysq.utils.Common;
-import com.atman.wysq.utils.ShareHelper;
-import com.atman.wysq.utils.Tools;
-import com.atman.wysq.widget.ShareDialog;
 import com.base.baselibs.net.MyStringCallback;
 import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PreferenceUtil;
@@ -32,7 +28,6 @@ import com.base.baselibs.widget.RoundImageView;
 import com.base.baselibs.widget.pullzoom.PullZoomScrollVIew;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tbl.okhttputils.OkHttpUtils;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -416,6 +411,18 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                         showToast("已请求添加\""+mGetUserIndexModel.getBody().getUserDetailBean().getNickName()+"\"为好友");
                         return;
                     }
+                    // 构造自定义通知，指定接收者
+//                    CustomNotification notification = new CustomNotification();
+//                    notification.setSessionId(String.valueOf(id));
+//                    notification.setSessionType(SessionTypeEnum.P2P);
+//                    // 构建通知的具体内容。为了可扩展性，这里采用 json 格式，以 "id" 作为类型区分。
+//                    // 这里以类型 “1” 作为“正在输入”的状态通知。
+//                    TouChuanGiftNotice json = new TouChuanGiftNotice();
+//                    json.setType();
+//                    notification.setContent(json.toString());
+//                    // 发送自定义通知
+//                    NIMClient.getService(MsgService.class).sendCustomNotification(notification);
+
                     showToast("添加好友请求已发出");
                     AddFriendRecord temp = new AddFriendRecord(null, String.valueOf(id)
                             , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID));

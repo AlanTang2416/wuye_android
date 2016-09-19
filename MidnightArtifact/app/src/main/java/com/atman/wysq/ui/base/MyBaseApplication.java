@@ -13,11 +13,13 @@ import android.text.TextUtils;
 import com.atman.wysq.R;
 import com.atman.wysq.model.bean.ImMessage;
 import com.atman.wysq.model.bean.ImSession;
+import com.atman.wysq.model.bean.TouChuanGiftNotice;
+import com.atman.wysq.model.bean.TouChuanOtherNotice;
+import com.atman.wysq.model.event.YunXinAddFriendEvent;
 import com.atman.wysq.model.event.YunXinAuthOutEvent;
 import com.atman.wysq.model.event.YunXinMessageEvent;
 import com.atman.wysq.model.greendao.gen.DaoMaster;
 import com.atman.wysq.model.greendao.gen.DaoSession;
-import com.atman.wysq.model.greendao.gen.ImMessageDao;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
 import com.atman.wysq.model.response.ChatAudioModel;
 import com.atman.wysq.model.response.ConfigModel;
@@ -47,7 +49,6 @@ import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
-import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomNotification;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
@@ -176,7 +177,6 @@ public class MyBaseApplication extends BaseApplication {
     }
 
     public void initObserver(boolean b) {
-        // ... your codes
         if (inMainProcess()) {
             // 注意：以下操作必须在主进程中进行
             // 1、UI相关初始化操作
@@ -192,11 +192,23 @@ public class MyBaseApplication extends BaseApplication {
             @Override
             public void onEvent(CustomNotification message) {
                 // 在这里处理自定义通知。
-//                LogUtils.e("touchuan>>>>getContent:"+message.getContent());
-//                LogUtils.e("touchuan>>>>getApnsText:"+message.getApnsText());
-//                LogUtils.e("touchuan>>>>getConfig:"+message.getConfig().toString());
-//                LogUtils.e("touchuan>>>>getPushPayload:"+message.getPushPayload());
-//                LogUtils.e("touchuan>>>>getSessionType:"+message.getSessionType());
+                LogUtils.e("touchuan>>>>getSessionType:"+message.getSessionType());
+                LogUtils.e("touchuan>>>>getContent:"+message.getContent());
+                TouChuanGiftNotice mTouChuanGiftNotice = new Gson().fromJson(message.getContent(), TouChuanGiftNotice.class);
+                if (mTouChuanGiftNotice.getType()==8) {//礼物通知
+                    getDaoSession().getTouChuanGiftNoticeDao().insert(mTouChuanGiftNotice);
+                    LogUtils.e("getType:"+ mTouChuanGiftNotice.getType()
+                            +",getGiftContent:"+ mTouChuanGiftNotice.getGiftContent()
+                            +",getGiftIcon:"+ mTouChuanGiftNotice.getGiftIcon());
+                } else {
+                    TouChuanOtherNotice mTouChuanOtherNotice = new Gson().fromJson(message.getContent(), TouChuanOtherNotice.class);
+                    getDaoSession().getTouChuanOtherNoticeDao().insert(mTouChuanOtherNotice);
+
+                    if (mTouChuanOtherNotice.getNoticeType()==1) {//加好友通知
+                        EventBus.getDefault().post(new YunXinAddFriendEvent());
+                    }
+                }
+                EventBus.getDefault().post(new YunXinMessageEvent());
             }
         }, b);
     }

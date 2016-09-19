@@ -15,12 +15,15 @@ import com.atman.wysq.R;
 import com.atman.wysq.adapter.MessageSessionListAdapter;
 import com.atman.wysq.model.bean.ImMessage;
 import com.atman.wysq.model.bean.ImSession;
+import com.atman.wysq.model.bean.TouChuanOtherNotice;
 import com.atman.wysq.model.event.YunXinMessageEvent;
 import com.atman.wysq.model.greendao.gen.ImMessageDao;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
+import com.atman.wysq.model.greendao.gen.TouChuanOtherNoticeDao;
 import com.atman.wysq.ui.MainActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.base.MyBaseFragment;
+import com.atman.wysq.ui.yunxinfriend.MessageCenterActivity;
 import com.atman.wysq.ui.yunxinfriend.MoFriendsActivity;
 import com.atman.wysq.ui.yunxinfriend.P2PChatActivity;
 import com.base.baselibs.iimp.AdapterInterface;
@@ -58,9 +61,11 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
 
     private List<ImSession> mImSession;
     private ImSessionDao mImSessionDao;
+    private TouChuanOtherNoticeDao mOtherNoticeDao;
     private ImMessageDao mImMessageDao;
     private List<ImMessage> mImMessage;
     private List<ImMessage> mImMessageDelete;
+    private List<TouChuanOtherNotice> mTouChuanOtherNotice;
     private ImSession mImSessionDelete;
 
     private MessageSessionListAdapter mAdapter;
@@ -96,48 +101,58 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
         messageListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImSession mImSession = mImSessionDao.queryBuilder()
-                        .where(ImSessionDao.Properties.UserId.eq(mAdapter.getItem(position).getUserId())).build().unique();
-                if (mImSession!=null) {
-                    mImSession.setUnreadNum(0);
-                    mImSessionDao.update(mImSession);
-                    mAdapter.clearUnreadNum(position);
-                    startActivity(P2PChatActivity.buildIntent(getActivity(), mAdapter.getItem(position).getUserId()
-                            , mAdapter.getItem(position).getNickName(), mAdapter.getItem(position).getSex()
-                            , mAdapter.getItem(position).getIcon(), mAdapter.getItem(position).getVerify_status()));
+                if (mAdapter.getItem(position).getVerify_status()!=-1) {
+                    ImSession mImSession = mImSessionDao.queryBuilder()
+                            .where(ImSessionDao.Properties.UserId.eq(mAdapter.getItem(position).getUserId())).build().unique();
+                    if (mImSession!=null) {
+                        mImSession.setUnreadNum(0);
+                        mImSessionDao.update(mImSession);
+                        mAdapter.clearUnreadNum(position);
+                        startActivity(P2PChatActivity.buildIntent(getActivity(), mAdapter.getItem(position).getUserId()
+                                , mAdapter.getItem(position).getNickName(), mAdapter.getItem(position).getSex()
+                                , mAdapter.getItem(position).getIcon(), mAdapter.getItem(position).getVerify_status()));
+                    }
+                } else {
+                    if (!isLogin()) {
+                        showLogin();
+                        return;
+                    }
+                    startActivity(MessageCenterActivity.buildIntent(getActivity()));
                 }
             }
         });
         messageListview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
-                PromptDialog.Builder builder = new PromptDialog.Builder(getActivity());
-                builder.setMessage("您确定要该好友从列表中删除吗？");
-                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        mImMessageDelete = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(mAdapter.getItem(position).getUserId()), ImMessageDao.Properties.LoginUserId.eq(
-                                String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().list();
-                        for (ImMessage imMessageDelete : mImMessageDelete) {
-                            mImMessageDao.delete(imMessageDelete);
-                        }
+                if (mAdapter.getItem(position).getVerify_status()!=-1) {
+                    PromptDialog.Builder builder = new PromptDialog.Builder(getActivity());
+                    builder.setMessage("您确定要该好友从列表中删除吗？");
+                    builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            mImMessageDelete = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(mAdapter.getItem(position).getUserId()), ImMessageDao.Properties.LoginUserId.eq(
+                                    String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().list();
+                            for (ImMessage imMessageDelete : mImMessageDelete) {
+                                mImMessageDao.delete(imMessageDelete);
+                            }
 
-                        mImSessionDelete = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(mAdapter.getItem(position).getUserId()), ImSessionDao.Properties.LoginUserId.eq(
-                                String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().unique();
-                        if (mImSessionDelete!=null) {
-                            mImSessionDao.delete(mImSessionDelete);
-                            mAdapter.deleteItemById(position);
+                            mImSessionDelete = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(mAdapter.getItem(position).getUserId()), ImSessionDao.Properties.LoginUserId.eq(
+                                    String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().unique();
+                            if (mImSessionDelete!=null) {
+                                mImSessionDao.delete(mImSessionDelete);
+                                mAdapter.deleteItemById(position);
+                            }
                         }
-                    }
-                });
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.show();
+                    });
+                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.show();
+                }
                 return true;
             }
         });
@@ -156,19 +171,43 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
     @Override
     public void onResume() {
         super.onResume();
-        if (isLogin()) {
-            setUnreadMessageNum();
-        } else {
-            if (mAdapter!=null) {
-                mAdapter.clearData();
-            }
-        }
+        setUnreadMessageNum();
     }
 
     private void setUnreadMessageNum() {
         mImSessionDao = MyBaseApplication.getApplication().getDaoSession().getImSessionDao();
-        mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.NickName.notEq(""), ImSessionDao.Properties.LoginUserId.eq(
-                PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID))).build().list();
+        mOtherNoticeDao = MyBaseApplication.getApplication().getDaoSession().getTouChuanOtherNoticeDao();
+
+        ImSession temp = null;
+
+        if (mImSession!=null) {
+            mImSession.clear();
+        }
+        if (mAdapter!=null) {
+            mAdapter.clearData();
+        }
+        if (isLogin()) {
+            mTouChuanOtherNotice = mOtherNoticeDao.queryBuilder().orderDesc(TouChuanOtherNoticeDao.Properties.Time).build().list();
+            String str = "暂时还没有通知";
+            int num = 0;
+            double time = System.currentTimeMillis();
+            if (mTouChuanOtherNotice!=null && mTouChuanOtherNotice.size()>0) {
+                num = mTouChuanOtherNotice.size();
+                time = mTouChuanOtherNotice.get(0).getTime();
+                if (mTouChuanOtherNotice.get(0).getNoticeType()==1) {
+                    str = mTouChuanOtherNotice.get(0).getSend_nickName()+":请求加你为好友";
+                }
+            }
+            temp = new ImSession("0",PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID)
+                    ,str,"通知中心","","",-1,Math.round(time),num);
+            mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.NickName.notEq(""), ImSessionDao.Properties.LoginUserId.eq(
+                    PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID))).build().list();
+        } else {
+            temp = new ImSession("0",PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID)
+                    ,"暂时还没有通知","通知中心","","",-1,System.currentTimeMillis(),0);
+        }
+        mAdapter.clearData();
+        mAdapter.addBody(temp);
         if (mImSession!=null) {
             mAdapter.addBody(mImSession);
         }
@@ -177,7 +216,6 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        LogUtils.e("setUserVisibleHint");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) //第2步:注册一个在后台线程执行的方法,用于接收事件

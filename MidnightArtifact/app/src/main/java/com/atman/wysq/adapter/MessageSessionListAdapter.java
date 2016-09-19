@@ -50,8 +50,12 @@ public class MessageSessionListAdapter extends BaseAdapter {
         this.dataList = new ArrayList<>();
     }
 
+    public void addBody(ImSession data) {
+        this.dataList.add(data);
+        notifyDataSetChanged();
+    }
+
     public void addBody(List<ImSession> data) {
-        this.dataList.clear();
         this.dataList.addAll(data);
         notifyDataSetChanged();
     }
@@ -100,8 +104,12 @@ public class MessageSessionListAdapter extends BaseAdapter {
             if (position==getCount()-1) {
                 isChange = false;
             }
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(position).getIcon(), holder.itemSessionHeadIv
-                    , MyBaseApplication.getApplication().getOptionsNot());
+            if (dataList.get(position).getIcon().isEmpty()) {
+                holder.itemSessionHeadIv.setBackgroundResource(R.mipmap.ic_launcher);
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+dataList.get(position).getIcon(), holder.itemSessionHeadIv
+                        , MyBaseApplication.getApplication().getOptionsNot());
+            }
         }
         if (dataList.get(position).getSex().equals("F")) {
             holder.itemSessionGenderIv.setImageResource(R.mipmap.personal_weman_ic);
@@ -134,6 +142,14 @@ public class MessageSessionListAdapter extends BaseAdapter {
         if (dataList.get(position).getContent()!=null) {
             holder.itemSessionContentTx.setText(SmileUtils.getEmotionContent(context
                     , holder.itemSessionContentTx, dataList.get(position).getContent()));
+        }
+
+        if (dataList.get(position).getVerify_status()==-1) {
+            if (dataList.get(position).getUnreadNum()==0) {
+                holder.itemSessionContentTx.setText("暂时还没有通知");
+            }
+            holder.itemSessionVerifyImg.setVisibility(View.GONE);
+            holder.itemSessionGenderIv.setVisibility(View.GONE);
         }
 
         return convertView;

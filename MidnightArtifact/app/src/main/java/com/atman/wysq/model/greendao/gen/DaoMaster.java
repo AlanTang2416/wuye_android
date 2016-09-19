@@ -24,6 +24,8 @@ public class DaoMaster extends AbstractDaoMaster {
         AddFriendRecordDao.createTable(db, ifNotExists);
         ImMessageDao.createTable(db, ifNotExists);
         ImSessionDao.createTable(db, ifNotExists);
+        TouChuanGiftNoticeDao.createTable(db, ifNotExists);
+        TouChuanOtherNoticeDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -31,6 +33,8 @@ public class DaoMaster extends AbstractDaoMaster {
         AddFriendRecordDao.dropTable(db, ifExists);
         ImMessageDao.dropTable(db, ifExists);
         ImSessionDao.dropTable(db, ifExists);
+        TouChuanGiftNoticeDao.dropTable(db, ifExists);
+        TouChuanOtherNoticeDao.dropTable(db, ifExists);
     }
 
     /**
@@ -52,6 +56,8 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(AddFriendRecordDao.class);
         registerDaoClass(ImMessageDao.class);
         registerDaoClass(ImSessionDao.class);
+        registerDaoClass(TouChuanGiftNoticeDao.class);
+        registerDaoClass(TouChuanOtherNoticeDao.class);
     }
 
     public DaoSession newSession() {
