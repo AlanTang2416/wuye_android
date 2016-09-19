@@ -140,13 +140,6 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
         mAdapter = new MessageCenterAdapter(mContext, this);
         messagecenterListview.setEmptyView(mEmpty);
         messagecenterListview.setAdapter(mAdapter);
-
-        messagecenterListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(OtherPersonalActivity.buildIntent(mContext, ueseID));
-            }
-        });
     }
 
     private void clearView() {
@@ -183,6 +176,9 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
                         .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                         .tag(Common.NET_ADD_FRIEND).id(Common.NET_ADD_FRIEND).build()
                         .execute(new MyStringCallback(mContext, this, true));
+                break;
+            case R.id.item_messagecenter_root_ll:
+                startActivity(OtherPersonalActivity.buildIntent(mContext, mAdapter.getItem(position).getSend_userId()));
                 break;
         }
     }

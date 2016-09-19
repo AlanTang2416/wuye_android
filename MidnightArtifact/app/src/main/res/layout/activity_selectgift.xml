@@ -101,7 +101,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right|center_vertical"
-                        android:text="  金币商城"
+                        android:text="  金币商店"
                         android:drawableLeft="@mipmap/icon_person_shop"
                         android:textSize="@dimen/dimen_sp_14"
                         android:textColor="#f67d53"/>

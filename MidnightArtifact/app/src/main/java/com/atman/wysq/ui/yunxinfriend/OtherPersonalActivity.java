@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.atman.wysq.R;
 import com.atman.wysq.model.bean.AddFriendRecord;
+import com.atman.wysq.model.bean.TouChuanGiftNotice;
+import com.atman.wysq.model.bean.TouChuanOtherNotice;
 import com.atman.wysq.model.greendao.gen.AddFriendRecordDao;
 import com.atman.wysq.model.response.GetUserIndexModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
@@ -26,6 +28,10 @@ import com.base.baselibs.widget.CustomImageView;
 import com.base.baselibs.widget.PromptDialog;
 import com.base.baselibs.widget.RoundImageView;
 import com.base.baselibs.widget.pullzoom.PullZoomScrollVIew;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.CustomNotification;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tbl.okhttputils.OkHttpUtils;
 
@@ -232,11 +238,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             otherpersonalRelationshipBt.setText("删除");
             otherpersonalRelationshipTv.setText("好友");
         } else {
-            if (mAddFriendRecord.size()>0) {
-                otherpersonalRelationshipBt.setText("等待验证");
-            } else {
-                otherpersonalRelationshipBt.setText("加好友");
-            }
+            otherpersonalRelationshipBt.setText("加好友");
             otherpersonalRelationshipTv.setText("陌生人");
         }
 
@@ -404,27 +406,32 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     });
                     builder.show();
                 } else {
-                    if (otherpersonalRelationshipBt.getText().toString().equals("等待验证")) {
+                    if (mAddFriendRecord.size()>0) {
                         showToast("已请求添加\""+mGetUserIndexModel.getBody().getUserDetailBean().getNickName()+"\"为好友");
                         return;
                     }
                     // 构造自定义通知，指定接收者
-//                    CustomNotification notification = new CustomNotification();
-//                    notification.setSessionId(String.valueOf(id));
-//                    notification.setSessionType(SessionTypeEnum.P2P);
-//                    // 构建通知的具体内容。为了可扩展性，这里采用 json 格式，以 "id" 作为类型区分。
-//                    // 这里以类型 “1” 作为“正在输入”的状态通知。
-//                    TouChuanGiftNotice json = new TouChuanGiftNotice();
-//                    json.setType();
-//                    notification.setContent(json.toString());
-//                    // 发送自定义通知
-//                    NIMClient.getService(MsgService.class).sendCustomNotification(notification);
+                    CustomNotification notification = new CustomNotification();
+                    notification.setSessionId(String.valueOf(id));
+                    notification.setSessionType(SessionTypeEnum.P2P);
+                    // 构建通知的具体内容。为了可扩展性，这里采用 json 格式，以 "id" 作为类型区分。
+                    // 这里以类型 “1” 作为“正在输入”的状态通知。
+                    TouChuanOtherNotice mTouChuanOtherNotice = new TouChuanOtherNotice();
+                    mTouChuanOtherNotice.setNoticeType(1);
+                    mTouChuanOtherNotice.setSend_nickName(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
+                    mTouChuanOtherNotice.setSend_userId(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId());
+                    mTouChuanOtherNotice.setReceive_nickName(mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
+                    mTouChuanOtherNotice.setReceive_userId(mGetUserIndexModel.getBody().getUserDetailBean().getUserId());
+                    mTouChuanOtherNotice.setTime(String.valueOf(System.currentTimeMillis()));
+                    mTouChuanOtherNotice.setAddfriendType(1);
+                    notification.setContent(mGson.toJson(mTouChuanOtherNotice));
+                    // 发送自定义通知
+                    NIMClient.getService(MsgService.class).sendCustomNotification(notification);
 
                     showToast("添加好友请求已发出");
                     AddFriendRecord temp = new AddFriendRecord(null, String.valueOf(id)
                             , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID));
                     mAddFriendRecordDao.insertOrReplace(temp);
-                    otherpersonalRelationshipBt.setText("等待验证");
                 }
                 break;
             case R.id.otherpersonal_back_ll:

@@ -6,15 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.atman.wysq.R;
 import com.atman.wysq.model.bean.TouChuanOtherNotice;
 import com.atman.wysq.utils.MyTools;
 import com.base.baselibs.iimp.AdapterInterface;
-import com.base.baselibs.widget.CustomImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +94,7 @@ public class MessageCenterAdapter extends BaseAdapter {
         }
 
         holder.itemMessagecenterTypeTx.setText("");
-        if (dataList.get(position).getNoticeType()==1) {
+        if (dataList.get(position).getNoticeType() == 1) {
             if (dataList.get(position).getIsEmbalmed()) {
                 holder.itemMessagecenterOkBt.setVisibility(View.GONE);
                 holder.itemMessagecenterCancelBt.setVisibility(View.GONE);
@@ -110,7 +108,7 @@ public class MessageCenterAdapter extends BaseAdapter {
             holder.itemMessagecenterCancelBt.setVisibility(View.GONE);
         }
 
-        holder.itemMessagecenterNameTx.setText(dataList.get(position).getSend_nickName()+":");
+        holder.itemMessagecenterNameTx.setText(dataList.get(position).getSend_nickName() + ":");
         String time = String.valueOf(dataList.get(position).getTime());
         long str;
         if (time.contains(".")) {
@@ -127,6 +125,12 @@ public class MessageCenterAdapter extends BaseAdapter {
             }
         });
         holder.itemMessagecenterCancelBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdapterInterface.onItemClick(v, position);
+            }
+        });
+        holder.itemMessagecenterRootLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAdapterInterface.onItemClick(v, position);
@@ -152,6 +156,8 @@ public class MessageCenterAdapter extends BaseAdapter {
         Button itemMessagecenterCancelBt;
         @Bind(R.id.item_messagecenter_ok_bt)
         Button itemMessagecenterOkBt;
+        @Bind(R.id.item_messagecenter_root_ll)
+        LinearLayout itemMessagecenterRootLl;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

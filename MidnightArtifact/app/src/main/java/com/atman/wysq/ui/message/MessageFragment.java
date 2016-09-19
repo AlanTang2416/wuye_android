@@ -127,7 +127,7 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
                 if (mAdapter.getItem(position).getVerify_status()!=-1) {
                     PromptDialog.Builder builder = new PromptDialog.Builder(getActivity());
-                    builder.setMessage("您确定要该好友从列表中删除吗？");
+                    builder.setMessage("您确定要将该消息删除吗？");
                     builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
