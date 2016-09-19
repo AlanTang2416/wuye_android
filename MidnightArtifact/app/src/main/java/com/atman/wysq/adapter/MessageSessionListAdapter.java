@@ -145,9 +145,6 @@ public class MessageSessionListAdapter extends BaseAdapter {
         }
 
         if (dataList.get(position).getVerify_status()==-1) {
-            if (dataList.get(position).getUnreadNum()==0) {
-                holder.itemSessionContentTx.setText("暂时还没有通知");
-            }
             holder.itemSessionVerifyImg.setVisibility(View.GONE);
             holder.itemSessionGenderIv.setVisibility(View.GONE);
         }

@@ -21,6 +21,7 @@ import com.atman.wysq.model.event.YunXinMessageEvent;
 import com.atman.wysq.model.greendao.gen.DaoMaster;
 import com.atman.wysq.model.greendao.gen.DaoSession;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
+import com.atman.wysq.model.greendao.gen.TouChuanOtherNoticeDao;
 import com.atman.wysq.model.response.ChatAudioModel;
 import com.atman.wysq.model.response.ConfigModel;
 import com.atman.wysq.model.response.GetGoldenRoleModel;
@@ -202,9 +203,21 @@ public class MyBaseApplication extends BaseApplication {
                             +",getGiftIcon:"+ mTouChuanGiftNotice.getGiftIcon());
                 } else {
                     TouChuanOtherNotice mTouChuanOtherNotice = new Gson().fromJson(message.getContent(), TouChuanOtherNotice.class);
-                    getDaoSession().getTouChuanOtherNoticeDao().insert(mTouChuanOtherNotice);
 
                     if (mTouChuanOtherNotice.getNoticeType()==1) {//加好友通知
+                        TouChuanOtherNotice temp = getDaoSession().getTouChuanOtherNoticeDao().queryBuilder()
+                                .where(TouChuanOtherNoticeDao.Properties.NoticeType.eq(1)
+                                        , TouChuanOtherNoticeDao.Properties.Send_userId.eq(mTouChuanOtherNotice.getSend_userId())
+                                        ,TouChuanOtherNoticeDao.Properties.Receive_userId.eq(mTouChuanOtherNotice.getReceive_userId())).build().unique();
+                        if (temp==null) {
+                            mTouChuanOtherNotice.setTime(String.valueOf(System.currentTimeMillis()));
+                            getDaoSession().getTouChuanOtherNoticeDao().insert(mTouChuanOtherNotice);
+                        } else {
+                            temp.setIsEmbalmed(false);
+                            temp.setIsRead(0);
+                            temp.setTime(String.valueOf(System.currentTimeMillis()));
+                            getDaoSession().getTouChuanOtherNoticeDao().update(temp);
+                        }
                         EventBus.getDefault().post(new YunXinAddFriendEvent());
                     }
                 }

@@ -117,6 +117,7 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
                         showLogin();
                         return;
                     }
+                    mAdapter.clearUnreadNum(position);
                     startActivity(MessageCenterActivity.buildIntent(getActivity()));
                 }
             }
@@ -190,16 +191,25 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
             mTouChuanOtherNotice = mOtherNoticeDao.queryBuilder().orderDesc(TouChuanOtherNoticeDao.Properties.Time).build().list();
             String str = "暂时还没有通知";
             int num = 0;
-            double time = System.currentTimeMillis();
+            long time = System.currentTimeMillis();
             if (mTouChuanOtherNotice!=null && mTouChuanOtherNotice.size()>0) {
-                num = mTouChuanOtherNotice.size();
-                time = mTouChuanOtherNotice.get(0).getTime();
+                for (int i=0;i<mTouChuanOtherNotice.size();i++){
+                    if (mTouChuanOtherNotice.get(i).getIsRead()==0) {
+                        num += 1;
+                    }
+                }
+                String s = String.valueOf(mTouChuanOtherNotice.get(0).getTime());
+                if (s.contains(".")) {
+                    time = Long.parseLong(s.split("\\.")[0]);
+                } else {
+                    time = Long.parseLong(s);
+                }
                 if (mTouChuanOtherNotice.get(0).getNoticeType()==1) {
                     str = mTouChuanOtherNotice.get(0).getSend_nickName()+":请求加你为好友";
                 }
             }
             temp = new ImSession("0",PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID)
-                    ,str,"通知中心","","",-1,Math.round(time),num);
+                    ,str,"通知中心","","",-1,time,num);
             mImSession = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.NickName.notEq(""), ImSessionDao.Properties.LoginUserId.eq(
                     PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID))).build().list();
         } else {

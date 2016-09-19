@@ -176,9 +176,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             updataView();
         } else if (id == Common.NET_ADD_BLACKLIST) {
             showToast("已成功拉黑");
-        } else if (id == Common.NET_ADD_FRIEND) {
-            showToast("添加好友请求已发出");
-        } else if (id == Common.NET_DLELTE_FRIEND) {
+        }else if (id == Common.NET_DLELTE_FRIEND) {
             mGetUserIndexModel.getBody().setFriend(false);
             otherpersonalRelationshipBt.setText("加好友");
             otherpersonalRelationshipTv.setText("陌生人");
@@ -370,7 +368,6 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(Common.NET_GET_USERINDEX);
         OkHttpUtils.getInstance().cancelTag(Common.NET_ADD_BLACKLIST);
-        OkHttpUtils.getInstance().cancelTag(Common.NET_ADD_FRIEND);
         OkHttpUtils.getInstance().cancelTag(Common.NET_DLELTE_FRIEND);
     }
 
@@ -428,10 +425,6 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                             , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID));
                     mAddFriendRecordDao.insertOrReplace(temp);
                     otherpersonalRelationshipBt.setText("等待验证");
-//                    OkHttpUtils.postString().url(Common.Url_Add_Friends+id).content("").mediaType(Common.JSON)
-//                            .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
-//                            .tag(Common.NET_ADD_FRIEND).id(Common.NET_ADD_FRIEND).build()
-//                            .execute(new MyStringCallback(mContext, this, true));
                 }
                 break;
             case R.id.otherpersonal_back_ll:

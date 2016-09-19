@@ -434,6 +434,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
 
         } else {
             MyBaseApplication.getApplication().initObserver(false);
+            MyBaseApplication.getApplication().getDaoSession().getAddFriendRecordDao().deleteAll();
             finish();
             System.exit(0);
         }

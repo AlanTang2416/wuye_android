@@ -15,7 +15,7 @@ public class TouChuanOtherNotice {
     private int noticeType;
     private String drawingImage;
     private long send_userId;
-    private double time;
+    private String time;
     private int propTouchY;
     private int propTouchX;
     private int giftId;
@@ -32,6 +32,13 @@ public class TouChuanOtherNotice {
     private int addfriendType;
     private String receive_avatar;
     private int isRead;
+    private boolean isEmbalmed;
+    public boolean getIsEmbalmed() {
+        return this.isEmbalmed;
+    }
+    public void setIsEmbalmed(boolean isEmbalmed) {
+        this.isEmbalmed = isEmbalmed;
+    }
     public int getIsRead() {
         return this.isRead;
     }
@@ -128,10 +135,10 @@ public class TouChuanOtherNotice {
     public void setPropTouchY(int propTouchY) {
         this.propTouchY = propTouchY;
     }
-    public double getTime() {
+    public String getTime() {
         return this.time;
     }
-    public void setTime(double time) {
+    public void setTime(String time) {
         this.time = time;
     }
     public long getSend_userId() {
@@ -158,13 +165,14 @@ public class TouChuanOtherNotice {
     public void setId(Long id) {
         this.id = id;
     }
-    @Generated(hash = 2117382828)
+    @Generated(hash = 483648170)
     public TouChuanOtherNotice(Long id, int noticeType, String drawingImage,
-            long send_userId, double time, int propTouchY, int propTouchX,
+            long send_userId, String time, int propTouchY, int propTouchX,
             int giftId, String giftMessage, String send_avatar,
             String send_nickName, int changeBackImageIndex, long receive_userId,
             int propId, int callType, String receive_nickName, String propMessage,
-            int grabType, int addfriendType, String receive_avatar, int isRead) {
+            int grabType, int addfriendType, String receive_avatar, int isRead,
+            boolean isEmbalmed) {
         this.id = id;
         this.noticeType = noticeType;
         this.drawingImage = drawingImage;
@@ -186,6 +194,7 @@ public class TouChuanOtherNotice {
         this.addfriendType = addfriendType;
         this.receive_avatar = receive_avatar;
         this.isRead = isRead;
+        this.isEmbalmed = isEmbalmed;
     }
     @Generated(hash = 502206853)
     public TouChuanOtherNotice() {
