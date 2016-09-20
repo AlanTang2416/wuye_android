@@ -508,7 +508,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
                     if (!UiHelper.isTabletDevice(getActivity())) {
                         getActivity().startActivity(new Intent(getActivity(), AddressListInvitationActivity.class));
                     } else {
-                        showToast("你的设备不支持短信");
+                        showToast("你的设备暂不支持通讯录功能。");
                     }
                 }
                 break;

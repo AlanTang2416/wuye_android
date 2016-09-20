@@ -190,7 +190,7 @@ public class RegisterActivity extends MyBaseActivity implements EditCheckBack {
         } else if (!StringUtils.isPhone(mPhoneNumber)) {
             showToast("请输入正确的手机号");
             return true;
-        } else if (mPassWord.isEmpty() || mPassWord.length()<6) {
+        } else if ((mPassWord.isEmpty() || mPassWord.length()<6) && num==2) {
             showToast("密码长度为 6-16位");
             return true;
         } else if ((registerCodeEt.getText().toString().trim().isEmpty()

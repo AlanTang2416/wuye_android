@@ -24,6 +24,7 @@ import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.login.LoginActivity;
 import com.atman.wysq.ui.mall.order.ConfirmationOrderActivity;
+import com.atman.wysq.ui.yunxinfriend.OtherPersonalActivity;
 import com.atman.wysq.utils.Common;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.net.MyStringCallback;
@@ -406,6 +407,14 @@ public class GoodsDetailActivity extends MyBaseActivity implements ScrollViewLis
     public void onItemClick(View view, int position) {
         mPosition = position;
         switch (view.getId()) {
+            case R.id.item_goodsdetail_head_rl:
+                if (mAdapter.getItem(position).getUser_id() ==
+                        MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                    showWraning("亲，这是你自己哦！");
+                    return;
+                }
+                startActivity(OtherPersonalActivity.buildIntent(mContext, mAdapter.getItem(position).getUser_id()));
+                break;
             case R.id.item_goodsdetail_like_tv:
                 if (!isLogin()) {
                     showLogin();

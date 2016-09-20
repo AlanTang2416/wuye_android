@@ -231,6 +231,11 @@ public class MySecretListActivity extends MyBaseActivity implements AdapterInter
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.item_bloglist_head_rl:
+                if (mAdapter.getItem(position).getUser_id() ==
+                        MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                    showWraning("亲，这是你自己哦！");
+                    return;
+                }
                 startActivity(OtherPersonalActivity.buildIntent(mContext, mAdapter.getItem(position).getUser_id()));
                 break;
             case R.id.item_bloglist_browse_ll:

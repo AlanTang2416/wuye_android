@@ -135,6 +135,13 @@ public class GoodsDetailOneAdapter extends BaseAdapter {
             holder.itemGoodsdetailNameTv.setTextColor(context.getResources().getColor(R.color.color_2B2B2B));
         }
 
+        holder.itemGoodsdetailHeadRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdapterInterface.onItemClick(v, position);
+            }
+        });
+
         return convertView;
     }
 

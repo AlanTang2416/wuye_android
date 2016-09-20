@@ -44,6 +44,10 @@ public class MyBaseFragment extends BaseFragment {
         ((MyBaseActivity) getActivity()).showLogin();
     }
 
+    public void showWraning(String s) {
+        ((MyBaseActivity) getActivity()).showWraning(s);
+    }
+
     @Override
     public void clearData() {
         super.clearData();

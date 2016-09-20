@@ -14,6 +14,7 @@ import com.atman.wysq.model.response.RechargeAddOrderModel;
 import com.atman.wysq.model.response.WeiXinPayResponseModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
+import com.atman.wysq.ui.login.CoinAgreementActivity;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.widget.pay.PayDialog;
 import com.base.baselibs.iimp.AdapterInterface;
@@ -70,6 +71,12 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
         super.initWidget(v);
 
         setBarTitleTx("我的金币");
+        setBarRightTx("金币帮助").setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, CoinAgreementActivity.class));
+            }
+        });
         goldCoin = getIntent().getIntExtra("goldCoin", 0);
         convertCoin = getIntent().getIntExtra("convertCoin", 0);
 

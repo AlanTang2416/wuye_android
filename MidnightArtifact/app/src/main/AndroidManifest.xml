@@ -27,6 +27,7 @@
         <activity android:name=".ui.login.RegisterActivity"/>
         <activity android:name=".ui.login.NewPassWordActivity"/>
         <activity android:name=".ui.login.UserAgreementActivity"/>
+        <activity android:name=".ui.login.CoinAgreementActivity"/>
         <activity android:name=".ui.personal.MyInformationActivity"/>
         <activity android:name=".ui.personal.ModifyPasswordActivity"/>
         <activity android:name=".ui.personal.ModifyNickAcitvity"/>

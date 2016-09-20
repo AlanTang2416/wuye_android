@@ -216,7 +216,6 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
             temp = new ImSession("0",PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID)
                     ,"暂时还没有通知","通知中心","","",-1,System.currentTimeMillis(),0);
         }
-        mAdapter.clearData();
         mAdapter.addBody(temp);
         if (mImSession!=null) {
             mAdapter.addBody(mImSession);

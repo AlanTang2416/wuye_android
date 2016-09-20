@@ -11,6 +11,7 @@
         android:layout_marginLeft="@dimen/dimen_dp_10"
         android:layout_marginTop="@dimen/dimen_dp_5"
         android:layout_marginBottom="@dimen/dimen_dp_5"
+        android:clickable="true"
         android:layout_width="@dimen/dimen_dp_30"
         android:layout_height="@dimen/dimen_dp_30">
 

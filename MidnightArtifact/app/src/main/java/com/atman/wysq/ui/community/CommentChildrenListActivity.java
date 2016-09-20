@@ -3,12 +3,10 @@ package com.atman.wysq.ui.community;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.Button;
@@ -20,7 +18,6 @@ import android.widget.Toast;
 import com.atman.wysq.R;
 import com.atman.wysq.adapter.ChildrenCommentAdapter;
 import com.atman.wysq.model.response.GetChildrenCommentModel;
-import com.atman.wysq.model.response.GetPostingsDetailsCommentListModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.yunxinfriend.OtherPersonalActivity;
@@ -171,6 +168,11 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
             @Override
             public void onClick(View v) {
                 if (!(blogUserId == ueseID && isAnonymity)) {
+                    if (ueseID ==
+                            MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                        showWraning("亲，这是你自己哦！");
+                        return;
+                    }
                     startActivity(OtherPersonalActivity.buildIntent(mContext, ueseID));
                 }
             }
@@ -406,6 +408,11 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.item_children_comment_head_rl:
+                if (mAdapter.getItem(position).getUser_id() ==
+                        MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                    showWraning("亲，这是你自己哦！");
+                    return;
+                }
                 startActivity(OtherPersonalActivity.buildIntent(mContext, mAdapter.getItem(position).getUser_id()));
                 break;
         }

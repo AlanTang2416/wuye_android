@@ -417,6 +417,11 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             @Override
             public void onClick(View v) {
                 if (mGetBlogDetailModel!=null && mGetBlogDetailModel.getBody().get(0).getAnonymityUser() == null) {
+                    if (mGetBlogDetailModel.getBody().get(0).getUser_id()==
+                            MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                        showWraning("亲，这是你自己哦！");
+                        return;
+                    }
                     startActivity(OtherPersonalActivity.buildIntent(mContext, mGetBlogDetailModel.getBody().get(0).getUser_id()));
                 }
             }
@@ -809,6 +814,11 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                         .build().execute(new MyStringCallback(mContext, PostingsDetailActivity.this, true));
                 break;
             case R.id.item_postingsdetail_comment_head_rl:
+                if (mAdapter.getItem(position).getUser_id() ==
+                        MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                    showWraning("亲，这是你自己哦！");
+                    return;
+                }
                 startActivity(OtherPersonalActivity.buildIntent(mContext, mAdapter.getItem(position).getUser_id()));
                 break;
         }

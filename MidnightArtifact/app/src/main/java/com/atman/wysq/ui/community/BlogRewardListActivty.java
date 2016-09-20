@@ -11,7 +11,9 @@ import com.atman.wysq.adapter.RewardListViewAdapter;
 import com.atman.wysq.model.response.GetRewardListModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
+import com.atman.wysq.ui.yunxinfriend.OtherPersonalActivity;
 import com.atman.wysq.utils.Common;
+import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.net.MyStringCallback;
 import com.tbl.okhttputils.OkHttpUtils;
 
@@ -26,13 +28,14 @@ import okhttp3.Response;
  * 邮箱 bltang@atman.com
  * 电话 18578909061
  */
-public class BlogRewardListActivty extends MyBaseActivity {
+public class BlogRewardListActivty extends MyBaseActivity implements AdapterInterface {
 
     @Bind(R.id.bloglist_lv)
     ListView bloglistLv;
 
     private Context mContext = BlogRewardListActivty.this;
     private int blogId = -1;
+    private RewardListViewAdapter mRewardListViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,7 @@ public class BlogRewardListActivty extends MyBaseActivity {
         super.onStringResponse(data, response, id);
         if (id == Common.NET_GET_AWARDLIST) {
             GetRewardListModel mGetRewardListModel = mGson.fromJson(data, GetRewardListModel.class);
-            RewardListViewAdapter mRewardListViewAdapter = new RewardListViewAdapter(mContext, mGetRewardListModel.getBody());
+            mRewardListViewAdapter = new RewardListViewAdapter(mContext, mGetRewardListModel.getBody(), this);
             bloglistLv.setAdapter(mRewardListViewAdapter);
         }
     }
@@ -83,5 +86,10 @@ public class BlogRewardListActivty extends MyBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(Common.NET_GET_AWARDLIST);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        startActivity(OtherPersonalActivity.buildIntent(mContext, mRewardListViewAdapter.getItem(position).getUser_id()));
     }
 }

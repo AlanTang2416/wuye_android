@@ -13,6 +13,7 @@ import com.atman.wysq.model.response.GetRewardListModel;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.MyTools;
+import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.widget.CustomImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -34,9 +35,11 @@ public class RewardListViewAdapter extends BaseAdapter {
     private ViewHolder holder;
     protected LayoutInflater layoutInflater;
     private List<GetRewardListModel.BodyEntity> shop;
+    private AdapterInterface mAdapterInterface;
 
-    public RewardListViewAdapter(Context context, List<GetRewardListModel.BodyEntity> shop) {
+    public RewardListViewAdapter(Context context, List<GetRewardListModel.BodyEntity> shop, AdapterInterface mAdapterInterface) {
         this.context = context;
+        this.mAdapterInterface = mAdapterInterface;
         layoutInflater = LayoutInflater.from(context);
         this.shop = shop;
     }
@@ -72,6 +75,13 @@ public class RewardListViewAdapter extends BaseAdapter {
         holder.itemRewardlistviewLevelTx.setText("Lv "+shop.get(position).getUserLevel());
         holder.itemRewardlistviewTimeTv.setText(MyTools.convertTimeS(shop.get(position).getCreate_time()));
         holder.itemRewardlistviewNumTv.setText("  "+shop.get(position).getUser_award_gold_num());
+
+        holder.itemRewardlistviewHeadImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdapterInterface.onItemClick(v, position);
+            }
+        });
 
         return convertView;
     }

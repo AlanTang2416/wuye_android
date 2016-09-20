@@ -51,6 +51,7 @@ public class MessageSessionListAdapter extends BaseAdapter {
     }
 
     public void addBody(ImSession data) {
+        this.dataList.clear();
         this.dataList.add(data);
         notifyDataSetChanged();
     }

@@ -99,7 +99,7 @@ public class MoFriendsActivity extends MyBaseActivity implements AdapterInterfac
                     if (!UiHelper.isTabletDevice(mContext)) {
                         startActivity(new Intent(mContext, AddressListInvitationActivity.class));
                     } else {
-                        showToast("你的设备不支持短信");
+                        showToast("你的设备暂不支持通讯录功能。");
                     }
                 }
             }

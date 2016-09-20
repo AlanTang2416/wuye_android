@@ -297,7 +297,7 @@ public class P2PChatAdapter extends BaseAdapter {
                 break;
         }
 
-        if (isPay) {
+        if (isPay && !temp.getIsGiftMessage()) {
             holderText.itemP2pchatRightPayTx.setVisibility(View.VISIBLE);
             holderText.itemP2pchatRightPayTx.setText("-"+MyBaseApplication.kPrivateChatCost);
         } else {
@@ -336,6 +336,13 @@ public class P2PChatAdapter extends BaseAdapter {
             }
         });
         holderText.itemP2pchatRootRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mP2PAdapterInter.onItem(v, position);
+            }
+        });
+
+        holderText.itemP2pchatTextHeadleftIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mP2PAdapterInter.onItem(v, position);

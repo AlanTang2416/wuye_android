@@ -313,9 +313,9 @@ public class MyBaseApplication extends BaseApplication {
                                 , mGetMessageModel.getSendUser().getIcon(), mGetMessageModel.getSendUser().getSex()
                                 , mGetMessageModel.getSendUser().getVerify_status()
                                 , isMy, messages.get(i).getTime(), messageType
-                                , "[图片]", "", "", "", ((FileAttachment)messages.get(i).getAttachment()).getUrl()
-                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl()
-                                , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), "", "", 0, 0, false, 1);
+                                , "[图片]", "", "", "", mGetMessageModel.getContentImageSUrl()
+                                , mGetMessageModel.getContentImageSUrl()
+                                , mGetMessageModel.getContentImageSUrl(), "", "", 0, 0, false, 1);
                         if (isOriginImageHasDownloaded(messages.get(i))) {
                             AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
                             future.setCallback(callback);
