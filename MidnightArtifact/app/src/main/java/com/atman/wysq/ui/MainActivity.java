@@ -20,8 +20,10 @@ import android.widget.TextView;
 import com.atman.wysq.R;
 import com.atman.wysq.adapter.MyFragmentAdapter;
 import com.atman.wysq.model.bean.ImSession;
+import com.atman.wysq.model.bean.TouChuanOtherNotice;
 import com.atman.wysq.model.event.YunXinAuthOutEvent;
 import com.atman.wysq.model.greendao.gen.ImSessionDao;
+import com.atman.wysq.model.greendao.gen.TouChuanOtherNoticeDao;
 import com.atman.wysq.model.response.CheckVersionModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
@@ -96,6 +98,8 @@ public class MainActivity extends MyBaseActivity {
 
     private List<ImSession> mImSession;
     private ImSessionDao mImSessionDao;
+    private TouChuanOtherNoticeDao mTouChuanOtherNoticeDao;
+    private List<TouChuanOtherNotice> mTouChuanOtherNotice;
     private int rtWidth;
     private RelativeLayout.LayoutParams params;
 
@@ -155,6 +159,18 @@ public class MainActivity extends MyBaseActivity {
                 }
             }
         }
+
+        mTouChuanOtherNoticeDao = MyBaseApplication.getApplication().getDaoSession().getTouChuanOtherNoticeDao();
+        mTouChuanOtherNotice = mTouChuanOtherNoticeDao.queryBuilder().orderDesc(TouChuanOtherNoticeDao.Properties.Time).build().list();
+
+        if (mTouChuanOtherNotice!=null && mTouChuanOtherNotice.size()>0) {
+            for (int i=0;i<mTouChuanOtherNotice.size();i++){
+                if (mTouChuanOtherNotice.get(i).getIsRead()==0) {
+                    n += 1;
+                }
+            }
+        }
+
         if (n==0) {
             tabSessionUnreadTx.setVisibility(View.GONE);
         } else {

@@ -186,6 +186,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             mGetMyUserIndexModel.getBody().setFriend(false);
             otherpersonalRelationshipBt.setText("加好友");
             otherpersonalRelationshipTv.setText("陌生人");
+            MyBaseApplication.getApplication().getDaoSession().getAddFriendRecordDao().deleteAll();
         }
     }
 
@@ -428,7 +429,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     // 发送自定义通知
                     NIMClient.getService(MsgService.class).sendCustomNotification(notification);
 
-                    showToast("添加好友请求已发出");
+                    showToast("已请求添加\""+mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName()+"\"为好友");
                     AddFriendRecord temp = new AddFriendRecord(null, String.valueOf(id)
                             , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID));
                     mAddFriendRecordDao.insertOrReplace(temp);

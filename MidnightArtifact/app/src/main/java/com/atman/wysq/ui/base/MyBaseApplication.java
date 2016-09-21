@@ -534,6 +534,8 @@ public class MyBaseApplication extends BaseApplication {
         PreferenceUtil.saveIntPreference(getApplicationContext(), PreferenceUtil.PARM_YUNXIN_WRAN, 0);
         getDaoSession().getImMessageDao().deleteAll();
         getDaoSession().getImSessionDao().deleteAll();
+        getDaoSession().getTouChuanGiftNoticeDao().deleteAll();
+        getDaoSession().getTouChuanOtherNoticeDao().deleteAll();
         initObserver(false);
     }
 

@@ -120,7 +120,7 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
     private void initData() {
         mAdapter.clearData();
         mTouChuanOtherNoticeDao = MyBaseApplication.getApplication().getDaoSession().getTouChuanOtherNoticeDao();
-        mTouChuanOtherNotice = mTouChuanOtherNoticeDao.queryBuilder().build().list();
+        mTouChuanOtherNotice = mTouChuanOtherNoticeDao.queryBuilder().orderDesc(TouChuanOtherNoticeDao.Properties.Time).build().list();
         mAdapter.addBody(mTouChuanOtherNotice);
         for (int i=0;i<mTouChuanOtherNotice.size();i++) {
             mTouChuanOtherNotice.get(i).setIsRead(1);

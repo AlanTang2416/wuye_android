@@ -297,11 +297,10 @@ public class P2PChatAdapter extends BaseAdapter {
                 break;
         }
 
-        if (isPay && !temp.getIsGiftMessage()) {
+        holderText.itemP2pchatRightPayTx.setVisibility(View.GONE);
+        if (isPay && !temp.getIsGiftMessage() && temp.getIsSelfSend()) {
             holderText.itemP2pchatRightPayTx.setVisibility(View.VISIBLE);
             holderText.itemP2pchatRightPayTx.setText("-"+MyBaseApplication.kPrivateChatCost);
-        } else {
-            holderText.itemP2pchatRightPayTx.setVisibility(View.GONE);
         }
 
         final ViewHolder finalHolderText = holderText;

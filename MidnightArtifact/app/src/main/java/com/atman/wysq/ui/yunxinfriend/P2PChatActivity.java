@@ -571,17 +571,19 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     public void onStringResponse(String data, Response response, int id) {
         super.onStringResponse(data, response, id);
         if (id == Common.NET_SEEDMESSAGE_PAY) {
-            isPay();
+            isPay(true);
         }
     }
 
-    private boolean isPay() {
+    private boolean isPay(boolean b) {
         int price = Integer.parseInt(MyBaseApplication.kPrivateChatCost);
         int myCion = MyBaseApplication.getApplication().mGetMyUserIndexModel
                 .getBody().getUserDetailBean().getUserExt().getGold_coin();
         if (myCion-price>=0) {
-            MyBaseApplication.getApplication().mGetMyUserIndexModel
-                    .getBody().getUserDetailBean().getUserExt().setGold_coin(myCion-price);
+            if (b) {
+                MyBaseApplication.getApplication().mGetMyUserIndexModel
+                        .getBody().getUserDetailBean().getUserExt().setGold_coin(myCion-price);
+            }
             return true;
         } else {
             return false;
@@ -734,7 +736,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     }
 
     private void seedMessage(IMMessage message, int contentType, String contentImageSUrl, String contentFinger, boolean isGiftMessage) {
-        if (isPay && !isPay()) {
+        if (isPay && !isPay(false)) {
             PromptDialog.Builder builder = new PromptDialog.Builder(mContext);
             builder.setMessage("你的金币余额不足，无法发送私信");
             builder.setPositiveButton("知道了", new DialogInterface.OnClickListener() {
@@ -846,7 +848,8 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     }
 
     private void payCion(ImMessage temp) {
-        if (temp.getContentType()==ContentTypeInter.contentTypeImageSmall) {
+        if (temp.getContentType()==ContentTypeInter.contentTypeImageSmall || temp.getIsGiftMessage()
+                || MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()==1) {
             return;
         }
 //        String s = temp.getContent();

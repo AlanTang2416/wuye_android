@@ -134,7 +134,7 @@ public class ChildrenCommentAdapter extends BaseAdapter {
                 }
             }
         });
-        if (isAnonymity) {
+        if (isAnonymity && shop.get(position).getUser_id() == blogUserId) {
             holder.itemChildrenCommentNameTv.setText("匿名用户");
             holder.itemChildrenCommentGenderIv.setVisibility(View.GONE);
             holder.itemChildrenCommentVerifyImg.setVisibility(View.GONE);

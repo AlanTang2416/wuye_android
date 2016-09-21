@@ -94,6 +94,7 @@ public class PostingsByClassificationFragment extends MyBaseFragment implements 
         postingsTopLl = (LinearLayout) mTopRootView.findViewById(R.id.postings_top_ll);
 
         mAdapter = new PostingListAdapter(getActivity(), getmWidth(), this);
+        mAdapter.setTypeId(typeId);
         pullToRefreshListView.setEmptyView(mEmpty);
         pullToRefreshListView.getRefreshableView().addHeaderView(mTopRootView);
         pullToRefreshListView.setAdapter(mAdapter);
