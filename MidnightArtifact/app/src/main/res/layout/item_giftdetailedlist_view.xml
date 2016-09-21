@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_giftdetailedlist_root_rl"
+    android:background="@color/color_white"
+    android:clickable="true"
+    android:paddingLeft="@dimen/dimen_dp_10"
+    android:paddingRight="@dimen/dimen_dp_10"
+    android:paddingTop="@dimen/dimen_dp_5"
+    android:paddingBottom="@dimen/dimen_dp_5"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/item_giftdetailedlist_head_rl"
+        android:layout_centerVertical="true"
+        android:layout_width="@dimen/dimen_dp_45"
+        android:layout_height="@dimen/dimen_dp_45">
+
+        <com.base.baselibs.widget.CustomImageView
+            xmlns:img="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/item_giftdetailedlist_head_iv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            img:circle="false"
+            img:radius="@dimen/dimen_dp_5"
+            android:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/item_giftdetailedlist_gender_iv"
+            android:layout_width="@dimen/dimen_dp_15"
+            android:layout_height="@dimen/dimen_dp_15"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/personal_name_tx"
+            android:src="@mipmap/personal_man_ic"/>
+
+        <com.base.baselibs.widget.CustomImageView
+            xmlns:img="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/item_giftdetailedlist_verify_img"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_dp_13"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            img:circle="false"
+            img:radius="@dimen/dimen_dp_5"
+            android:src="@mipmap/personal_identification"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/item_giftdetailedlist_ll1"
+        android:layout_toRightOf="@+id/item_giftdetailedlist_head_rl"
+        android:layout_marginLeft="@dimen/dimen_dp_10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/item_giftdetailedlist_name_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dimen_sp_15"
+            android:text="名字"
+            android:textColor="#484848"/>
+
+        <TextView
+            android:id="@+id/item_giftdetailedlist_level_tx"
+            android:layout_marginLeft="@dimen/dimen_dp_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dimen_dp_3"
+            android:paddingRight="@dimen/dimen_dp_3"
+            android:text="LV.2"
+            android:background="@drawable/level_blue_frame_bg"
+            android:textSize="@dimen/dimen_sp_10"
+            android:textColor="#54BEF9"/>
+
+        <TextView
+            android:id="@+id/item_giftdetailedlist_vip_tx"
+            android:layout_marginLeft="@dimen/dimen_dp_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dimen_dp_3"
+            android:paddingRight="@dimen/dimen_dp_3"
+            android:text="VIP.2"
+            android:visibility="gone"
+            android:background="@drawable/level_red_frame_bg"
+            android:textSize="@dimen/dimen_sp_10"
+            android:textColor="#f1908b"/>
+
+        <ImageView
+            android:id="@+id/item_giftdetailedlist_svip_iv"
+            android:layout_width="@dimen/dimen_dp_45"
+            android:layout_height="@dimen/dimen_dp_15"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/dimen_dp_3"
+            android:layout_marginTop="@dimen/dimen_dp_5"
+            android:visibility="gone"
+            android:src="@mipmap/other_svip_ic" />
+
+        <TextView
+            android:id="@+id/item_giftdetailedlist_time_tx"
+            android:layout_weight="1"
+            android:layout_below="@+id/item_giftdetailedlist_ll1"
+            android:gravity="right"
+            android:textSize="@dimen/dimen_sp_12"
+            android:text=""
+            android:textColor="#a0a0a0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/item_giftdetailedlist_ll1"
+        android:layout_marginLeft="@dimen/dimen_dp_10"
+        android:layout_marginTop="@dimen/dimen_dp_10"
+        android:layout_toRightOf="@+id/item_giftdetailedlist_head_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <TextView
+            android:textSize="@dimen/dimen_sp_15"
+            android:text="送你"
+            android:layout_marginRight="@dimen/dimen_dp_10"
+            android:textColor="#54BEF9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/item_giftdetailedlist_gift_tx"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="@dimen/dimen_dp_30"
+            android:layout_height="@dimen/dimen_dp_30" />
+
+        <TextView
+            android:id="@+id/item_giftdetailedlist_num_tx"
+            android:textSize="@dimen/dimen_sp_15"
+            android:text="x2"
+            android:layout_marginLeft="@dimen/dimen_dp_10"
+            android:textColor="#54BEF9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,8 +16,6 @@ import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.utils.Common;
 import com.base.baselibs.net.MyStringCallback;
-import com.base.baselibs.util.DensityUtil;
-import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.MyGridView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tbl.okhttputils.OkHttpUtils;
@@ -26,6 +25,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.Response;
 
 /**
@@ -100,6 +100,16 @@ public class MyGiftActivity extends MyBaseActivity {
     private void initGridView() {
         mAdapter = new MyGiftGridViewAdapter(mContext);
         mygiftListGv.setAdapter(mAdapter);
+        mygiftListGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                toGiftDetailed(mAdapter.getItem(position).getGift_id());
+            }
+        });
+    }
+
+    private void toGiftDetailed(int gift_id) {
+        startActivity(GiftDetailedListActivity.buildIntent(mContext, gift_id));
     }
 
     @Override
@@ -136,55 +146,55 @@ public class MyGiftActivity extends MyBaseActivity {
             }
         }
 
-        RelativeLayout.LayoutParams paramsOne = (RelativeLayout.LayoutParams)itemMygiftNameOneTx.getLayoutParams();
-        paramsOne.setMargins(0, 0, getmWidth()/10, 0);
+        RelativeLayout.LayoutParams paramsOne = (RelativeLayout.LayoutParams) itemMygiftNameOneTx.getLayoutParams();
+        paramsOne.setMargins(0, 0, getmWidth() / 10, 0);
         itemMygiftNameOneTx.setLayoutParams(paramsOne);
-        RelativeLayout.LayoutParams paramsTwo = (RelativeLayout.LayoutParams)itemMygiftNumTwoTx.getLayoutParams();
-        paramsTwo.setMargins(0, 0, getmWidth()/10, 0);
+        RelativeLayout.LayoutParams paramsTwo = (RelativeLayout.LayoutParams) itemMygiftNumTwoTx.getLayoutParams();
+        paramsTwo.setMargins(0, 0, getmWidth() / 10, 0);
         itemMygiftNumTwoTx.setLayoutParams(paramsTwo);
-        RelativeLayout.LayoutParams paramsThree = (RelativeLayout.LayoutParams)itemMygiftNumThreeTx.getLayoutParams();
-        paramsThree.setMargins(0, 0, getmWidth()/3, 0);
+        RelativeLayout.LayoutParams paramsThree = (RelativeLayout.LayoutParams) itemMygiftNumThreeTx.getLayoutParams();
+        paramsThree.setMargins(0, 0, getmWidth() / 3, 0);
         itemMygiftNumThreeTx.setLayoutParams(paramsThree);
 
-        for (int i=0;i<listGVBottom.size();i++) {
+        for (int i = 0; i < listGVBottom.size(); i++) {
             switch (i) {
                 case 0:
                     itemMygiftNameOneTx.setText(listGVBottom.get(i).getName());
-                    if (listGVBottom.get(i).getUser_count()==0) {
+                    if (listGVBottom.get(i).getUser_count() == 0) {
                         itemMygiftNumOneTx.setVisibility(View.GONE);
-                        ImageLoader.getInstance().displayImage(Common.ImageUrl+listGVBottom.get(i).getGray_pic_url()
-                                ,itemMygiftOneImg, MyBaseApplication.getApplication().getOptionsNot());
+                        ImageLoader.getInstance().displayImage(Common.ImageUrl + listGVBottom.get(i).getGray_pic_url()
+                                , itemMygiftOneImg, MyBaseApplication.getApplication().getOptionsNot());
                     } else {
                         itemMygiftNumOneTx.setVisibility(View.VISIBLE);
-                        itemMygiftNumOneTx.setText("x"+listGVBottom.get(i).getUser_count());
-                        ImageLoader.getInstance().displayImage(Common.ImageUrl+listGVBottom.get(i).getPic_url()
-                                ,itemMygiftOneImg, MyBaseApplication.getApplication().getOptionsNot());
+                        itemMygiftNumOneTx.setText("x" + listGVBottom.get(i).getUser_count());
+                        ImageLoader.getInstance().displayImage(Common.ImageUrl + listGVBottom.get(i).getPic_url()
+                                , itemMygiftOneImg, MyBaseApplication.getApplication().getOptionsNot());
                     }
                     break;
                 case 1:
                     itemMygiftNameTwoTx.setText(listGVBottom.get(i).getName());
-                    if (listGVBottom.get(i).getUser_count()==0) {
+                    if (listGVBottom.get(i).getUser_count() == 0) {
                         itemMygiftNumTwoTx.setVisibility(View.GONE);
-                        ImageLoader.getInstance().displayImage(Common.ImageUrl+listGVBottom.get(i).getGray_pic_url()
-                                ,itemMygiftTwoImg, MyBaseApplication.getApplication().getOptionsNot());
+                        ImageLoader.getInstance().displayImage(Common.ImageUrl + listGVBottom.get(i).getGray_pic_url()
+                                , itemMygiftTwoImg, MyBaseApplication.getApplication().getOptionsNot());
                     } else {
                         itemMygiftNumTwoTx.setVisibility(View.VISIBLE);
-                        itemMygiftNumTwoTx.setText("x"+listGVBottom.get(i).getUser_count());
-                        ImageLoader.getInstance().displayImage(Common.ImageUrl+listGVBottom.get(i).getPic_url()
-                                ,itemMygiftTwoImg, MyBaseApplication.getApplication().getOptionsNot());
+                        itemMygiftNumTwoTx.setText("x" + listGVBottom.get(i).getUser_count());
+                        ImageLoader.getInstance().displayImage(Common.ImageUrl + listGVBottom.get(i).getPic_url()
+                                , itemMygiftTwoImg, MyBaseApplication.getApplication().getOptionsNot());
                     }
                     break;
                 case 2:
                     itemMygiftNameThreeTx.setText(listGVBottom.get(i).getName());
-                    if (listGVBottom.get(i).getUser_count()==0) {
+                    if (listGVBottom.get(i).getUser_count() == 0) {
                         itemMygiftNumThreeTx.setVisibility(View.GONE);
-                        ImageLoader.getInstance().displayImage(Common.ImageUrl+listGVBottom.get(i).getGray_pic_url()
-                                ,itemMygiftThreeImg, MyBaseApplication.getApplication().getOptionsNot());
+                        ImageLoader.getInstance().displayImage(Common.ImageUrl + listGVBottom.get(i).getGray_pic_url()
+                                , itemMygiftThreeImg, MyBaseApplication.getApplication().getOptionsNot());
                     } else {
                         itemMygiftNumThreeTx.setVisibility(View.VISIBLE);
-                        itemMygiftNumThreeTx.setText("x"+listGVBottom.get(i).getUser_count());
-                        ImageLoader.getInstance().displayImage(Common.ImageUrl+listGVBottom.get(i).getPic_url()
-                                ,itemMygiftThreeImg, MyBaseApplication.getApplication().getOptionsNot());
+                        itemMygiftNumThreeTx.setText("x" + listGVBottom.get(i).getUser_count());
+                        ImageLoader.getInstance().displayImage(Common.ImageUrl + listGVBottom.get(i).getPic_url()
+                                , itemMygiftThreeImg, MyBaseApplication.getApplication().getOptionsNot());
                     }
                     break;
             }
@@ -200,5 +210,20 @@ public class MyGiftActivity extends MyBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(Common.NET_GET_MYGIFTLIST);
+    }
+
+    @OnClick({R.id.item_mygift_one_rl, R.id.item_mygift_two_rl, R.id.item_mygift_three_rl})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.item_mygift_one_rl:
+                toGiftDetailed(listGVBottom.get(0).getGift_id());
+                break;
+            case R.id.item_mygift_two_rl:
+                toGiftDetailed(listGVBottom.get(1).getGift_id());
+                break;
+            case R.id.item_mygift_three_rl:
+                toGiftDetailed(listGVBottom.get(2).getGift_id());
+                break;
+        }
     }
 }

@@ -37,6 +37,7 @@
         <activity android:name=".ui.personal.TaskListActivity"/>
         <activity android:name=".ui.personal.RechargeActivity"/>
         <activity android:name=".ui.personal.MyGiftActivity"/>
+        <activity android:name=".ui.personal.GiftDetailedListActivity"/>
         <activity android:name=".ui.base.BaseGestureLockActivity" android:launchMode="singleTask"/>
         <activity android:name=".ui.base.WebPageActivity"/>
         <activity android:name=".ui.mall.TwoLevelCategoryListActivity"/>

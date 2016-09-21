@@ -12,6 +12,8 @@
         android:paddingTop="@dimen/dimen_dp_5">
 
         <RelativeLayout
+            android:id="@+id/item_mygift_one_rl"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -49,6 +51,8 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/item_mygift_two_rl"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -88,6 +92,8 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/item_mygift_three_rl"
+        android:clickable="true"
         android:paddingBottom="@dimen/dimen_dp_5"
         android:paddingTop="@dimen/dimen_dp_5"
         android:layout_width="match_parent"

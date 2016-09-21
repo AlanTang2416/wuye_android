@@ -163,6 +163,8 @@ public class Common {
     public static String Url_SeedMessage_Pay = hostUrl + "rest/chat/send";
     //获取我的用户礼物列表
     public static String Url_Get_MyGiftList = hostUrl + "rest/gift/userList";
+    //获取礼物清单
+    public static String Url_Get_GiftDetailedList = hostUrl + "rest/gift/userList/";
     /**************************http访问路径*****************************/
 
 
@@ -300,6 +302,8 @@ public class Common {
     public static int NET_SEEDMESSAGE_PAY = 65;
     //获取我的用户礼物列表
     public static int NET_GET_MYGIFTLIST = 66;
+    //获取礼物清单
+    public static int NET_GET_GIFTDETAILEDLIST = 67;
     /**************************http访问回应识别码*****************************/
 
 
