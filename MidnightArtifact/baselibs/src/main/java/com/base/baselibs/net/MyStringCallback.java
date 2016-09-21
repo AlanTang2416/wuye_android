@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.tbl.okhttputils.callback.StringCallback;
 import com.tbl.okhttputils.utils.L;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -102,18 +104,7 @@ public class MyStringCallback extends StringCallback {
             if (mBaseErrorThreeModel.getBody().getError_code().equals("20030")) {
 //                CustomToast.showToast(mContext, mBaseErrorThreeModel.getBody().getError_description(), 50000);
 //                CallBack.clearData();
-                PromptDialog.Builder builder = new PromptDialog.Builder(mContext);
-                builder.setTitle("账号异常");
-                builder.setMessage("您的账号已在别处登录，请退出登录，如非您本人操作，请尽快修改您的密码！");
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        CallBack.clearData();
-                    }
-                });
-                builder.setCancelable(false);
-                builder.show();
+                EventBus.getDefault().post(new YunXinAuthOutEvent());
             } else {
                 CallBack.onError(null, new IOException(mBaseErrorThreeModel.getBody().getError_description()), 200, id);
             }
