@@ -177,7 +177,7 @@ public class P2PChatAdapter extends BaseAdapter {
             if (holderText.itemP2pchatTextHeadrightIv.getDrawable() == null || rightChange) {
                 rightChange = false;
                 ImageLoader.getInstance().displayImage(Common.ImageUrl +
-                        MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                        MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
                         , holderText.itemP2pchatTextHeadrightIv, MyBaseApplication.getApplication().getOptionsNot(), mListener);
             }
         } else {

@@ -56,7 +56,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
 
     private Context mContext = OtherPersonalActivity.this;
     private long id;
-    private GetUserIndexModel mGetUserIndexModel;
+    private GetUserIndexModel mGetMyUserIndexModel;
     private List<AddFriendRecord> mAddFriendRecord;
     private AddFriendRecordDao mAddFriendRecordDao;
 
@@ -178,43 +178,43 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     public void onStringResponse(String data, Response response, int id) {
         super.onStringResponse(data, response, id);
         if (id == Common.NET_GET_USERINDEX) {
-            mGetUserIndexModel = mGson.fromJson(data, GetUserIndexModel.class);
+            mGetMyUserIndexModel = mGson.fromJson(data, GetUserIndexModel.class);
             updataView();
         } else if (id == Common.NET_ADD_BLACKLIST) {
             showToast("已成功拉黑");
         }else if (id == Common.NET_DLELTE_FRIEND) {
-            mGetUserIndexModel.getBody().setFriend(false);
+            mGetMyUserIndexModel.getBody().setFriend(false);
             otherpersonalRelationshipBt.setText("加好友");
             otherpersonalRelationshipTv.setText("陌生人");
         }
     }
 
     private void updataView() {
-        otherpersonalNameTx.setText(mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
-        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()>=3) {
+        otherpersonalNameTx.setText(mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName());
+        if (mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()>=3) {
             otherpersonalNameTx.setTextColor(getResources().getColor(R.color.color_red));
         } else {
             otherpersonalNameTx.setTextColor(getResources().getColor(R.color.color_7F2505));
         }
-        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()>=4) {
+        if (mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()>=4) {
             otherpersonalVipTx.setVisibility(View.GONE);
             otherpersonalSvipIv.setVisibility(View.VISIBLE);
         } else {
             otherpersonalSvipIv.setVisibility(View.GONE);
-            if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()==0) {
+            if (mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()==0) {
                 otherpersonalVipTx.setVisibility(View.GONE);
             } else {
-                otherpersonalVipTx.setText("VIP."+mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level());
+                otherpersonalVipTx.setText("VIP."+mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level());
                 otherpersonalVipTx.setVisibility(View.VISIBLE);
             }
         }
-        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("M")) {
+        if (mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("M")) {
             otherpersonalGenderIv.setImageResource(R.mipmap.personal_man_ic);
         } else {
             otherpersonalGenderIv.setImageResource(R.mipmap.personal_weman_ic);
         }
-        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("F")) {
-            if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()==1) {//已认证
+        if (mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex().equals("F")) {
+            if (mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()==1) {//已认证
                 otherpersonalGenderIv.setVisibility(View.GONE);
                 otherpersonalHeadVerifyImg.setVisibility(View.VISIBLE);
             } else {//没认证
@@ -224,17 +224,17 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
         } else {
             otherpersonalHeadVerifyImg.setVisibility(View.GONE);
         }
-        ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+        ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
                 ,otherpersonalHeadIv,MyBaseApplication.getApplication().getOptionsNot());
 
-        otherpersonalDynamicNumberTx.setText(""+mGetUserIndexModel.getBody().getBlogImageMap().getDataSize());
+        otherpersonalDynamicNumberTx.setText(""+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataSize());
         initDynamicIV();
 
         initVisitorIV();
 
         initguardianIV();
 
-        if (mGetUserIndexModel.getBody().isFriend()) {
+        if (mGetMyUserIndexModel.getBody().isFriend()) {
             otherpersonalRelationshipBt.setText("删除");
             otherpersonalRelationshipTv.setText("好友");
         } else {
@@ -242,40 +242,40 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             otherpersonalRelationshipTv.setText("陌生人");
         }
 
-        otherpersonalOftenaddrTv.setText(mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getAround_site());
+        otherpersonalOftenaddrTv.setText(mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getAround_site());
     }
 
     private void initguardianIV() {
-        int num = mGetUserIndexModel.getBody().getGuardlist().size();
+        int num = mGetMyUserIndexModel.getBody().getGuardlist().size();
         if (num==1) {
             otherpersonalGuardianOneRl.setVisibility(View.GONE);
             otherpersonalGuardianTwoRl.setVisibility(View.GONE);
             otherpersonalGuardianThreeRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_one);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getGuardlist().get(0).getIcon()
                     ,otherpersonalGuardianThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==2) {
             otherpersonalGuardianOneRl.setVisibility(View.GONE);
             otherpersonalGuardianTwoRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianThreeRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianTopTwoIv.setImageResource(R.mipmap.other_guard_one);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getGuardlist().get(0).getIcon()
                     ,otherpersonalGuardianTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             otherpersonalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_two);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(1).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getGuardlist().get(1).getIcon()
                     ,otherpersonalGuardianThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num>=3) {
             otherpersonalGuardianOneRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianTwoRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianThreeRl.setVisibility(View.VISIBLE);
             otherpersonalGuardianTopOneIv.setImageResource(R.mipmap.other_guard_one);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(0).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getGuardlist().get(0).getIcon()
                     ,otherpersonalGuardianOneIv,MyBaseApplication.getApplication().getOptionsNot());
             otherpersonalGuardianTopTwoIv.setImageResource(R.mipmap.other_guard_two);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(1).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getGuardlist().get(1).getIcon()
                     ,otherpersonalGuardianTwoIv,MyBaseApplication.getApplication().getOptionsNot());
             otherpersonalGuardianTopThreeIv.setImageResource(R.mipmap.other_guard_three);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGuardlist().get(2).getIcon()
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getGuardlist().get(2).getIcon()
                     ,otherpersonalGuardianThreeIv,MyBaseApplication.getApplication().getOptionsNot());
         }
     }
@@ -283,11 +283,11 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     private List<GetUserIndexModel.BodyEntity.VisitorMapEntity.VisitorListEntity> dataList = new ArrayList<>();
     private int num;
     private void initVisitorIV() {
-        num = mGetUserIndexModel.getBody().getVisitorMap().getVisitorSize();
+        num = mGetMyUserIndexModel.getBody().getVisitorMap().getVisitorSize();
         dataList.clear();
-        for (int i=0;i<mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();i++) {
-            if (mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i).getUser_id()!= id) {
-                dataList.add(mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i));
+        for (int i=0;i<mGetMyUserIndexModel.getBody().getVisitorMap().getVisitorList().size();i++) {
+            if (mGetMyUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i).getUser_id()!= id) {
+                dataList.add(mGetMyUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i));
             } else {
                 num -= 1;
             }
@@ -321,46 +321,46 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     }
 
     private void initDynamicIV() {
-        int num = mGetUserIndexModel.getBody().getBlogImageMap().getDataList().size();
+        int num = mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().size();
         if (num==1) {
             otherpersonalDynmicOneIv.setVisibility(View.GONE);
             otherpersonalDynmicTwoIv.setVisibility(View.GONE);
             otherpersonalDynmicThreeIv.setVisibility(View.GONE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
                     ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==2) {
             otherpersonalDynmicOneIv.setVisibility(View.GONE);
             otherpersonalDynmicTwoIv.setVisibility(View.GONE);
             otherpersonalDynmicThreeIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
                     ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
                     ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num==3) {
             otherpersonalDynmicOneIv.setVisibility(View.GONE);
             otherpersonalDynmicTwoIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicThreeIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(2)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().get(2)
                     ,otherpersonalDynmicTwoIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
                     ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
                     ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         } else if (num>=4) {
             otherpersonalDynmicOneIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicTwoIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicThreeIv.setVisibility(View.VISIBLE);
             otherpersonalDynmicFourIv.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(3)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().get(3)
                     ,otherpersonalDynmicOneIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(2)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().get(2)
                     ,otherpersonalDynmicTwoIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().get(1)
                     ,otherpersonalDynmicThreeIv,MyBaseApplication.getApplication().getOptionsNot());
-            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
+            ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetMyUserIndexModel.getBody().getBlogImageMap().getDataList().get(0)
                     ,otherpersonalDynmicFourIv,MyBaseApplication.getApplication().getOptionsNot());
         }
     }
@@ -381,11 +381,11 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     showLogin();
                     return;
                 }
-                if (id==MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                if (id==MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                     showWraning("亲，这是你自己哦！");
                     return;
                 }
-                if (mGetUserIndexModel.getBody().isFriend()) {
+                if (mGetMyUserIndexModel.getBody().isFriend()) {
                     PromptDialog.Builder builder = new PromptDialog.Builder(this);
                     builder.setMessage("您确定要删除好友吗？");
                     builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
@@ -407,7 +407,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     builder.show();
                 } else {
                     if (mAddFriendRecord.size()>0) {
-                        showToast("已请求添加\""+mGetUserIndexModel.getBody().getUserDetailBean().getNickName()+"\"为好友");
+                        showToast("已请求添加\""+mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName()+"\"为好友");
                         return;
                     }
                     // 构造自定义通知，指定接收者
@@ -418,10 +418,10 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     // 这里以类型 “1” 作为“正在输入”的状态通知。
                     TouChuanOtherNotice mTouChuanOtherNotice = new TouChuanOtherNotice();
                     mTouChuanOtherNotice.setNoticeType(1);
-                    mTouChuanOtherNotice.setSend_nickName(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
-                    mTouChuanOtherNotice.setSend_userId(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId());
-                    mTouChuanOtherNotice.setReceive_nickName(mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
-                    mTouChuanOtherNotice.setReceive_userId(mGetUserIndexModel.getBody().getUserDetailBean().getUserId());
+                    mTouChuanOtherNotice.setSend_nickName(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName());
+                    mTouChuanOtherNotice.setSend_userId(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId());
+                    mTouChuanOtherNotice.setReceive_nickName(mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName());
+                    mTouChuanOtherNotice.setReceive_userId(mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId());
                     mTouChuanOtherNotice.setTime(String.valueOf(System.currentTimeMillis()));
                     mTouChuanOtherNotice.setAddfriendType(1);
                     notification.setContent(mGson.toJson(mTouChuanOtherNotice));
@@ -438,14 +438,14 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.otherpersonal_visitor_ll:
-                if (!isLogin() || MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<1) {
+                if (!isLogin() || MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<1) {
                     showWraning("VIP.1以上用户才有权限查看");
                     return;
                 }
                 startActivity(HisVisitorActivity.buildIntent(mContext, id, "TA的访客", num));
                 break;
             case R.id.otherpersonal_friends_ll:
-                if (!isLogin() || MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<2) {
+                if (!isLogin() || MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()<2) {
                     showWraning("VIP.2以上用户才有权限查看");
                     return;
                 }
@@ -462,15 +462,15 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                     showLogin();
                     return;
                 }
-                if (id==MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                if (id==MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                     showWraning("亲，这是你自己哦！");
                     return;
                 }
                 startActivity(P2PChatActivity.buildIntent(mContext, String.valueOf(id)
-                        , mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
-                        , mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
-                        , mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
-                        , mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()));
+                        , mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName()
+                        , mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                        , mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                        , mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()));
                 break;
         }
     }
@@ -489,7 +489,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
                 if (which == 0) {//举报
                     startActivity(ReportActivity.buildIntent(mContext, id, 1));
                 } else if (which == 1) {//把TA加入黑名单
-                    if (MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id() == id) {
+                    if (MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id() == id) {
                         showToast("不能将自己加入黑名单");
                         return;
                     }

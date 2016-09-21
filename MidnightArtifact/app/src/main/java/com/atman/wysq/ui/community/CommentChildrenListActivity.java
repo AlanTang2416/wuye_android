@@ -169,7 +169,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
             public void onClick(View v) {
                 if (!(blogUserId == ueseID && isAnonymity)) {
                     if (ueseID ==
-                            MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                            MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                         showWraning("亲，这是你自己哦！");
                         return;
                     }
@@ -341,13 +341,13 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
                 GetChildrenCommentModel.BodyEntity body = new GetChildrenCommentModel.BodyEntity();
                 body.setContent(blogdetailAddcommentEt.getText().toString().trim());
                 body.setCreate_time(System.currentTimeMillis());
-                body.setIcon(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon());
-                body.setSex(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex());
-                body.setVerify_status(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status());
-                body.setUserLevel(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUserLevel());
-                body.setUser_name(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getNick_name());
-                body.setUser_id(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id());
-                body.setVip_level(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level());
+                body.setIcon(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon());
+                body.setSex(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex());
+                body.setVerify_status(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status());
+                body.setUserLevel(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getUserLevel());
+                body.setUser_name(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getNick_name());
+                body.setUser_id(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id());
+                body.setVip_level(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level());
                 mAdapter.addBody(body);
             }
             blogdetailAddcommentEt.setText("");
@@ -409,7 +409,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
         switch (view.getId()) {
             case R.id.item_children_comment_head_rl:
                 if (mAdapter.getItem(position).getUser_id() ==
-                        MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                        MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                     showWraning("亲，这是你自己哦！");
                     return;
                 }

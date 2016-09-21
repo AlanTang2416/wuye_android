@@ -133,13 +133,13 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             mImMessageDelete = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(mAdapter.getItem(position).getUserId()), ImMessageDao.Properties.LoginUserId.eq(
-                                    String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().list();
+                                    String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().list();
                             for (ImMessage imMessageDelete : mImMessageDelete) {
                                 mImMessageDao.delete(imMessageDelete);
                             }
 
                             mImSessionDelete = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(mAdapter.getItem(position).getUserId()), ImSessionDao.Properties.LoginUserId.eq(
-                                    String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().unique();
+                                    String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().unique();
                             if (mImSessionDelete!=null) {
                                 mImSessionDao.delete(mImSessionDelete);
                                 mAdapter.deleteItemById(position);

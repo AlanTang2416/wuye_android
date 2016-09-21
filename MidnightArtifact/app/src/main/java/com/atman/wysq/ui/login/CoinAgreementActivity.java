@@ -25,6 +25,6 @@ public class CoinAgreementActivity extends MyBaseActivity {
     @Override
     public void initWidget(View... v) {
         super.initWidget(v);
-        setBarTitleTx("午夜神器用户协议");
+        setBarTitleTx("如何赚取金币");
     }
 }

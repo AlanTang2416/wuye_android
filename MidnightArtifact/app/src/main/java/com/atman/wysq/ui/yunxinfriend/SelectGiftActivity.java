@@ -174,7 +174,7 @@ public class SelectGiftActivity extends MyBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        myCion = MyBaseApplication.getApplication().mGetUserIndexModel
+        myCion = MyBaseApplication.getApplication().mGetMyUserIndexModel
                 .getBody().getUserDetailBean().getUserExt().getGold_coin();
         selectgiftMycionTx.setText("金币余额：" + myCion);
     }
@@ -216,8 +216,8 @@ public class SelectGiftActivity extends MyBaseActivity {
                     showLogin();
                 } else {
                     startActivity(RechargeActivity.buildIntent(mContext
-                            , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getGold_coin()
-                            , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getConvert_coin()));
+                            , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getGold_coin()
+                            , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getConvert_coin()));
                 }
                 break;
         }
@@ -225,7 +225,7 @@ public class SelectGiftActivity extends MyBaseActivity {
 
     public void backResuilt (String url, String text, int price) {
         if (myCion-price>=0) {
-            MyBaseApplication.getApplication().mGetUserIndexModel
+            MyBaseApplication.getApplication().mGetMyUserIndexModel
                     .getBody().getUserDetailBean().getUserExt().setGold_coin(myCion-price);
         }
         Intent mIntent = new Intent();

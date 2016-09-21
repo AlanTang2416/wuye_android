@@ -141,7 +141,7 @@ public class SelectGiftFragment extends MyBaseFragment implements AdapterInterfa
     @Override
     public void onResume() {
         super.onResume();
-        cionNum = MyBaseApplication.getApplication().mGetUserIndexModel
+        cionNum = MyBaseApplication.getApplication().mGetMyUserIndexModel
                 .getBody().getUserDetailBean().getUserExt().getGold_coin();
         if (mAdapter!=null) {
             mAdapter.setMyCion(cionNum);

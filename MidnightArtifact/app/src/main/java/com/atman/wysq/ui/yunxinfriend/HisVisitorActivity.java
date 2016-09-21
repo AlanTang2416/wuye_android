@@ -199,7 +199,7 @@ public class HisVisitorActivity extends MyBaseActivity implements AdapterInterfa
 
     @Override
     public void onItemClick(View view, int position) {
-        if (mAdapter.getItem(position).getUser_id() == MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+        if (mAdapter.getItem(position).getUser_id() == MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
             showWraning("亲，这是你自己哦！");
             return;
         }

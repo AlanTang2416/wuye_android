@@ -12,6 +12,7 @@ import com.atman.wysq.R;
 import com.atman.wysq.model.event.YunXinAuthOutEvent;
 import com.atman.wysq.model.request.LoginRequestModel;
 import com.atman.wysq.model.response.GetChatTokenModel;
+import com.atman.wysq.model.response.GetMyUserIndexModel;
 import com.atman.wysq.model.response.GetUserIndexModel;
 import com.atman.wysq.model.response.LoginResultModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
@@ -147,8 +148,8 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                     .tag(Common.NET_GET_CHATTOKEN).id(Common.NET_GET_CHATTOKEN).build()
                     .execute(new MyStringCallback(mContext, this, true));
         } else if (id == Common.NET_GET_USERINDEX) {
-            GetUserIndexModel mGetUserIndexModel = mGson.fromJson(data, GetUserIndexModel.class);
-            MyBaseApplication.mGetUserIndexModel = mGetUserIndexModel;
+            GetMyUserIndexModel mGetMyUserIndexModel = mGson.fromJson(data, GetMyUserIndexModel.class);
+            MyBaseApplication.mGetMyUserIndexModel = mGetMyUserIndexModel;
             MyBaseApplication.getApplication().initObserver(true);
             Intent mIntent = new Intent();
             setResult(RESULT_OK,mIntent);
@@ -174,7 +175,7 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                             && PreferenceUtil.getBoolPreferences(LoginActivity.this, PreferenceUtil.PARM_ISOPEN_GESTURE)) {
                         startActivityForResult(new Intent(mContext, CreateGestrureLockActivity.class), Common.toLoginCreateGesrure);
                     } else {
-                        OkHttpUtils.get().url(Common.Url_Get_UserIndex +"/"+ mLoginResultModel.getBody())
+                        OkHttpUtils.get().url(Common.Url_Get_UserIndex)
                                 .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                                 .tag(Common.NET_GET_USERINDEX).id(Common.NET_GET_USERINDEX).build()
                                 .execute(new MyStringCallback(mContext, LoginActivity.this, true));

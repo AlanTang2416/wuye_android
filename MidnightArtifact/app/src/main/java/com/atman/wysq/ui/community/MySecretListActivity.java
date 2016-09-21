@@ -176,8 +176,8 @@ public class MySecretListActivity extends MyBaseActivity implements AdapterInter
     }
 
     private void doHttp(boolean b) {
-        if (MyBaseApplication.mGetUserIndexModel!=null) {
-            OkHttpUtils.get().url(Common.Url_Get_My_Sceret + MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserId() + "/"  + mStateId + "/" + mPage)
+        if (MyBaseApplication.mGetMyUserIndexModel!=null) {
+            OkHttpUtils.get().url(Common.Url_Get_My_Sceret + MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId() + "/"  + mStateId + "/" + mPage)
                     .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_MYSECRET).id(Common.NET_GET_MYSECRET).build()
                     .execute(new MyStringCallback(mContext, this, b));
@@ -232,7 +232,7 @@ public class MySecretListActivity extends MyBaseActivity implements AdapterInter
         switch (view.getId()) {
             case R.id.item_bloglist_head_rl:
                 if (mAdapter.getItem(position).getUser_id() ==
-                        MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                        MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                     showWraning("亲，这是你自己哦！");
                     return;
                 }

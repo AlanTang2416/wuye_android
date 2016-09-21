@@ -182,7 +182,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         LogUtils.e("id:"+id);
         NIMClient.getService(MsgService.class).setChattingAccount(id, SessionTypeEnum.P2P);
 
-        if (verify_status==1 && MyBaseApplication.getApplication().mGetUserIndexModel.
+        if (verify_status==1 && MyBaseApplication.getApplication().mGetMyUserIndexModel.
                 getBody().getUserDetailBean().getUserExt().getVerify_status()==0) {
             isPay = true;
             if (PreferenceUtil.getIntPreferences(mContext, PreferenceUtil.PARM_YUNXIN_WRAN)==0) {
@@ -235,14 +235,14 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         mImMessageDelete = mImMessageDao.queryBuilder().where(ImMessageDao.Properties.ChatId.eq(id), ImMessageDao.Properties.LoginUserId.eq(
-                                String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().list();
+                                String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().list();
                         for (ImMessage imMessageDelete : mImMessageDelete) {
                             mImMessageDao.delete(imMessageDelete);
                         }
                         mAdapter.clearData();
 
                         mImSessionDelete = mImSessionDao.queryBuilder().where(ImSessionDao.Properties.UserId.eq(id), ImSessionDao.Properties.LoginUserId.eq(
-                                String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().unique();
+                                String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()))).build().unique();
                         if (mImSessionDelete!=null) {
                             LogUtils.e("mImSessionDelete");
                             mImSessionDao.delete(mImSessionDelete);
@@ -450,7 +450,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     int messageType = mGetMessageModel.getContentType();
                     if (messageType == ContentTypeInter.contentTypeText) {
                         temp = new ImMessage(null, messages.get(i).getUuid()
-                                , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+                                , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount()
                                 , mGetMessageModel.getSendUser().getNickName()
@@ -462,7 +462,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                                 , messages.get(i).getContent(), "", "", "", "", "", "", "", "", 0, 0, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeImage) {
                         temp = new ImMessage(null, messages.get(i).getUuid()
-                                , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+                                , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount()
                                 , mGetMessageModel.getSendUser().getNickName()
@@ -490,7 +490,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                             fingerValue = 3;
                         }
                         temp = new ImMessage(null, messages.get(i).getUuid()
-                                , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+                                , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount()
                                 , mGetMessageModel.getSendUser().getNickName()
@@ -503,7 +503,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     } else if (messageType == ContentTypeInter.contentTypeAudio) {
                         ChatAudioModel mChatAudioModel = new Gson().fromJson(messages.get(i).getAttachment().toJson(true), ChatAudioModel.class);
                         temp = new ImMessage(null, messages.get(i).getUuid()
-                                , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+                                , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount(), mGetMessageModel.getSendUser().getNickName()
                                 , mGetMessageModel.getSendUser().getIcon(), mGetMessageModel.getSendUser().getSex()
@@ -514,7 +514,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeImageSmall) {
                         temp = new ImMessage(null, messages.get(i).getUuid()
-                                , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+                                , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount()
                                 , mGetMessageModel.getSendUser().getNickName()
@@ -577,10 +577,10 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
 
     private boolean isPay() {
         int price = Integer.parseInt(MyBaseApplication.kPrivateChatCost);
-        int myCion = MyBaseApplication.getApplication().mGetUserIndexModel
+        int myCion = MyBaseApplication.getApplication().mGetMyUserIndexModel
                 .getBody().getUserDetailBean().getUserExt().getGold_coin();
         if (myCion-price>=0) {
-            MyBaseApplication.getApplication().mGetUserIndexModel
+            MyBaseApplication.getApplication().mGetMyUserIndexModel
                     .getBody().getUserDetailBean().getUserExt().setGold_coin(myCion-price);
             return true;
         } else {
@@ -751,8 +751,8 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                         showLogin();
                     } else {
                         startActivity(RechargeActivity.buildIntent(mContext
-                                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getGold_coin()
-                                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getConvert_coin()));
+                                , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getGold_coin()
+                                , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getConvert_coin()));
                     }
                 }
             });
@@ -763,10 +763,10 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         if (!contentFinger.isEmpty()) {
             mFinger = Integer.parseInt(contentFinger);
         }
-        SeedMessageModel mSeedMessageModel = new SeedMessageModel(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
-                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
-                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
-                , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName());
+        SeedMessageModel mSeedMessageModel = new SeedMessageModel(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName());
         GetMessageModel mGetMessageModel = new GetMessageModel(contentType, mFinger, contentImageSUrl,mSeedMessageModel);
         Map<String, Object> mMap = new HashMap<>();
         mMap.put("extra",mGson.toJson(mGetMessageModel));
@@ -779,21 +779,21 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
         ImMessage temp = null;
         if (contentType==ContentTypeInter.contentTypeText) {
             temp= new ImMessage(null, message.getUuid()
-                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()), id
-                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                    , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()), id
+                    , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, message.getContent(), "", "", "", "", "", "", "", "", 0, 0, isGiftMessage, 0);
         } else if (contentType==ContentTypeInter.contentTypeImage) {
             temp = new ImMessage(null, message.getUuid()
-                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()), id
-                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                    , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()), id
+                    , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, "［图片］", ((FileAttachment)message.getAttachment()).getPathForSave()
                     , ((FileAttachment)message.getAttachment()).getUrl()
                     , ((FileAttachment)message.getAttachment()).getThumbPathForSave(), "", "", "", "", "", 0, 0, false, 0);
@@ -809,32 +809,32 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 fingerValue = 3;
             }
             temp= new ImMessage(null, message.getUuid()
-                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()), id
-                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                    , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()), id
+                    , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, str, "", "", "", "", "", "", "", "", 0, fingerValue, false, 0);
         } else if (contentType==ContentTypeInter.contentTypeAudio) {
             ChatAudioModel mChatAudioModel = new Gson().fromJson(message.getAttachment().toJson(true), ChatAudioModel.class);
             temp = new ImMessage(null, message.getUuid()
-                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()), id
-                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                    , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()), id
+                    , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, "[语音]", "", "", "", "", "", "", ((FileAttachment)message.getAttachment()).getPathForSave()
                     , ((FileAttachment)message.getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 0);
         } else if (contentType==ContentTypeInter.contentTypeImageSmall) {
             temp = new ImMessage(null, message.getUuid()
-                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()), id
-                    , String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getNickName()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
-                    , MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
+                    , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()), id
+                    , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex()
+                    , MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status()
                     , true, System.currentTimeMillis(), contentType, "［图片］", "", "", "", ((FileAttachment)message.getAttachment()).getPathForSave()
                     , ((FileAttachment)message.getAttachment()).getUrl()
                     , ((FileAttachment)message.getAttachment()).getThumbPathForSave(), "", "", 0, 0, isGiftMessage, 0);
@@ -879,7 +879,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
             setBarTitleTx(message.getNickName());
         }
         if (mImSession==null) {
-            ImSession mImSessionTemp = new ImSession(id, String.valueOf(MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId())
+            ImSession mImSessionTemp = new ImSession(id, String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
                     , message.getContent(), nick, icon, sex, verify_status, System.currentTimeMillis(), 0);
             mImSessionDao.insertOrReplace(mImSessionTemp);
         } else {

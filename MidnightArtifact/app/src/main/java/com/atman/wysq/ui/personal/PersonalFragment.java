@@ -20,20 +20,21 @@ import android.widget.TextView;
 
 import com.atman.wysq.R;
 import com.atman.wysq.model.event.YunXinAuthOutEvent;
+import com.atman.wysq.model.response.GetMyUserIndexModel;
 import com.atman.wysq.model.response.GetTaskAllModel;
-import com.atman.wysq.model.response.GetUserIndexModel;
-import com.atman.wysq.model.response.GetUserInfoModel;
 import com.atman.wysq.model.response.HeadImgResultModel;
 import com.atman.wysq.model.response.HeadImgSuccessModel;
 import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.base.MyBaseFragment;
 import com.atman.wysq.ui.login.LoginActivity;
+import com.atman.wysq.ui.mall.TwoLevelCategoryListActivity;
 import com.atman.wysq.ui.mall.order.MyOrderListActivity;
 import com.atman.wysq.ui.yunxinfriend.HisGuardianActivity;
 import com.atman.wysq.ui.yunxinfriend.HisVisitorActivity;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.UiHelper;
 import com.base.baselibs.net.MyStringCallback;
+import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.util.StringUtils;
 import com.base.baselibs.widget.BottomDialog;
@@ -76,7 +77,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     private CustomImageView personalHeadVerifyImg;
     private TextView personalNameTx;
     private TextView personalGendercertificationTv;
-    private GetUserIndexModel mGetUserIndexModel;
+    private GetMyUserIndexModel mGetUserIndexModel;
 
     private LinearLayout personalMaillistLl;
     private LinearLayout personalServiceLl;
@@ -85,12 +86,16 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     private LinearLayout personalMyorderLl;
     private LinearLayout personalVisitorLl;
     private LinearLayout personalFriendsLl;
+    private LinearLayout personalVipLl;
+    private LinearLayout personalMygiftLl;
 
     private TextView personalVisitorNumTx;
     private TextView personalVipTx;
     private ImageView personalSVipIv;
     private TextView personalMycoinTv;
+    private TextView personalMyvipstatusTv;
     private RoundImageView personalVisitorOneIv, personalVisitorTwoIv, personalVisitorThreeIv;
+    private ImageView personalGiftOneIv, personalGiftTwoIv, personalGiftThreeIv, personalGiftFourIv, personalGiftFiveIv;
     private RoundImageView personalGuardianOneIv, personalGuardianTwoIv, personalGuardianThreeIv;
     private ImageView personalGuardianTopOneIv, personalGuardianTopTwoIv, personalGuardianTopThreeIv;
     private RelativeLayout personalGuardianOneRl,personalGuardianTwoRl,personalGuardianThreeRl;
@@ -141,8 +146,11 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalTaskLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_task_ll);
         personalRechargeLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_recharge_ll);
         personalMyorderLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_myorder_ll);
+        personalMygiftLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_mygift_ll);
+        personalVipLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_vip_ll);
         personalVisitorNumTx = (TextView) personalScrollview.findViewById(R.id.personal_visitor_num_tx);
         personalMycoinTv = (TextView) personalScrollview.findViewById(R.id.personal_mycoin_tv);
+        personalMyvipstatusTv = (TextView) personalScrollview.findViewById(R.id.personal_myvipstatus_tv);
         personalVipTx = (TextView) personalScrollview.findViewById(R.id.personal_vip_tx);
         personalSVipIv = (ImageView) personalScrollview.findViewById(R.id.personal_svip_iv);
 
@@ -151,6 +159,12 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalVisitorOneIv = (RoundImageView) personalScrollview.findViewById(R.id.personal_visitor_one_iv);
         personalVisitorTwoIv = (RoundImageView) personalScrollview.findViewById(R.id.personal_visitor_two_iv);
         personalVisitorThreeIv = (RoundImageView) personalScrollview.findViewById(R.id.personal_visitor_three_iv);
+
+        personalGiftOneIv = (ImageView) personalScrollview.findViewById(R.id.personal_gift_one_iv);
+        personalGiftTwoIv = (ImageView) personalScrollview.findViewById(R.id.personal_gift_two_iv);
+        personalGiftThreeIv = (ImageView) personalScrollview.findViewById(R.id.personal_gift_three_iv);
+        personalGiftFourIv = (ImageView) personalScrollview.findViewById(R.id.personal_gift_four_iv);
+        personalGiftFiveIv = (ImageView) personalScrollview.findViewById(R.id.personal_gift_five_iv);
 
         personalFriendsLl = (LinearLayout) personalScrollview.findViewById(R.id.personal_friends_ll);
         personalFriendsLl.setOnClickListener(this);
@@ -173,6 +187,8 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalRechargeLl.setOnClickListener(this);
         personalGendercertificationTv.setOnClickListener(this);
         personalMyorderLl.setOnClickListener(this);
+        personalVipLl.setOnClickListener(this);
+        personalMygiftLl.setOnClickListener(this);
 
     }
 
@@ -191,7 +207,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         if (!isLogin()) {
             hitSetring();
         } else {
-            OkHttpUtils.get().url(Common.Url_Get_UserIndex + "/" + PreferenceUtil.getPreferences(getActivity(), PreferenceUtil.PARM_USERID))
+            OkHttpUtils.get().url(Common.Url_Get_UserIndex)
                     .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_USERINDEX).id(Common.NET_GET_USERINDEX).build()
                     .execute(new MyStringCallback(getActivity(), this, b));
@@ -206,6 +222,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalTaskIv.setVisibility(View.INVISIBLE);
         personalHeadVerifyImg.setVisibility(View.INVISIBLE);
         personalNameTx.setText("请点击登录");
+        personalMyvipstatusTv.setText("");
         personalNameTx.setTextColor(getResources().getColor(R.color.color_7F2505));
         personalGuardianOneRl.setVisibility(View.GONE);
         personalVisitorNumTx.setVisibility(View.GONE);
@@ -216,6 +233,12 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         personalVisitorTwoIv.setVisibility(View.GONE);
         personalVisitorThreeIv.setVisibility(View.GONE);
 
+        personalGiftOneIv.setVisibility(View.GONE);
+        personalGiftTwoIv.setVisibility(View.GONE);
+        personalGiftThreeIv.setVisibility(View.GONE);
+        personalGiftFourIv.setVisibility(View.GONE);
+        personalGiftFiveIv.setVisibility(View.GONE);
+
         personalMycoinTv.setVisibility(View.GONE);
 
         personalVipTx.setVisibility(View.GONE);
@@ -225,7 +248,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
-        if (isLogin() && MyBaseApplication.mGetUserIndexModel!=null) {
+        if (isLogin() && MyBaseApplication.mGetMyUserIndexModel!=null) {
             changView();
         }
         doHttp(false);
@@ -243,13 +266,13 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     public void onStringResponse(String data, Response response, int id) {
         super.onStringResponse(data, response, id);
         if (id == Common.NET_GET_USERINDEX) {
-            mGetUserIndexModel = mGson.fromJson(data, GetUserIndexModel.class);
-            MyBaseApplication.mGetUserIndexModel = mGetUserIndexModel;
+            mGetUserIndexModel = mGson.fromJson(data, GetMyUserIndexModel.class);
+            MyBaseApplication.mGetMyUserIndexModel = mGetUserIndexModel;
             UpDateUI();
             OkHttpUtils.get().url(Common.Url_Get_Task)
                     .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                     .tag(Common.NET_GET_RASK).id(Common.NET_GET_RASK).build()
-                    .execute(new MyStringCallback(getActivity(), this, true));
+                    .execute(new MyStringCallback(getActivity(), this, false));
         } else if (id == Common.NET_RESET_HEAD) {
             HeadImgResultModel mHeadImgResultModel = mGson.fromJson(data, HeadImgResultModel.class);
             if (mHeadImgResultModel!=null && mHeadImgResultModel.getFiles().size()>0 ) {
@@ -286,7 +309,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
             isHead = false;
             MyBaseApplication.getApplication().setFilterLock(false);
             showToast("头像修改成功");
-            MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().setIcon(mHeadImgUrl);
+            MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().setIcon(mHeadImgUrl);
             ImageLoader.getInstance().displayImage(Common.ImageUrl + mHeadImgUrl
                     , personalHeadIv, MyBaseApplication.getApplication().getOptions());
         } else if (id == Common.NET_VERIFY) {
@@ -364,6 +387,148 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
 
         personalMycoinTv.setVisibility(View.VISIBLE);
         personalMycoinTv.setText(mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getGold_coin()+"｜更多");
+        if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()==0) {
+            personalMyvipstatusTv.setText("去开通");
+        } else {
+            personalMyvipstatusTv.setText("剩余：" + mGetUserIndexModel.getBody().getRemainingTime()/(24*60*60));
+        }
+
+        initGiftIv();
+    }
+
+    private void initGiftIv() {
+        int num = mGetUserIndexModel.getBody().getGiftList().size();
+        personalGiftOneIv.setVisibility(View.GONE);
+        personalGiftTwoIv.setVisibility(View.GONE);
+        personalGiftThreeIv.setVisibility(View.GONE);
+        personalGiftFourIv.setVisibility(View.GONE);
+        personalGiftFiveIv.setVisibility(View.GONE);
+        if (num==1) {
+            personalGiftFiveIv.setVisibility(View.VISIBLE);
+            if (mGetUserIndexModel.getBody().getGiftList().get(0).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(0).getPic_url()
+                        ,personalGiftFiveIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(0).getGray_pic_url()
+                        ,personalGiftFiveIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+        } else if (num==2) {
+            personalGiftFourIv.setVisibility(View.VISIBLE);
+            personalGiftFiveIv.setVisibility(View.VISIBLE);
+            if (mGetUserIndexModel.getBody().getGiftList().get(0).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(0).getPic_url()
+                        ,personalGiftFourIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(0).getGray_pic_url()
+                        ,personalGiftFourIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+            if (mGetUserIndexModel.getBody().getGiftList().get(1).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(1).getPic_url()
+                        ,personalGiftFiveIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(1).getGray_pic_url()
+                        ,personalGiftFiveIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+        } else if (num==3) {
+            personalGiftThreeIv.setVisibility(View.VISIBLE);
+            personalGiftFourIv.setVisibility(View.VISIBLE);
+            personalGiftFiveIv.setVisibility(View.VISIBLE);
+            if (mGetUserIndexModel.getBody().getGiftList().get(0).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(0).getPic_url()
+                        ,personalGiftThreeIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(0).getGray_pic_url()
+                        ,personalGiftThreeIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+            if (mGetUserIndexModel.getBody().getGiftList().get(1).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(1).getPic_url()
+                        ,personalGiftFourIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(1).getGray_pic_url()
+                        ,personalGiftFourIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+            if (mGetUserIndexModel.getBody().getGiftList().get(2).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(2).getPic_url()
+                        ,personalGiftFiveIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(2).getGray_pic_url()
+                        ,personalGiftFiveIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+        } else if (num==4) {
+            personalGiftTwoIv.setVisibility(View.VISIBLE);
+            personalGiftThreeIv.setVisibility(View.VISIBLE);
+            personalGiftFourIv.setVisibility(View.VISIBLE);
+            personalGiftFiveIv.setVisibility(View.VISIBLE);
+            if (mGetUserIndexModel.getBody().getGiftList().get(0).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(0).getPic_url()
+                        ,personalGiftTwoIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(0).getGray_pic_url()
+                        ,personalGiftTwoIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+            if (mGetUserIndexModel.getBody().getGiftList().get(1).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(1).getPic_url()
+                        ,personalGiftThreeIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(1).getGray_pic_url()
+                        ,personalGiftThreeIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+            if (mGetUserIndexModel.getBody().getGiftList().get(2).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(2).getPic_url()
+                        ,personalGiftFourIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(2).getGray_pic_url()
+                        ,personalGiftFourIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+            if (mGetUserIndexModel.getBody().getGiftList().get(3).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(3).getPic_url()
+                        ,personalGiftFiveIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(3).getGray_pic_url()
+                        ,personalGiftFiveIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+        } else if (num>=5) {
+            personalGiftOneIv.setVisibility(View.VISIBLE);
+            personalGiftTwoIv.setVisibility(View.VISIBLE);
+            personalGiftThreeIv.setVisibility(View.VISIBLE);
+            personalGiftFourIv.setVisibility(View.VISIBLE);
+            personalGiftFiveIv.setVisibility(View.VISIBLE);
+            if (mGetUserIndexModel.getBody().getGiftList().get(0).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(0).getPic_url()
+                        ,personalGiftOneIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(0).getGray_pic_url()
+                        ,personalGiftOneIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+            if (mGetUserIndexModel.getBody().getGiftList().get(1).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(1).getPic_url()
+                        ,personalGiftTwoIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(1).getGray_pic_url()
+                        ,personalGiftTwoIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+            if (mGetUserIndexModel.getBody().getGiftList().get(2).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(2).getPic_url()
+                        ,personalGiftThreeIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(2).getGray_pic_url()
+                        ,personalGiftThreeIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+            if (mGetUserIndexModel.getBody().getGiftList().get(3).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(3).getPic_url()
+                        ,personalGiftFourIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(3).getGray_pic_url()
+                        ,personalGiftFourIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+            if (mGetUserIndexModel.getBody().getGiftList().get(4).getType()==1) {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(4).getPic_url()
+                        ,personalGiftFiveIv,MyBaseApplication.getApplication().getOptionsNot());
+            } else {
+                ImageLoader.getInstance().displayImage(Common.ImageUrl+mGetUserIndexModel.getBody().getGiftList().get(4).getGray_pic_url()
+                        ,personalGiftFiveIv,MyBaseApplication.getApplication().getOptionsNot());
+            }
+        }
     }
 
     private void initguardianIV() {
@@ -401,14 +566,14 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         }
     }
 
-    private List<GetUserIndexModel.BodyEntity.VisitorMapEntity.VisitorListEntity> dataList = new ArrayList<>();
+    private List<GetMyUserIndexModel.BodyBean.VisitorMapBean.VisitorListBean> dataList = new ArrayList<>();
     private int num;
     private void initVisitorIV() {
         num = mGetUserIndexModel.getBody().getVisitorMap().getVisitorSize();
         dataList.clear();
         for (int i=0;i<mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().size();i++) {
             if (mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i).getUser_id()!=
-                    MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                    MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                 dataList.add(mGetUserIndexModel.getBody().getVisitorMap().getVisitorList().get(i));
             } else {
                 num -= 1;
@@ -474,6 +639,21 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
                 }
                 startActivity(HisVisitorActivity.buildIntent(getActivity()
                         , mGetUserIndexModel.getBody().getUserDetailBean().getUserId(), "我的访客", num));
+                break;
+            case R.id.personal_vip_ll:
+                if (!isLogin()) {
+                    showLogin();
+                } else {
+                    startActivity(TwoLevelCategoryListActivity.buildIntent(getActivity(),
+                            Integer.parseInt(MyBaseApplication.mWEB_ID), "VIP", true));
+                }
+                break;
+            case R.id.personal_mygift_ll:
+                if (!isLogin()) {
+                    showLogin();
+                } else {
+                    getActivity().startActivity(MyGiftActivity.buildIntent(getActivity()));
+                }
                 break;
             case R.id.personal_myorder_ll:
                 if (!isLogin()) {
@@ -638,12 +818,12 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
     }
 
     private void changView() {
-        mGetUserIndexModel = MyBaseApplication.mGetUserIndexModel;
+        mGetUserIndexModel = MyBaseApplication.mGetMyUserIndexModel;
         UpDateUI();
         OkHttpUtils.get().url(Common.Url_Get_Task)
                 .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
                 .tag(Common.NET_GET_RASK).id(Common.NET_GET_RASK).build()
-                .execute(new MyStringCallback(getActivity(), this, true));
+                .execute(new MyStringCallback(getActivity(), this, false));
     }
 
     //裁减照片

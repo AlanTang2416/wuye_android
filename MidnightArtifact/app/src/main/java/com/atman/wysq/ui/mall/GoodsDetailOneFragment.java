@@ -5,19 +5,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.atman.wysq.R;
 import com.atman.wysq.adapter.GoodsDetailOneAdapter;
 import com.atman.wysq.model.response.GoodsDetailsResponseModel;
-import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.ui.base.MyBaseFragment;
-import com.atman.wysq.utils.Common;
 import com.base.baselibs.util.LogUtils;
-import com.base.baselibs.widget.MyListView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**

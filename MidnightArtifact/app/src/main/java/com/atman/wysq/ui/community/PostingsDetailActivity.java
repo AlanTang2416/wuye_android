@@ -321,14 +321,14 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                 GetPostingsDetailsCommentListModel.BodyEntity body = new GetPostingsDetailsCommentListModel.BodyEntity();
                 body.setContent(blogdetailAddcommentEt.getText().toString().trim());
                 body.setCreate_time(System.currentTimeMillis());
-                body.setIcon(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon());
-                body.setSex(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex());
-                body.setVerify_status(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status());
-                body.setUserLevel(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUserLevel());
-                body.setUser_name(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getNick_name());
-                body.setUser_id(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id());
+                body.setIcon(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getIcon());
+                body.setSex(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getSex());
+                body.setVerify_status(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVerify_status());
+                body.setUserLevel(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getUserLevel());
+                body.setUser_name(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getNick_name());
+                body.setUser_id(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id());
                 body.setBlog_comment_id(mAddCommentResultModel.getBody());
-                body.setVip_level(MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level());
+                body.setVip_level(MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level());
                 body.setBlog_id(bolgId);
                 mAdapter.addBody(body);
             }
@@ -418,7 +418,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
             public void onClick(View v) {
                 if (mGetBlogDetailModel!=null && mGetBlogDetailModel.getBody().get(0).getAnonymityUser() == null) {
                     if (mGetBlogDetailModel.getBody().get(0).getUser_id()==
-                            MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                            MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                         showWraning("亲，这是你自己哦！");
                         return;
                     }
@@ -448,7 +448,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                     showLogin();
                 } else {
                     if (mGetBlogDetailModel.getBody().get(0).getUser_id()
-                            == MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                            == MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                         showToast("亲，这是你自己的帖子哦");
                     } else {
                         showWran();
@@ -705,7 +705,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                         return;
                     }
                     if (mGetBlogDetailModel.getBody().size() > 0
-                            && MyBaseApplication.mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id()
+                            && MyBaseApplication.mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getUser_id()
                             == mGetBlogDetailModel.getBody().get(0).getUser_id()) {
                         showToast("不能将自己加入黑名单");
                         return;
@@ -815,7 +815,7 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
                 break;
             case R.id.item_postingsdetail_comment_head_rl:
                 if (mAdapter.getItem(position).getUser_id() ==
-                        MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                        MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                     showWraning("亲，这是你自己哦！");
                     return;
                 }

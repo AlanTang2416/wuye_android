@@ -71,7 +71,7 @@ public class RechargeActivity extends MyBaseActivity implements AdapterInterface
         super.initWidget(v);
 
         setBarTitleTx("我的金币");
-        setBarRightTx("金币帮助").setOnClickListener(new View.OnClickListener() {
+        setBarRightIv(R.mipmap.mycion_bar_right_ic).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(mContext, CoinAgreementActivity.class));

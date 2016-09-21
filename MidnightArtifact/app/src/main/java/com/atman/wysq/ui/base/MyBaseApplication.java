@@ -26,7 +26,7 @@ import com.atman.wysq.model.response.ChatAudioModel;
 import com.atman.wysq.model.response.ConfigModel;
 import com.atman.wysq.model.response.GetGoldenRoleModel;
 import com.atman.wysq.model.response.GetMessageModel;
-import com.atman.wysq.model.response.GetUserIndexModel;
+import com.atman.wysq.model.response.GetMyUserIndexModel;
 import com.atman.wysq.ui.MainActivity;
 import com.atman.wysq.yunxin.DemoCache;
 import com.atman.wysq.yunxin.model.ContentTypeInter;
@@ -104,7 +104,7 @@ public class MyBaseApplication extends BaseApplication {
     public static int mUserCion = 0;
     public static List<ConfigModel.ShopEntity> mShop ;
     public static GetGoldenRoleModel mGetGoldenRoleModel ;
-    public static GetUserIndexModel mGetUserIndexModel ;
+    public static GetMyUserIndexModel mGetMyUserIndexModel ;
     public boolean isLock = true;
     public boolean isFilterLock = false;
     public static boolean isUnRead = false;

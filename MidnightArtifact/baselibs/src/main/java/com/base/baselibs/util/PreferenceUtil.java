@@ -19,6 +19,7 @@ public class PreferenceUtil {
 	public static final String PARM_USER_KEY = "USER_KEY";
 	public static final String PARM_USER_TOKEN = "USER_TOKEN";
 	public static final String PARM_YUNXIN_TOKEN = "PARM_YUNXIN_TOKEN";
+	public static final String PARM_YUNXIN_WRAN = "PARM_YUNXIN_WRAN";
 	public static final String PARM_GESTURE_PW = "Gesture_PW";
 	public static final String PARM_ISOPEN_GESTURE = "IsOpen_Gesture";
 	public static final String PARM_GESTURE_ERROR = "Gesture_error";

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/dimen_dp_5"
+    android:paddingTop="@dimen/dimen_dp_5">
+
+    <ImageView
+        android:id="@+id/item_mygift_img"
+        android:layout_width="@dimen/dimen_dp_60"
+        android:layout_height="@dimen/dimen_dp_60"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/item_mygift_name_tx"
+        android:layout_below="@+id/item_mygift_img"
+        android:layout_marginTop="@dimen/dimen_dp_5"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textSize="@dimen/dimen_sp_15"
+        android:textColor="@color/color_666666"/>
+
+    <TextView
+        android:id="@+id/item_mygift_num_tx"
+        android:layout_alignParentRight="true"
+        android:layout_width="@dimen/dimen_dp_40"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_above="@+id/item_mygift_name_tx"
+        android:background="@drawable/gift_gray_bg"
+        android:text="X2"
+        android:textSize="@dimen/dimen_sp_12"
+        android:textColor="@color/color_white"/>
+
+</RelativeLayout>

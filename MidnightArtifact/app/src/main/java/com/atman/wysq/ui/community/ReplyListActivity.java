@@ -206,7 +206,7 @@ public class ReplyListActivity extends MyBaseActivity implements AdapterInterfac
         switch (view.getId()) {
             case R.id.item_bloglist_head_rl:
                 if (mAdapter.getItem(position).getUser_id() ==
-                        MyBaseApplication.getApplication().mGetUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                        MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                     showWraning("亲，这是你自己哦！");
                     return;
                 }

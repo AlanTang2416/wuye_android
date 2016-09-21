@@ -94,6 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/dimen_sp_14"
+                        android:textColor="@color/color_2B2B2B"
                         android:text="金币余额："/>
 
                     <TextView
