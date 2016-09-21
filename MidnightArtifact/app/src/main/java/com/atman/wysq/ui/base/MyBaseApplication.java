@@ -16,7 +16,7 @@ import com.atman.wysq.model.bean.ImSession;
 import com.atman.wysq.model.bean.TouChuanGiftNotice;
 import com.atman.wysq.model.bean.TouChuanOtherNotice;
 import com.atman.wysq.model.event.YunXinAddFriendEvent;
-import com.atman.wysq.model.event.YunXinAuthOutEvent;
+import com.base.baselibs.net.YunXinAuthOutEvent;
 import com.atman.wysq.model.event.YunXinMessageEvent;
 import com.atman.wysq.model.greendao.gen.DaoMaster;
 import com.atman.wysq.model.greendao.gen.DaoSession;

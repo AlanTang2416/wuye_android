@@ -1,4 +1,4 @@
-package com.atman.wysq.model.event;
+package com.base.baselibs.net;
 
 /**
  * 描述

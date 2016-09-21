@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atman.wysq.R;
+import com.base.baselibs.net.YunXinAuthOutEvent;
 import com.atman.wysq.ui.MainActivity;
 import com.atman.wysq.ui.SplashActivity;
 import com.atman.wysq.ui.community.CommentChildrenListActivity;
@@ -41,6 +42,10 @@ import com.google.gson.Gson;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.IOException;
@@ -109,6 +114,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
                 }
             }
         });
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -326,6 +332,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
         super.onDestroy();
         //停止监听screen状态
         mScreenObserver.stopScreenStateUpdate();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -412,6 +419,36 @@ public class MyBaseActivity extends BaseAppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    //在注册了的Activity中,声明处理事件的方法
+    @Subscribe(threadMode = ThreadMode.MAIN) //第2步:注册一个在后台线程执行的方法,用于接收事件
+    public void onUserEvent(YunXinAuthOutEvent event) {//参数必须是ClassEvent类型, 否则不会调用此方法
+        if (!getTopActivity(mAty).equals("") && getTopActivity(mAty).contains(mAty.getLocalClassName())) {
+            PromptDialog.Builder builder = new PromptDialog.Builder(mAty);
+            builder.setTitle("账号异常");
+            builder.setMessage("您的账号已在别处登录，请退出登录，如非您本人操作，请尽快修改您的密码！");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    startActivity(new Intent(mAty, MainActivity.class));
+                    finish();
+                }
+            });
+            builder.setCancelable(false);
+            builder.show();
+        }
+    }
+
+    private String getTopActivity(Context context) {
+        android.app.ActivityManager manager = (android.app.ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
+
+        if (runningTaskInfos != null) {
+            return (runningTaskInfos.get(0).topActivity).toString();
+        } else
+            return "";
     }
 
     /**

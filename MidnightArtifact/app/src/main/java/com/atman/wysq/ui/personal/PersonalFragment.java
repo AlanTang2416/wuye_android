@@ -19,7 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atman.wysq.R;
-import com.atman.wysq.model.event.YunXinAuthOutEvent;
+import com.base.baselibs.net.YunXinAuthOutEvent;
 import com.atman.wysq.model.response.GetMyUserIndexModel;
 import com.atman.wysq.model.response.GetTaskAllModel;
 import com.atman.wysq.model.response.HeadImgResultModel;
@@ -34,8 +34,6 @@ import com.atman.wysq.ui.yunxinfriend.HisVisitorActivity;
 import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.UiHelper;
 import com.base.baselibs.net.MyStringCallback;
-import com.base.baselibs.util.LogUtils;
-import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.util.StringUtils;
 import com.base.baselibs.widget.BottomDialog;
 import com.base.baselibs.widget.CustomImageView;
