@@ -1,5 +1,6 @@
 package com.atman.wysq.ui.yunxinfriend;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,11 +36,13 @@ import com.netease.nimlib.sdk.msg.model.CustomNotification;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tbl.okhttputils.OkHttpUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.Response;
 
 /**
@@ -53,6 +56,8 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
 
     @Bind(R.id.otherpersonal_scrollview)
     PullZoomScrollVIew otherpersonalScrollview;
+    @Bind(R.id.otherpersonal_chat_iv)
+    ImageView otherpersonalChatIv;
 
     private Context mContext = OtherPersonalActivity.this;
     private long id;
@@ -68,7 +73,6 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     private ImageView otherpersonalHeadIv;
     private ImageView otherpersonalGenderIv;
     private ImageView otherpersonalHeadVerifyImg;
-    private ImageView otherpersonalChatIv;
     private ImageView otherpersonalSvipIv;
     private TextView otherpersonalNameTx;
     private TextView otherpersonalVipTx;
@@ -77,6 +81,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     private TextView otherpersonalOftenaddrTv;
     private TextView otherpersonalRelationshipTv;
     private TextView otherpersonalRelationshipBt;
+    private TextView otherpersonalGiftBt;
     private CustomImageView otherpersonalDynmicOneIv, otherpersonalDynmicTwoIv
             , otherpersonalDynmicThreeIv, otherpersonalDynmicFourIv;
     private RoundImageView otherpersonalVisitorOneIv, otherpersonalVisitorTwoIv, otherpersonalVisitorThreeIv;
@@ -125,8 +130,6 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
         otherpersonalFriendsLl = (LinearLayout) otherpersonalScrollview.findViewById(R.id.otherpersonal_friends_ll);
         otherpersonalFriendsLl.setOnClickListener(this);
 
-        otherpersonalChatIv = (ImageView) otherpersonalScrollview.findViewById(R.id.otherpersonal_chat_iv);
-        otherpersonalChatIv.setOnClickListener(this);
         otherpersonalHeadIv = (ImageView) otherpersonalScrollview.findViewById(R.id.otherpersonal_head_iv);
         otherpersonalGenderIv = (ImageView) otherpersonalScrollview.findViewById(R.id.otherpersonal_gender_iv);
         otherpersonalHeadVerifyImg = (ImageView) otherpersonalScrollview.findViewById(R.id.otherpersonal_head_verify_img);
@@ -139,6 +142,8 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
         otherpersonalRelationshipTv = (TextView) otherpersonalScrollview.findViewById(R.id.otherpersonal_relationship_tv);
         otherpersonalRelationshipBt = (TextView) otherpersonalScrollview.findViewById(R.id.otherpersonal_relationship_bt);
         otherpersonalRelationshipBt.setOnClickListener(this);
+        otherpersonalGiftBt = (TextView) otherpersonalScrollview.findViewById(R.id.otherpersonal_gift_bt);
+        otherpersonalGiftBt.setOnClickListener(this);
 
         otherpersonalDynmicOneIv = (CustomImageView) otherpersonalScrollview.findViewById(R.id.otherpersonal_dynmic_one_iv);
         otherpersonalDynmicTwoIv = (CustomImageView) otherpersonalScrollview.findViewById(R.id.otherpersonal_dynmic_two_iv);
@@ -375,8 +380,50 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     }
 
     @Override
+    public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
+        super.startActivityForResult(intent, requestCode, options);
+        overridePendingTransition(com.base.baselibs.R.anim.activity_bottom_in, com.base.baselibs.R.anim.activity_bottom_out);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == Common.toSelectGift) {
+            String text = data.getStringExtra("text");
+            String giftName = data.getStringExtra("giftName");
+            String giftPic = data.getStringExtra("giftPic");
+            int price = data.getIntExtra("price", 0);
+            File file = ImageLoader.getInstance().getDiskCache().get(Common.ImageUrl+data.getStringExtra("url"));
+
+            // 构造自定义通知，指定接收者
+            CustomNotification notification = new CustomNotification();
+            notification.setSessionId(String.valueOf(id));
+            notification.setSessionType(SessionTypeEnum.P2P);
+            // 构建通知的具体内容。为了可扩展性，这里采用 json 格式，以 "id" 作为类型区分。
+            // 这里以类型 “1” 作为“正在输入”的状态通知。
+            TouChuanGiftNotice mTouChuanGiftNotice = new TouChuanGiftNotice();
+            mTouChuanGiftNotice.setGiftContent(text);
+            mTouChuanGiftNotice.setGiftSendName(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName());
+            mTouChuanGiftNotice.setGiftPrice(price);
+            mTouChuanGiftNotice.setType(8);
+            mTouChuanGiftNotice.setGiftIcon(giftPic);
+            notification.setContent(mGson.toJson(mTouChuanGiftNotice));
+            // 发送自定义通知
+            NIMClient.getService(MsgService.class).sendCustomNotification(notification);
+            showToast("赠送礼物["+giftName+"]成功！");
+        }
+    }
+
+    @OnClick({R.id.otherpersonal_chat_iv})
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.otherpersonal_gift_bt:
+                startActivityForResult(SelectGiftActivity.buildIntent(mContext, String.valueOf(id)), Common.toSelectGift);
+                break;
             case R.id.otherpersonal_relationship_bt:
                 if (!isLogin()) {
                     showLogin();

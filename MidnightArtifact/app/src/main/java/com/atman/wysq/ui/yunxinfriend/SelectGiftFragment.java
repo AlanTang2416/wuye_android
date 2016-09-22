@@ -124,7 +124,8 @@ public class SelectGiftFragment extends MyBaseFragment implements AdapterInterfa
         super.onStringResponse(data, response, id);
         if (id == Common.NET_PAY_GIFTLIST) {
             ((SelectGiftActivity)getActivity()).backResuilt(mAdapter.getItem(myPosition).getPic_url()
-                    , mAdapter.getItem(myPosition).getPaopao(), mAdapter.getItem(myPosition).getPrice());
+                    , mAdapter.getItem(myPosition).getPaopao(), mAdapter.getItem(myPosition).getPrice()
+                    , mAdapter.getItem(myPosition).getName(), mAdapter.getItem(myPosition).getPic_url());
         }
     }
 

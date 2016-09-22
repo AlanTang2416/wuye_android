@@ -354,6 +354,62 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/otherpersonal_relationship_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_dp_50"
+        android:background="@color/color_white"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_dp_15"
+        android:paddingRight="@dimen/dimen_dp_15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="赠送礼物"
+            android:textColor="@color/personal_item_tx"
+            android:textSize="@dimen/dimen_sp_16" />
+
+        <TextView
+            android:id="@+id/otherpersonal_gift_tv"
+            android:layout_marginLeft="@dimen/dimen_dp_15"
+            android:gravity="center_vertical|right"
+            android:textSize="@dimen/dimen_sp_13"
+            android:textColor="#ff8896"
+            android:text="给TA一个惊喜，从一件礼物开始!"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/otherpersonal_gift_bt"
+            android:layout_marginLeft="@dimen/dimen_dp_10"
+            android:textSize="@dimen/dimen_sp_11"
+            android:paddingTop="@dimen/dimen_dp_2"
+            android:paddingBottom="@dimen/dimen_dp_2"
+            android:paddingLeft="@dimen/dimen_dp_7"
+            android:paddingRight="@dimen/dimen_dp_7"
+            android:textColor="@color/color_white"
+            android:background="@drawable/level_red_circular_bg"
+            android:text="送礼物"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/dimen_dp_15"
+            android:background="@color/color_line" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/otherpersonal_oftenaddr_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -392,12 +448,5 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/color_line" />
-
-    <ImageView
-        android:id="@+id/otherpersonal_chat_iv"
-        android:layout_width="@dimen/dimen_dp_50"
-        android:layout_height="@dimen/dimen_dp_50"
-        android:layout_marginTop="@dimen/dimen_dp_50"
-        android:src="@mipmap/other_chat_ic" />
 
 </LinearLayout>

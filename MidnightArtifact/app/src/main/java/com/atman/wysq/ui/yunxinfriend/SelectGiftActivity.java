@@ -223,13 +223,16 @@ public class SelectGiftActivity extends MyBaseActivity {
         }
     }
 
-    public void backResuilt (String url, String text, int price) {
+    public void backResuilt (String url, String text, int price, String name, String giftPic) {
         if (myCion-price>=0) {
             MyBaseApplication.getApplication().mGetMyUserIndexModel
                     .getBody().getUserDetailBean().getUserExt().setGold_coin(myCion-price);
         }
         Intent mIntent = new Intent();
         mIntent.putExtra("url",url);
+        mIntent.putExtra("giftPic",giftPic);
+        mIntent.putExtra("price",price);
+        mIntent.putExtra("name",name);
         if (blogdetailAddcommentEt.getText().toString().trim().isEmpty()) {
             mIntent.putExtra("text", text);
         } else {

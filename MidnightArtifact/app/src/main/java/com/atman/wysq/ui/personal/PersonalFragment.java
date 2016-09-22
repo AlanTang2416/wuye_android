@@ -388,7 +388,7 @@ public class PersonalFragment extends MyBaseFragment implements View.OnClickList
         if (mGetUserIndexModel.getBody().getUserDetailBean().getUserExt().getVip_level()==0) {
             personalMyvipstatusTv.setText("去开通");
         } else {
-            personalMyvipstatusTv.setText("剩余：" + mGetUserIndexModel.getBody().getRemainingTime()/(24*60*60*1000));
+            personalMyvipstatusTv.setText("剩余时间：" + mGetUserIndexModel.getBody().getRemainingTime()/(24*60*60*1000)+"天");
         }
 
         initGiftIv();

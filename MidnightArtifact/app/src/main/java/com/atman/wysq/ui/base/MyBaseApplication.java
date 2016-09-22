@@ -16,6 +16,7 @@ import com.atman.wysq.model.bean.ImSession;
 import com.atman.wysq.model.bean.TouChuanGiftNotice;
 import com.atman.wysq.model.bean.TouChuanOtherNotice;
 import com.atman.wysq.model.event.YunXinAddFriendEvent;
+import com.atman.wysq.model.response.GiftMessageModel;
 import com.base.baselibs.net.YunXinAuthOutEvent;
 import com.atman.wysq.model.event.YunXinMessageEvent;
 import com.atman.wysq.model.greendao.gen.DaoMaster;
@@ -201,6 +202,7 @@ public class MyBaseApplication extends BaseApplication {
                     LogUtils.e("getType:"+ mTouChuanGiftNotice.getType()
                             +",getGiftContent:"+ mTouChuanGiftNotice.getGiftContent()
                             +",getGiftIcon:"+ mTouChuanGiftNotice.getGiftIcon());
+
                 } else {
                     TouChuanOtherNotice mTouChuanOtherNotice = new Gson().fromJson(message.getContent(), TouChuanOtherNotice.class);
 
@@ -236,6 +238,32 @@ public class MyBaseApplication extends BaseApplication {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
             LogUtils.e("messages.size():"+messages.size());
             for (int i=0;i<messages.size();i++) {
+                LogUtils.e("messages.get(i).getContent():"+messages.get(i).getContent());
+                try {
+                    GiftMessageModel mGiftMessageModel = new Gson().fromJson(messages.get(i).getContent(), GiftMessageModel.class);
+                    TouChuanOtherNotice temp = getDaoSession().getTouChuanOtherNoticeDao().queryBuilder()
+                            .where(TouChuanOtherNoticeDao.Properties.NoticeType.eq(8)
+                                    , TouChuanOtherNoticeDao.Properties.Send_userId.eq(mGiftMessageModel.getCenter_user_id())
+                                    ,TouChuanOtherNoticeDao.Properties.Receive_userId.eq(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID))).build().unique();
+                    if (temp==null) {
+                        TouChuanOtherNotice mTouChuanOtherNotice = new TouChuanOtherNotice();
+                        mTouChuanOtherNotice.setReceive_userId(Long.valueOf(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID)));
+                        mTouChuanOtherNotice.setSend_userId(mGiftMessageModel.getCenter_user_id());
+                        mTouChuanOtherNotice.setSend_nickName(mGiftMessageModel.getCenter_user_name());
+                        mTouChuanOtherNotice.setGiftMessage(mGiftMessageModel.getCenter_content());
+                        mTouChuanOtherNotice.setTime(String.valueOf(System.currentTimeMillis()));
+                        mTouChuanOtherNotice.setNoticeType(8);
+                        getDaoSession().getTouChuanOtherNoticeDao().insert(mTouChuanOtherNotice);
+                    } else {
+                        temp.setIsEmbalmed(false);
+                        temp.setIsRead(0);
+                        temp.setTime(String.valueOf(System.currentTimeMillis()));
+                        getDaoSession().getTouChuanOtherNoticeDao().update(temp);
+                    }
+                    EventBus.getDefault().post(new YunXinAddFriendEvent());
+                } catch (JsonSyntaxException e){
+                    LogUtils.e("e:"+e.toString());
+                }
                 if (messages.get(i).getRemoteExtension()!=null && messages.get(i).getRemoteExtension().get("extra")!=null) {
                     ImMessage temp = null;
                     boolean isMy = false;
