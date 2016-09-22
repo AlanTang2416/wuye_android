@@ -22,7 +22,12 @@ import com.atman.wysq.ui.base.MyBaseApplication;
 import com.atman.wysq.utils.Common;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.net.MyStringCallback;
+import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.PromptDialog;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.CustomNotification;
 import com.tbl.okhttputils.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,6 +55,7 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
     private List<TouChuanOtherNotice> mTouChuanOtherNotice;
     private String name;
     private long ueseID;
+    private int mPosition;
 
     private View mEmpty;
     private TextView mEmptyTX;
@@ -106,6 +112,7 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
     public void onStringResponse(String data, Response response, int id) {
         super.onStringResponse(data, response, id);
         if (id == Common.NET_ADD_FRIEND) {
+            seedNotice(mPosition, 2);
             showToast("已请求添加\""+name+"\"为好友");
         }
     }
@@ -167,10 +174,12 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.item_messagecenter_cancel_bt:
-                changDataBase(position);
+                changDataBase(position, mAdapter.getItem(position).getId());
+                seedNotice(position, 3);
                 break;
             case R.id.item_messagecenter_ok_bt:
-                changDataBase(position);
+                mPosition = position;
+                changDataBase(position, mAdapter.getItem(position).getId());
                 OkHttpUtils.postString().url(Common.Url_Add_Friends+mAdapter.getItem(position).getSend_userId())
                         .content("").mediaType(Common.JSON)
                         .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
@@ -178,18 +187,51 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
                         .execute(new MyStringCallback(mContext, this, true));
                 break;
             case R.id.item_messagecenter_root_ll:
-                startActivity(OtherPersonalActivity.buildIntent(mContext, mAdapter.getItem(position).getSend_userId()));
+                long userId = mAdapter.getItem(position).getSend_userId();
+                if (mAdapter.getItem(position).getAddfriendType()==3) {
+                    userId = mAdapter.getItem(position).getReceive_userId();
+                }
+                if (userId == MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                    showWraning("亲，这是你自己哦！");
+                    return;
+                }
+                startActivity(OtherPersonalActivity.buildIntent(mContext, userId));
                 break;
         }
     }
 
-    private void changDataBase(int position) {
+    private void seedNotice(int id, int num) {
+        String Send_nickName = mAdapter.getItem(id).getSend_nickName();
+        long Send_userId = mAdapter.getItem(id).getSend_userId();
+        String Receive_nickName = MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getNickName();
+        long Receive_userId = MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId();
+
+        // 构造自定义通知，指定接收者
+        CustomNotification notification = new CustomNotification();
+        notification.setSessionId(String.valueOf(mAdapter.getItem(id).getSend_userId()));
+        notification.setSessionType(SessionTypeEnum.P2P);
+        // 构建通知的具体内容。为了可扩展性，这里采用 json 格式，以 "id" 作为类型区分。
+        // 这里以类型 “1” 作为“正在输入”的状态通知。
+        TouChuanOtherNotice mTouChuanOtherNotice = new TouChuanOtherNotice();
+        mTouChuanOtherNotice.setNoticeType(1);
+        mTouChuanOtherNotice.setSend_nickName(Send_nickName);
+        mTouChuanOtherNotice.setSend_userId(Send_userId);
+        mTouChuanOtherNotice.setReceive_nickName(Receive_nickName);
+        mTouChuanOtherNotice.setReceive_userId(Receive_userId);
+        mTouChuanOtherNotice.setTime(String.valueOf(System.currentTimeMillis()));
+        mTouChuanOtherNotice.setAddfriendType(num);
+        notification.setContent(mGson.toJson(mTouChuanOtherNotice));
+        // 发送自定义通知
+        NIMClient.getService(MsgService.class).sendCustomNotification(notification);
+    }
+
+    private void changDataBase(int position, long n) {
+        LogUtils.e("n:"+n);
         mAdapter.clearUnreadNum(position);
         name = mAdapter.getItem(position).getSend_nickName();
         ueseID = mAdapter.getItem(position).getSend_userId();
-        TouChuanOtherNotice temp = mTouChuanOtherNoticeDao.queryBuilder().where(TouChuanOtherNoticeDao.Properties.NoticeType.eq(1)
-                , TouChuanOtherNoticeDao.Properties.Send_userId.eq(mAdapter.getItem(position).getSend_userId())
-                , TouChuanOtherNoticeDao.Properties.Receive_userId.eq(mAdapter.getItem(position).getReceive_userId())).build().unique();
+        TouChuanOtherNotice temp = mTouChuanOtherNoticeDao.queryBuilder()
+                .where(TouChuanOtherNoticeDao.Properties.Id.eq(n)).build().unique();
         temp.setIsEmbalmed(true);
         mTouChuanOtherNoticeDao.update(temp);
     }

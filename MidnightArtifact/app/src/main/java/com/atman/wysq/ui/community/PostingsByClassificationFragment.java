@@ -253,6 +253,10 @@ public class PostingsByClassificationFragment extends MyBaseFragment implements 
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.item_bloglist_head_rl:
+                if (MyBaseApplication.getApplication().mGetMyUserIndexModel==null) {
+                    showLogin();
+                    return;
+                }
                 if (mAdapter.getItem(position).getUser_id()==
                         MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                     showWraning("亲，这是你自己哦！");

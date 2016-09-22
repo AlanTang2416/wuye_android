@@ -205,7 +205,13 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
                     time = Long.parseLong(s);
                 }
                 if (mTouChuanOtherNotice.get(0).getNoticeType()==1) {
-                    str = mTouChuanOtherNotice.get(0).getSend_nickName()+":请求加你为好友";
+                    if (mTouChuanOtherNotice.get(0).getAddfriendType()==1) {
+                        str = mTouChuanOtherNotice.get(0).getSend_nickName()+":请求加你为好友";
+                    } else if (mTouChuanOtherNotice.get(0).getAddfriendType()==2) {
+                        str = mTouChuanOtherNotice.get(0).getSend_nickName()+":我们已经成为朋友啦";
+                    } else if (mTouChuanOtherNotice.get(0).getAddfriendType()==3) {
+                        str = mTouChuanOtherNotice.get(0).getReceive_nickName()+":拒绝了你的加好友请求";
+                    }
                 } else if (mTouChuanOtherNotice.get(0).getNoticeType()==8 || mTouChuanOtherNotice.get(0).getNoticeType()==4) {
                     str = mTouChuanOtherNotice.get(0).getSend_nickName()+":"+mTouChuanOtherNotice.get(0).getGiftMessage();
                 }

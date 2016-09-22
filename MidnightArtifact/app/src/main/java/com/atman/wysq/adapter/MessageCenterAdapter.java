@@ -97,6 +97,8 @@ public class MessageCenterAdapter extends BaseAdapter {
         holder.itemMessagecenterOkBt.setVisibility(View.GONE);
         holder.itemMessagecenterCancelBt.setVisibility(View.GONE);
 
+        holder.itemMessagecenterNameTx.setText(dataList.get(position).getSend_nickName() + ":");
+
         if (dataList.get(position).getNoticeType() == 1) {
             if (dataList.get(position).getIsEmbalmed()) {
                 holder.itemMessagecenterOkBt.setVisibility(View.GONE);
@@ -105,12 +107,23 @@ public class MessageCenterAdapter extends BaseAdapter {
                 holder.itemMessagecenterOkBt.setVisibility(View.VISIBLE);
                 holder.itemMessagecenterCancelBt.setVisibility(View.VISIBLE);
             }
-            holder.itemMessagecenterTypeTx.setText("请求加你为好友");
+            if (dataList.get(position).getAddfriendType()==1) {
+                holder.itemMessagecenterNameTx.setText(dataList.get(position).getSend_nickName() + ":");
+                holder.itemMessagecenterTypeTx.setText("请求加你为好友");
+            } else if (dataList.get(position).getAddfriendType()==2) {
+                holder.itemMessagecenterNameTx.setText(dataList.get(position).getSend_nickName() + ":");
+                holder.itemMessagecenterOkBt.setVisibility(View.GONE);
+                holder.itemMessagecenterCancelBt.setVisibility(View.GONE);
+                holder.itemMessagecenterTypeTx.setText("我们已经成为朋友啦");
+            } else if (dataList.get(position).getAddfriendType()==3) {
+                holder.itemMessagecenterNameTx.setText(dataList.get(position).getReceive_nickName() + ":");
+                holder.itemMessagecenterOkBt.setVisibility(View.GONE);
+                holder.itemMessagecenterCancelBt.setVisibility(View.GONE);
+                holder.itemMessagecenterTypeTx.setText("拒绝与你成为朋友");
+            }
         } else if (dataList.get(position).getNoticeType() == 8 || dataList.get(position).getNoticeType() == 4) {
             holder.itemMessagecenterTypeTx.setText(dataList.get(position).getGiftMessage());
         }
-
-        holder.itemMessagecenterNameTx.setText(dataList.get(position).getSend_nickName() + ":");
         String time = String.valueOf(dataList.get(position).getTime());
         long str;
         if (time.contains(".")) {
