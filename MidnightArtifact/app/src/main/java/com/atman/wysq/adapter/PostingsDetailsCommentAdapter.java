@@ -182,7 +182,7 @@ public class PostingsDetailsCommentAdapter extends BaseAdapter {
                 holder.itemPostingsdetailHostTx.setVisibility(View.INVISIBLE);
             }
 
-            if (isAnonymity) {
+            if (isAnonymity && shop.get(position).getUser_id() == blogUserId) {
                 ImageLoader.getInstance().displayImage(anonymityImg,
                         holder.itemPostingsdetailCommentHeadIv, MyBaseApplication.getApplication().getOptionsNot());
                 holder.itemPostingsdetailCommentLevelTx.setVisibility(View.GONE);

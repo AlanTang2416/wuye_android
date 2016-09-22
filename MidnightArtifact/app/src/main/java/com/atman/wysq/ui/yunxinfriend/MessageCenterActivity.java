@@ -60,7 +60,7 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
         disableLoginCheck();
         setContentView(R.layout.activity_messagecenter);
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     public static Intent buildIntent(Context context) {
@@ -114,7 +114,7 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
     protected void onDestroy() {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(Common.NET_ADD_FRIEND);
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 
     private void initData() {
