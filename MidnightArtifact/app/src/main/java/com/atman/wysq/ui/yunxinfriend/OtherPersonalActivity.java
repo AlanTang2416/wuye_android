@@ -393,7 +393,7 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
         }
         if (requestCode == Common.toSelectGift) {
             String text = data.getStringExtra("text");
-            String giftName = data.getStringExtra("giftName");
+            String giftName = data.getStringExtra("name");
             String giftPic = data.getStringExtra("giftPic");
             int price = data.getIntExtra("price", 0);
             File file = ImageLoader.getInstance().getDiskCache().get(Common.ImageUrl+data.getStringExtra("url"));
