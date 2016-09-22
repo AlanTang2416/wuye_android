@@ -23,4 +23,16 @@
 
         <include layout="@layout/part_main_top_bar"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/base_login_status_tx"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_dp_5"
+        android:background="#FFD700"
+        android:visibility="gone"
+        android:text="登陆中..."
+        android:textColor="@color/color_2B2B2B"
+        android:gravity="center"/>
+
 </RelativeLayout>

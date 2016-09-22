@@ -102,6 +102,7 @@ public class MyBaseApplication extends BaseApplication {
     public static String mDownLoad_URL = "";
     public static String kPrivateChatCost = "";
     public static String mHEAD_URL = "";
+    public int mLOGIN_STATUS = 0;//0:登录中，1：登录成功，2：登录失败
     public static int mUserCion = 0;
     public static List<ConfigModel.ShopEntity> mShop ;
     public static GetGoldenRoleModel mGetGoldenRoleModel ;
@@ -138,6 +139,14 @@ public class MyBaseApplication extends BaseApplication {
 
         YunXinInit();
 
+    }
+
+    public int getmLOGIN_STATUS() {
+        return mLOGIN_STATUS;
+    }
+
+    public void setmLOGIN_STATUS(int mLOGIN_STATUS) {
+        this.mLOGIN_STATUS = mLOGIN_STATUS;
     }
 
     public static MyBaseApplication getApplication() {
@@ -241,26 +250,38 @@ public class MyBaseApplication extends BaseApplication {
                 LogUtils.e("messages.get(i).getContent():"+messages.get(i).getContent());
                 try {
                     GiftMessageModel mGiftMessageModel = new Gson().fromJson(messages.get(i).getContent(), GiftMessageModel.class);
-                    TouChuanOtherNotice temp = getDaoSession().getTouChuanOtherNoticeDao().queryBuilder()
-                            .where(TouChuanOtherNoticeDao.Properties.NoticeType.eq(8)
-                                    , TouChuanOtherNoticeDao.Properties.Send_userId.eq(mGiftMessageModel.getCenter_user_id())
-                                    ,TouChuanOtherNoticeDao.Properties.Receive_userId.eq(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID))).build().unique();
-                    if (temp==null) {
+                    if (mGiftMessageModel.getType()==1) {//礼物通知
+                        TouChuanOtherNotice temp = getDaoSession().getTouChuanOtherNoticeDao().queryBuilder()
+                                .where(TouChuanOtherNoticeDao.Properties.NoticeType.eq(8)
+                                        , TouChuanOtherNoticeDao.Properties.Send_userId.eq(mGiftMessageModel.getCenter_user_id())
+                                        ,TouChuanOtherNoticeDao.Properties.Receive_userId.eq(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID))).build().unique();
+                        if (temp==null) {
+                            TouChuanOtherNotice mTouChuanOtherNotice = new TouChuanOtherNotice();
+                            mTouChuanOtherNotice.setReceive_userId(Long.valueOf(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID)));
+                            mTouChuanOtherNotice.setSend_userId(mGiftMessageModel.getCenter_user_id());
+                            mTouChuanOtherNotice.setSend_nickName(mGiftMessageModel.getCenter_user_name());
+                            mTouChuanOtherNotice.setGiftMessage(mGiftMessageModel.getCenter_content());
+                            mTouChuanOtherNotice.setTime(String.valueOf(System.currentTimeMillis()));
+                            mTouChuanOtherNotice.setNoticeType(8);
+                            getDaoSession().getTouChuanOtherNoticeDao().insert(mTouChuanOtherNotice);
+                        } else {
+                            temp.setIsEmbalmed(false);
+                            temp.setIsRead(0);
+                            temp.setTime(String.valueOf(System.currentTimeMillis()));
+                            getDaoSession().getTouChuanOtherNoticeDao().update(temp);
+                        }
+                        EventBus.getDefault().post(new YunXinAddFriendEvent());
+                    } else if (mGiftMessageModel.getType()==4) {//帖子回复
                         TouChuanOtherNotice mTouChuanOtherNotice = new TouChuanOtherNotice();
                         mTouChuanOtherNotice.setReceive_userId(Long.valueOf(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID)));
                         mTouChuanOtherNotice.setSend_userId(mGiftMessageModel.getCenter_user_id());
                         mTouChuanOtherNotice.setSend_nickName(mGiftMessageModel.getCenter_user_name());
                         mTouChuanOtherNotice.setGiftMessage(mGiftMessageModel.getCenter_content());
                         mTouChuanOtherNotice.setTime(String.valueOf(System.currentTimeMillis()));
-                        mTouChuanOtherNotice.setNoticeType(8);
+                        mTouChuanOtherNotice.setNoticeType(4);
                         getDaoSession().getTouChuanOtherNoticeDao().insert(mTouChuanOtherNotice);
-                    } else {
-                        temp.setIsEmbalmed(false);
-                        temp.setIsRead(0);
-                        temp.setTime(String.valueOf(System.currentTimeMillis()));
-                        getDaoSession().getTouChuanOtherNoticeDao().update(temp);
+                        EventBus.getDefault().post(new YunXinAddFriendEvent());
                     }
-                    EventBus.getDefault().post(new YunXinAddFriendEvent());
                 } catch (JsonSyntaxException e){
                     LogUtils.e("e:"+e.toString());
                 }

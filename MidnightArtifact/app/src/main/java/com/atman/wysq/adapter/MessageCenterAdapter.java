@@ -106,7 +106,7 @@ public class MessageCenterAdapter extends BaseAdapter {
                 holder.itemMessagecenterCancelBt.setVisibility(View.VISIBLE);
             }
             holder.itemMessagecenterTypeTx.setText("请求加你为好友");
-        } else if (dataList.get(position).getNoticeType() == 8) {
+        } else if (dataList.get(position).getNoticeType() == 8 || dataList.get(position).getNoticeType() == 4) {
             holder.itemMessagecenterTypeTx.setText(dataList.get(position).getGiftMessage());
         }
 

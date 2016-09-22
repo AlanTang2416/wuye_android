@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atman.wysq.R;
-import com.base.baselibs.net.YunXinAuthOutEvent;
 import com.atman.wysq.ui.MainActivity;
 import com.atman.wysq.ui.SplashActivity;
 import com.atman.wysq.ui.community.CommentChildrenListActivity;
@@ -35,6 +34,7 @@ import com.atman.wysq.ui.yunxinfriend.P2PChatActivity;
 import com.atman.wysq.ui.yunxinfriend.SelectGiftActivity;
 import com.atman.wysq.utils.ScreenObserver;
 import com.base.baselibs.base.BaseAppCompatActivity;
+import com.base.baselibs.net.YunXinAuthOutEvent;
 import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.util.PreferenceUtil;
 import com.base.baselibs.widget.PromptDialog;
@@ -84,6 +84,8 @@ public class MyBaseActivity extends BaseAppCompatActivity {
     LinearLayout rootContentLl;
     @Bind(R.id.bar_title_iv)
     ImageView barTitleIv;
+    @Bind(R.id.base_login_status_tx)
+    TextView baseLoginStatusTx;
 
     private boolean mShouldLogin = true;
     private static long lastClickTime = 0;
@@ -115,6 +117,17 @@ public class MyBaseActivity extends BaseAppCompatActivity {
             }
         });
         EventBus.getDefault().register(this);
+    }
+
+    public void checkLoginStatus() {
+        if (MyBaseApplication.getApplication().getmLOGIN_STATUS()==0) {
+            baseLoginStatusTx.setVisibility(View.VISIBLE);
+        } else {
+            if (MyBaseApplication.getApplication().getmLOGIN_STATUS()==2) {
+                clearData();
+            }
+            baseLoginStatusTx.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -177,7 +190,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
      * 影藏头部
      */
     protected void hideTitleBar() {
-        LogUtils.e("rootBarRl:"+rootBarRl);
+        LogUtils.e("rootBarRl:" + rootBarRl);
         if (rootBarRl != null) {
             rootBarRl.setVisibility(View.GONE);
         }
@@ -292,12 +305,14 @@ public class MyBaseActivity extends BaseAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (PreferenceUtil.getIntPreferences(this, PreferenceUtil.PARM_GESTURE_ERROR)<=0
+        if (PreferenceUtil.getIntPreferences(this, PreferenceUtil.PARM_GESTURE_ERROR) <= 0
                 && PreferenceUtil.getBoolPreferences(this, PreferenceUtil.PARM_ISOPEN_GESTURE)
                 && mShouldLogin && isLogin()) {
             clearData();
             finish();
         }
+
+//        checkLoginStatus();
     }
 
     @Override
@@ -340,7 +355,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
         super.clearData();
         MyBaseApplication.getApplication().cleanLoginData();
         Intent mIntent = new Intent();
-        setResult(RESULT_OK,mIntent);
+        setResult(RESULT_OK, mIntent);
         mAty.finish();
     }
 
@@ -394,7 +409,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
     }
 
     public void toPhone(Context context, String phoneNumber) {
-        if (!phoneNumber.startsWith("tel:")){
+        if (!phoneNumber.startsWith("tel:")) {
             phoneNumber = "tel:" + phoneNumber;
         }
         Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -442,7 +457,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
     }
 
     private String getTopActivity(Context context) {
-        android.app.ActivityManager manager = (android.app.ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
+        ActivityManager manager = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
 
         if (runningTaskInfos != null) {
@@ -479,18 +494,19 @@ public class MyBaseActivity extends BaseAppCompatActivity {
 
     /**
      * 是否在后台
+     *
      * @return
      */
-    public boolean isAppOnFreground(){
+    public boolean isAppOnFreground() {
         ActivityManager am = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
         String curPackageName = getApplicationContext().getPackageName();
         List<ActivityManager.RunningAppProcessInfo> app = am.getRunningAppProcesses();
-        if(app==null){
+        if (app == null) {
             return false;
         }
-        for(ActivityManager.RunningAppProcessInfo a:app){
-            if(a.processName.equals(curPackageName)&&
-                    a.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND){
+        for (ActivityManager.RunningAppProcessInfo a : app) {
+            if (a.processName.equals(curPackageName) &&
+                    a.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
                 return true;
             }
         }
@@ -528,12 +544,12 @@ public class MyBaseActivity extends BaseAppCompatActivity {
         builder.show();
     }
 
-    public File createFile(String versionName){
+    public File createFile(String versionName) {
         File updateDir = null;
         File updateFile = null;
-        if (android.os.Environment.MEDIA_MOUNTED.equals(android.os.Environment.getExternalStorageState())) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
 
-            updateDir = new File(Environment.getExternalStorageDirectory()+ "/wysq/downLoad/");
+            updateDir = new File(Environment.getExternalStorageDirectory() + "/wysq/downLoad/");
             updateFile = new File(updateDir + "/" + versionName + ".apk");
 
             if (!updateDir.exists()) {
@@ -553,7 +569,7 @@ public class MyBaseActivity extends BaseAppCompatActivity {
     public boolean isOriginImageHasDownloaded(final IMMessage message) {
         if (message.getAttachStatus() == AttachStatusEnum.transferred &&
                 !TextUtils.isEmpty(((FileAttachment) message.getAttachment()).getPath())) {
-            LogUtils.e("imagePath:"+((FileAttachment) message.getAttachment()).getPath());
+            LogUtils.e("imagePath:" + ((FileAttachment) message.getAttachment()).getPath());
             return true;
         }
         return false;

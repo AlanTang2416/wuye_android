@@ -206,7 +206,7 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
                 }
                 if (mTouChuanOtherNotice.get(0).getNoticeType()==1) {
                     str = mTouChuanOtherNotice.get(0).getSend_nickName()+":请求加你为好友";
-                } else if (mTouChuanOtherNotice.get(0).getNoticeType()==8) {
+                } else if (mTouChuanOtherNotice.get(0).getNoticeType()==8 || mTouChuanOtherNotice.get(0).getNoticeType()==4) {
                     str = mTouChuanOtherNotice.get(0).getSend_nickName()+":"+mTouChuanOtherNotice.get(0).getGiftMessage();
                 }
             }
