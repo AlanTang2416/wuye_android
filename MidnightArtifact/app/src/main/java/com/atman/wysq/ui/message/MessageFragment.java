@@ -225,8 +225,9 @@ public class MessageFragment extends MyBaseFragment implements AdapterInterface{
                     ,"暂时还没有通知","通知中心","","",-1,System.currentTimeMillis(),0);
         }
         if (temp!=null) {
-            mAdapter.addBody(temp);
+
         }
+        mAdapter.addBody(temp);
         if (mImSession!=null) {
             mAdapter.addBody(mImSession);
         }

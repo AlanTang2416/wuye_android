@@ -16,6 +16,10 @@ import android.widget.TextView;
 
 import com.atman.wysq.R;
 import com.atman.wysq.adapter.CommunityBlogBoardAdapter;
+import com.atman.wysq.model.bean.TouChuanOtherNotice;
+import com.atman.wysq.model.event.YunXinAddFriendEvent;
+import com.atman.wysq.model.event.YunXinMessageEvent;
+import com.atman.wysq.model.greendao.gen.TouChuanOtherNoticeDao;
 import com.atman.wysq.model.response.GetBlogBoardModel;
 import com.atman.wysq.model.response.GetMyCollectionModel;
 import com.atman.wysq.model.response.MallTopResponseModel;
@@ -26,13 +30,15 @@ import com.atman.wysq.utils.Common;
 import com.atman.wysq.utils.UiHelper;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.net.MyStringCallback;
-import com.base.baselibs.util.DensityUtil;
 import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.adview.ADInfo;
 import com.base.baselibs.widget.adview.CycleViewPager;
 import com.base.baselibs.widget.adview.ViewFactory;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.tbl.okhttputils.OkHttpUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +84,9 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
     private TextView topWinMysecretTx;
     private TextView topWinMycollectionTx;
 
+    private TouChuanOtherNoticeDao mOtherNoticeDao;
+    private List<TouChuanOtherNotice> mTouChuanOtherNotice;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_community, null);
@@ -88,6 +97,7 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -96,11 +106,7 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
         fragmentBarTitleIv.setImageResource(R.mipmap.top_community_ic);
 
         fragmentBarRightIv.setVisibility(View.VISIBLE);
-        if (MyBaseApplication.isUnRead) {
-            fragmentBarRightIv.setImageResource(R.mipmap.plaza_icon_post_new);
-        } else {
-            fragmentBarRightIv.setImageResource(R.mipmap.plaza_icon_post);
-        }
+
         fragmentBarRightRl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +114,28 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
             }
         });
 
+        mOtherNoticeDao = MyBaseApplication.getApplication().getDaoSession().getTouChuanOtherNoticeDao();
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(YunXinAddFriendEvent event) {
+        setTuBiao();
+    }
+
+    private void setTuBiao() {
+        mTouChuanOtherNotice = mOtherNoticeDao.queryBuilder().where(TouChuanOtherNoticeDao.Properties.NoticeType.eq(4)
+                , TouChuanOtherNoticeDao.Properties.IsRead.eq(0)).build().list();
+        if (mTouChuanOtherNotice!=null && mTouChuanOtherNotice.size()>0) {
+            MyBaseApplication.isReportUnRead=true;
+        } else {
+            MyBaseApplication.isReportUnRead=false;
+        }
+        if (MyBaseApplication.isReportUnRead) {
+            fragmentBarRightIv.setImageResource(R.mipmap.plaza_icon_post_new);
+        } else {
+            fragmentBarRightIv.setImageResource(R.mipmap.plaza_icon_post);
+        }
     }
 
     private void showTopPopWin() {
@@ -116,7 +144,7 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
                 ,RelativeLayout.LayoutParams.MATCH_PARENT);
         topWinSecretreplyTx = (TextView) view.findViewById(R.id.top_win_secretreply_tx);
         Drawable drawable = null;
-        if (MyBaseApplication.isUnRead) {
+        if (MyBaseApplication.isReportUnRead) {
             drawable = getActivity().getResources().getDrawable(R.mipmap.plaza_icon_more_reply_new);
         } else {
             drawable = getActivity().getResources().getDrawable(R.mipmap.plaza_icon_more_reply);
@@ -131,6 +159,13 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
                     //需要登陆状态，跳转到登陆界面
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                 } else {
+                    if (mTouChuanOtherNotice!=null) {
+                        for(int i=0;i<mTouChuanOtherNotice.size();i++) {
+                            mTouChuanOtherNotice.get(i).setIsRead(1);
+                            mOtherNoticeDao.update(mTouChuanOtherNotice.get(i));
+                        }
+                        EventBus.getDefault().post(new YunXinMessageEvent());
+                    }
                     startActivity(new Intent(getActivity(), ReplyListActivity.class));
                 }
             }
@@ -188,19 +223,23 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
     @Override
     public void onResume() {
         super.onResume();
+        setTuBiao();
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && getActivity() != null && isError) {
-            isError = false;
-            OkHttpUtils.get().url(Common.Url_AdList + 4).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
-                    .tag(Common.NET_AD_LIST).id(Common.NET_AD_LIST).build()
-                    .execute(new MyStringCallback(getActivity(), this, true));
-            OkHttpUtils.get().url(Common.Url_Get_BlogBoard).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
-                    .tag(Common.NET_GET_BLOGBOARD).id(Common.NET_GET_BLOGBOARD).build()
-                    .execute(new MyStringCallback(getActivity(), this, true));
+        if (isVisibleToUser && getActivity() != null) {
+            setTuBiao();
+            if (isError) {
+                isError = false;
+                OkHttpUtils.get().url(Common.Url_AdList + 4).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
+                        .tag(Common.NET_AD_LIST).id(Common.NET_AD_LIST).build()
+                        .execute(new MyStringCallback(getActivity(), this, true));
+                OkHttpUtils.get().url(Common.Url_Get_BlogBoard).addHeader("cookie", MyBaseApplication.getApplication().getCookie())
+                        .tag(Common.NET_GET_BLOGBOARD).id(Common.NET_GET_BLOGBOARD).build()
+                        .execute(new MyStringCallback(getActivity(), this, true));
+            }
         }
     }
 
@@ -288,15 +327,6 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
             communityListview.addHeaderView(communityHeadview);
             mAdapter = new CommunityBlogBoardAdapter(getActivity(), mGetBlogBoardModel.getBody(), this);
             communityListview.setAdapter(mAdapter);
-        } else if (id == Common.NET_GET_USERCOMMENT) {
-            GetMyCollectionModel mGetMyCollectionModel = mGson.fromJson(data, GetMyCollectionModel.class);
-            for (int i=0;i<mGetMyCollectionModel.getBody().size();i++) {
-                if (mGetMyCollectionModel.getBody().get(i).getUnread_flag()==1) {
-                    MyBaseApplication.isUnRead = true;
-                    fragmentBarRightIv.setImageResource(R.mipmap.plaza_icon_post_new);
-                    break;
-                }
-            }
         }
     }
 
@@ -309,6 +339,7 @@ public class CommunityFragment extends MyBaseFragment implements AdapterInterfac
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

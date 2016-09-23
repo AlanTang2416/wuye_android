@@ -112,7 +112,7 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
         super.onStringResponse(data, response, id);
         if (id == Common.NET_ADD_FRIEND) {
             seedNotice(mPosition, 2);
-            showToast("已请求添加\""+name+"\"为好友");
+            showToast("成功添加\""+name+"\"为好友");
         }
     }
 
@@ -120,7 +120,6 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
     protected void onDestroy() {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(Common.NET_ADD_FRIEND);
-//        EventBus.getDefault().unregister(this);
     }
 
     private void initData() {

@@ -222,7 +222,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
                     , MyBaseApplication.getApplication().getOptionsNot());
             childrencommentHostTx.setVisibility(View.INVISIBLE);
         }
-        if (isAnonymity) {
+        if (isAnonymity && ueseID == blogUserId) {
             childrencommentLevelTx.setVisibility(View.GONE);
             childrencommentGenderImg.setVisibility(View.GONE);
             childrencommentVerifyImg.setVisibility(View.GONE);

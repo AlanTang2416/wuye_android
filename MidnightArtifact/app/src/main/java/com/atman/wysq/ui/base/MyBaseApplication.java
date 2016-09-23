@@ -110,7 +110,7 @@ public class MyBaseApplication extends BaseApplication {
     public static GetMyUserIndexModel mGetMyUserIndexModel ;
     public boolean isLock = true;
     public boolean isFilterLock = false;
-    public static boolean isUnRead = false;
+    public static boolean isReportUnRead = false;
     public boolean isError = false;
     public static String appId = "";
 
@@ -217,8 +217,8 @@ public class MyBaseApplication extends BaseApplication {
                     TouChuanOtherNotice mTouChuanOtherNotice = new Gson().fromJson(message.getContent(), TouChuanOtherNotice.class);
 
                     if (mTouChuanOtherNotice.getAddfriendType()==2) {
-                        Toast.makeText(getApplication(), "\""+mTouChuanOtherNotice.getSend_nickName()
-                                +"\" 我们已经成为朋友啦", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplication(), "\""+mTouChuanOtherNotice.getReceive_nickName()
+                                +"\" 与你成为朋友啦", Toast.LENGTH_SHORT).show();
                     } else if (mTouChuanOtherNotice.getAddfriendType()==3) {
                         Toast.makeText(getApplication(), "\""+mTouChuanOtherNotice.getReceive_nickName()
                                 +"\" 拒绝了你的加好友请求", Toast.LENGTH_SHORT).show();
@@ -258,8 +258,13 @@ public class MyBaseApplication extends BaseApplication {
             LogUtils.e("messages.size():"+messages.size());
             for (int i=0;i<messages.size();i++) {
                 try {
+                    LogUtils.e("messages.get(i).getContent():"+messages.get(i).getContent());
                     GiftMessageModel mGiftMessageModel = new Gson().fromJson(messages.get(i).getContent(), GiftMessageModel.class);
                     if (mGiftMessageModel!=null && mGiftMessageModel.getType()==1) {//礼物通知
+                        if (mGiftMessageModel.getCenter_user_name()==null || String.valueOf(mGiftMessageModel.getCenter_user_id())
+                                .equals(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID))) {
+                            continue;
+                        }
                         TouChuanOtherNotice mTouChuanOtherNotice = new TouChuanOtherNotice();
                         mTouChuanOtherNotice.setReceive_userId(Long.valueOf(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID)));
                         mTouChuanOtherNotice.setSend_userId(mGiftMessageModel.getCenter_user_id());

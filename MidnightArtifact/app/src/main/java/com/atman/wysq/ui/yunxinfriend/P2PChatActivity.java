@@ -1020,6 +1020,9 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                 startActivity(OtherPersonalActivity.buildIntent(mContext, Long.valueOf(mAdapter.getItem(position).getUserId())));
                 break;
             case R.id.item_p2pchat_root_Rl:
+                if (layoutPlayAudio.getVisibility()==View.VISIBLE) {
+                    return;
+                }
                 if (isIMOpen()) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
