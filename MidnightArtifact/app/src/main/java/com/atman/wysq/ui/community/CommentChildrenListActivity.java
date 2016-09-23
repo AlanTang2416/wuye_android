@@ -168,11 +168,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
             @Override
             public void onClick(View v) {
                 if (!(blogUserId == ueseID && isAnonymity)) {
-                    if (MyBaseApplication.getApplication().mGetMyUserIndexModel==null) {
-                        showLogin();
-                        return;
-                    }
-                    if (ueseID ==
+                    if (MyBaseApplication.getApplication().mGetMyUserIndexModel !=null && ueseID ==
                             MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                         showWraning("亲，这是你自己哦！");
                         return;
@@ -412,11 +408,7 @@ public class CommentChildrenListActivity extends MyBaseActivity implements Adapt
     public void onItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.item_children_comment_head_rl:
-                if (MyBaseApplication.getApplication().mGetMyUserIndexModel==null) {
-                    showLogin();
-                    return;
-                }
-                if (mAdapter.getItem(position).getUser_id() ==
+                if (MyBaseApplication.getApplication().mGetMyUserIndexModel != null && mAdapter.getItem(position).getUser_id() ==
                         MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                     showWraning("亲，这是你自己哦！");
                     return;

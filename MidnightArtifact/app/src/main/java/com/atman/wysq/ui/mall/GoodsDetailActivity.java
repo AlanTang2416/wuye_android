@@ -408,11 +408,7 @@ public class GoodsDetailActivity extends MyBaseActivity implements ScrollViewLis
         mPosition = position;
         switch (view.getId()) {
             case R.id.item_goodsdetail_head_rl:
-                if (MyBaseApplication.getApplication().mGetMyUserIndexModel==null) {
-                    showLogin();
-                    return;
-                }
-                if (mAdapter.getItem(position).getUser_id() ==
+                if (MyBaseApplication.getApplication().mGetMyUserIndexModel != null && mAdapter.getItem(position).getUser_id() ==
                         MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
                     showWraning("亲，这是你自己哦！");
                     return;
