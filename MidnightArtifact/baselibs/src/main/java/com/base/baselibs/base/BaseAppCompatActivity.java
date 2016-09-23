@@ -302,6 +302,9 @@ public class BaseAppCompatActivity extends SwipeBackActivity
     @Override
     public void onError(Call call, Exception e, int code, int id) {
         LogUtils.e("返回码："+code+"，id:"+id);
+        if (id==65) {
+            return;
+        }
         showToast(e.toString().replace("java.io.IOException: ",""));
     }
 

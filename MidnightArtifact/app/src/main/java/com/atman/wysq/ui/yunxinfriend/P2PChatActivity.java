@@ -150,6 +150,8 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
     private boolean isPay = false;
     private boolean isToLimit = false;
     private File mFile;
+    private String mUuid;
+    private String mText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -513,6 +515,12 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                                 ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeImageSmall) {
+                        String url = "";
+                        if (mGetMessageModel.getContentImageSUrl().contains("http:")) {
+                            url = mGetMessageModel.getContentImageSUrl();
+                        } else {
+                            url = ((FileAttachment)messages.get(i).getAttachment()).getUrl();
+                        }
                         temp = new ImMessage(null, messages.get(i).getUuid()
                                 , String.valueOf(MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId())
                                 , messages.get(i).getSessionId()
@@ -523,9 +531,7 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                                 , mGetMessageModel.getSendUser().getVerify_status()
                                 , false, System.currentTimeMillis()
                                 , messageType
-                                , "[图片]", "", "", "", mGetMessageModel.getContentImageSUrl()
-                                , mGetMessageModel.getContentImageSUrl()
-                                , mGetMessageModel.getContentImageSUrl(), "", "", 0, 0, false, 1);
+                                , "[图片]", "", "", "", url, url, url, "", "", 0, 0, false, 1);
                         if (isOriginImageHasDownloaded(messages.get(i))) {
                             AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
                             future.setCallback(callback);
@@ -552,6 +558,13 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
                     if (imMessage.getStatus()==MsgStatusEnum.success) {
                         mImMessageUpdata.get(i).setIsSeedSuccess(1);
                         mAdapter.setImMessageStatus(imMessage.getUuid(), 1);
+                        if (mUuid == imMessage.getUuid()) {
+                            if (!mText.isEmpty() && !TextUtils.isEmpty(mText)) {
+                                IMMessage messagetext = MessageBuilder.createTextMessage(id, SessionTypeEnum.P2P
+                                        , mText.toString());
+                                seedMessage(messagetext, ContentTypeInter.contentTypeText, "", "", true);
+                            }
+                        }
                     } else {
                         mImMessageUpdata.get(i).setIsSeedSuccess(2);
                         mAdapter.setImMessageStatus(imMessage.getUuid(), 2);
@@ -919,15 +932,11 @@ public class P2PChatActivity extends MyBaseActivity implements EditCheckBack, IA
             return;
         }
         if (requestCode == Common.toSelectGift) {
-            String text = data.getStringExtra("text");
+            mText = data.getStringExtra("text");
             File file = ImageLoader.getInstance().getDiskCache().get(Common.ImageUrl+data.getStringExtra("url"));
             IMMessage message = MessageBuilder.createImageMessage(id, SessionTypeEnum.P2P, file, "");
+            mUuid = message.getUuid();
             seedMessage(message, ContentTypeInter.contentTypeImageSmall, file.getPath(), "", true);
-            if (!text.isEmpty() && !TextUtils.isEmpty(text)) {
-                IMMessage messagetext = MessageBuilder.createTextMessage(id, SessionTypeEnum.P2P
-                        , text.toString());
-                seedMessage(messagetext, ContentTypeInter.contentTypeText, "", "", true);
-            }
         } else {
             if (requestCode == CHOOSE_BIG_PICTURE) {//选择照片
                 imageUri = data.getData();
