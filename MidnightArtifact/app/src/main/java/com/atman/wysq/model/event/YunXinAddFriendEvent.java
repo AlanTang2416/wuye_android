@@ -8,4 +8,13 @@ package com.atman.wysq.model.event;
  * 电话 18578909061
  */
 public class YunXinAddFriendEvent {
+
+    public final int id;
+    public YunXinAddFriendEvent(int id) {
+        this.id = id;
+    }
+
+    public YunXinAddFriendEvent() {
+        this.id = 0;
+    }
 }

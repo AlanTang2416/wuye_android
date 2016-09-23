@@ -114,12 +114,20 @@ public class MessageCenterAdapter extends BaseAdapter {
                 holder.itemMessagecenterNameTx.setText(dataList.get(position).getSend_nickName() + ":");
                 holder.itemMessagecenterOkBt.setVisibility(View.GONE);
                 holder.itemMessagecenterCancelBt.setVisibility(View.GONE);
-                holder.itemMessagecenterTypeTx.setText("我们已经成为朋友啦");
+                if (dataList.get(position).getPropMessage()==null || dataList.get(position).getPropMessage().isEmpty()) {
+                    holder.itemMessagecenterTypeTx.setText("我们已经成为朋友啦");
+                } else {
+                    holder.itemMessagecenterTypeTx.setText(dataList.get(position).getPropMessage());
+                }
             } else if (dataList.get(position).getAddfriendType()==3) {
                 holder.itemMessagecenterNameTx.setText(dataList.get(position).getReceive_nickName() + ":");
                 holder.itemMessagecenterOkBt.setVisibility(View.GONE);
                 holder.itemMessagecenterCancelBt.setVisibility(View.GONE);
-                holder.itemMessagecenterTypeTx.setText("拒绝与你成为朋友");
+                if (dataList.get(position).getPropMessage()==null ||dataList.get(position).getPropMessage().isEmpty()) {
+                    holder.itemMessagecenterTypeTx.setText("拒绝与你成为朋友");
+                } else {
+                    holder.itemMessagecenterTypeTx.setText(dataList.get(position).getPropMessage());
+                }
             }
         } else if (dataList.get(position).getNoticeType() == 8 || dataList.get(position).getNoticeType() == 4) {
             holder.itemMessagecenterTypeTx.setText(dataList.get(position).getGiftMessage());

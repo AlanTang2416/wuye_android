@@ -66,7 +66,6 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
         disableLoginCheck();
         setContentView(R.layout.activity_messagecenter);
         ButterKnife.bind(this);
-//        EventBus.getDefault().register(this);
     }
 
     public static Intent buildIntent(Context context) {
@@ -175,11 +174,25 @@ public class MessageCenterActivity extends MyBaseActivity implements AdapterInte
         switch (view.getId()) {
             case R.id.item_messagecenter_cancel_bt:
                 changDataBase(position, mAdapter.getItem(position).getId());
+                TouChuanOtherNotice temp = mTouChuanOtherNoticeDao.queryBuilder().where(
+                        TouChuanOtherNoticeDao.Properties.Id.eq(mAdapter.getItem(position).getId())).build().unique();
+                if (temp!=null) {
+                    temp.setPropMessage("拒绝添加\""+mAdapter.getItem(position).getSend_nickName()+"\"为朋友");
+                    temp.setAddfriendType(3);
+                    mTouChuanOtherNoticeDao.update(temp);
+                }
                 seedNotice(position, 3);
                 break;
             case R.id.item_messagecenter_ok_bt:
                 mPosition = position;
                 changDataBase(position, mAdapter.getItem(position).getId());
+                TouChuanOtherNotice mTemp = mTouChuanOtherNoticeDao.queryBuilder().where(
+                        TouChuanOtherNoticeDao.Properties.Id.eq(mAdapter.getItem(position).getId())).build().unique();
+                if (mTemp!=null) {
+                    mTemp.setPropMessage("同意添加\""+mAdapter.getItem(position).getSend_nickName()+"\"为朋友");
+                    mTemp.setAddfriendType(2);
+                    mTouChuanOtherNoticeDao.update(mTemp);
+                }
                 OkHttpUtils.postString().url(Common.Url_Add_Friends+mAdapter.getItem(position).getSend_userId())
                         .content("").mediaType(Common.JSON)
                         .addHeader("cookie", MyBaseApplication.getApplication().getCookie())

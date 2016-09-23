@@ -13,6 +13,7 @@ import com.atman.wysq.model.request.UpdateAddressRequestModel;
 import com.atman.wysq.model.response.GetDataModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
+import com.atman.wysq.ui.mall.order.ConfirmationOrderActivity;
 import com.atman.wysq.utils.Common;
 import com.base.baselibs.net.MyStringCallback;
 import com.base.baselibs.util.StringUtils;
@@ -232,7 +233,7 @@ public class AddAddressActivity extends MyBaseActivity implements SelectItemPopw
             } else {
                 showToast("修改收货地址成功");
             }
-            Intent mIntent = new Intent();
+            Intent mIntent = new Intent(AddAddressActivity.this, ConfirmationOrderActivity.class);
             setResult(RESULT_OK,mIntent);
             finish();
         }

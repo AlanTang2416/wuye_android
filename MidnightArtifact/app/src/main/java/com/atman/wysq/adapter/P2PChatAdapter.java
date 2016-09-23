@@ -241,6 +241,13 @@ public class P2PChatAdapter extends BaseAdapter {
                 }
                 break;
             case ContentTypeInter.contentTypeImageSmall:
+                LogUtils.e("temp.getImageSThumUrl():"+temp.getImageSThumUrl());
+                LogUtils.e("temp.getImageSUrl():"+temp.getImageSUrl());
+                LogUtils.e("temp.getImageSFilePath():"+temp.getImageSFilePath());
+
+                LogUtils.e("temp.getImageThumUrl():"+temp.getImageThumUrl());
+                LogUtils.e("temp.getImageUrl():"+temp.getImageUrl());
+                LogUtils.e("temp.getImageFilePath():"+temp.getImageFilePath());
                 if (temp.getIsSelfSend()) {
                     holderText.itemP2pchatImageRightIv.setVisibility(View.VISIBLE);
                     if (temp.getImageSThumUrl().startsWith("http")) {

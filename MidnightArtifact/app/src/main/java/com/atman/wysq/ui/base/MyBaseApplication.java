@@ -239,7 +239,7 @@ public class MyBaseApplication extends BaseApplication {
                             temp.setTime(String.valueOf(System.currentTimeMillis()));
                             getDaoSession().getTouChuanOtherNoticeDao().update(temp);
                         }
-                        EventBus.getDefault().post(new YunXinAddFriendEvent());
+                        EventBus.getDefault().post(new YunXinAddFriendEvent(mTouChuanOtherNotice.getAddfriendType()));
                     }
                 }
                 EventBus.getDefault().post(new YunXinMessageEvent());
@@ -259,7 +259,7 @@ public class MyBaseApplication extends BaseApplication {
             for (int i=0;i<messages.size();i++) {
                 try {
                     GiftMessageModel mGiftMessageModel = new Gson().fromJson(messages.get(i).getContent(), GiftMessageModel.class);
-                    if (mGiftMessageModel.getType()==1) {//礼物通知
+                    if (mGiftMessageModel!=null && mGiftMessageModel.getType()==1) {//礼物通知
                         TouChuanOtherNotice mTouChuanOtherNotice = new TouChuanOtherNotice();
                         mTouChuanOtherNotice.setReceive_userId(Long.valueOf(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID)));
                         mTouChuanOtherNotice.setSend_userId(mGiftMessageModel.getCenter_user_id());
@@ -268,7 +268,11 @@ public class MyBaseApplication extends BaseApplication {
                         mTouChuanOtherNotice.setTime(String.valueOf(System.currentTimeMillis()));
                         mTouChuanOtherNotice.setNoticeType(8);
                         getDaoSession().getTouChuanOtherNoticeDao().insert(mTouChuanOtherNotice);
-                    } else if (mGiftMessageModel.getType()==4) {//帖子回复
+                    } else if (mGiftMessageModel!=null && mGiftMessageModel.getType()==4) {//帖子回复
+                        if (mGiftMessageModel.getCenter_user_name()==null || String.valueOf(mGiftMessageModel.getCenter_user_id())
+                                .equals(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID))) {
+                            continue;
+                        }
                         TouChuanOtherNotice mTouChuanOtherNotice = new TouChuanOtherNotice();
                         mTouChuanOtherNotice.setReceive_userId(Long.valueOf(PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID)));
                         mTouChuanOtherNotice.setSend_userId(mGiftMessageModel.getCenter_user_id());
@@ -355,15 +359,21 @@ public class MyBaseApplication extends BaseApplication {
                                 ((FileAttachment)messages.get(i).getAttachment()).getPathForSave()
                                 , ((FileAttachment)messages.get(i).getAttachment()).getUrl(), mChatAudioModel.getDur(), 0, false, 1);
                     } else if (messageType == ContentTypeInter.contentTypeImageSmall) {
+                        String url = "";
+                        if (mGetMessageModel.getContentImageSUrl().contains("http:")) {
+                            url = mGetMessageModel.getContentImageSUrl();
+                        } else {
+                            url = ((FileAttachment)messages.get(i).getAttachment()).getUrl();
+                        }
                         temp = new ImMessage(null, messages.get(i).getUuid()
                                 , PreferenceUtil.getPreferences(getApplicationContext(), PreferenceUtil.PARM_USERID), messages.get(i).getSessionId()
                                 , messages.get(i).getFromAccount(), mGetMessageModel.getSendUser().getNickName()
                                 , mGetMessageModel.getSendUser().getIcon(), mGetMessageModel.getSendUser().getSex()
                                 , mGetMessageModel.getSendUser().getVerify_status()
                                 , isMy, messages.get(i).getTime(), messageType
-                                , "[图片]", "", "", "", mGetMessageModel.getContentImageSUrl()
-                                , mGetMessageModel.getContentImageSUrl()
-                                , mGetMessageModel.getContentImageSUrl(), "", "", 0, 0, false, 1);
+                                , "[图片]", "", "", "", url
+                                , url
+                                , url, "", "", 0, 0, false, 1);
                         if (isOriginImageHasDownloaded(messages.get(i))) {
                             AbortableFuture future = NIMClient.getService(MsgService.class).downloadAttachment(messages.get(i), true);
                             future.setCallback(callback);

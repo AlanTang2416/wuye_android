@@ -16,10 +16,11 @@ import com.atman.wysq.adapter.AddressManageListAdapter;
 import com.atman.wysq.model.response.GetAddressListResponseModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
-import com.atman.wysq.ui.login.LoginActivity;
+import com.atman.wysq.ui.mall.order.ConfirmationOrderActivity;
 import com.atman.wysq.utils.Common;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.net.MyStringCallback;
+import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.PromptDialog;
 import com.tbl.okhttputils.OkHttpUtils;
 
@@ -192,6 +193,7 @@ public class AddressManageActivity extends MyBaseActivity implements AdapterInte
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {// 返回键
+            LogUtils.e("onKeyDown>>>>");
             back();
             return true;
         }
@@ -200,12 +202,12 @@ public class AddressManageActivity extends MyBaseActivity implements AdapterInte
 
     private void back() {
         if (mAdapter.getCount()==0) {
-            Intent mIntent = new Intent();
+            Intent mIntent = new Intent(AddressManageActivity.this, ConfirmationOrderActivity.class);
             mIntent.putExtra("addressId", -2);
             setResult(RESULT_OK,mIntent);
         } else {
             int n = mAdapter.getSelectId();
-            Intent mIntent = new Intent();
+            Intent mIntent = new Intent(AddressManageActivity.this, ConfirmationOrderActivity.class);
             mIntent.putExtra("addressId", mAdapter.getItem(n).getAddress_id());
             mIntent.putExtra("name", mAdapter.getItem(n).getReceiver_name());
             mIntent.putExtra("phone", mAdapter.getItem(n).getReceiver_phone());

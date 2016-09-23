@@ -43,9 +43,9 @@
         <activity android:name=".ui.mall.TwoLevelCategoryListActivity"/>
         <activity android:name=".ui.mall.GoodsDetailActivity"/>
         <activity android:name=".ui.mall.order.ConfirmationOrderActivity"/>
-        <activity android:name=".ui.mall.address.AddressManageActivity" android:launchMode="singleTask"/>
-        <activity android:name=".ui.mall.address.AddAddressActivity" android:launchMode="singleTask"/>
-        <activity android:name=".ui.mall.address.EditAddressActivity" android:launchMode="singleTask"/>
+        <activity android:name=".ui.mall.address.AddressManageActivity" android:launchMode="singleTop"/>
+        <activity android:name=".ui.mall.address.AddAddressActivity" android:launchMode="singleTop"/>
+        <activity android:name=".ui.mall.address.EditAddressActivity" android:launchMode="singleTop"/>
         <activity android:name=".ui.mall.order.MyOrderListActivity"/>
         <activity android:name=".ui.mall.order.OrderDetailActivity"/>
         <activity android:name=".ui.community.PostingsByClassificationActivity"/>

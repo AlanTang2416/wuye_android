@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atman.wysq.R;
+import com.atman.wysq.model.response.GetMyUserIndexModel;
 import com.atman.wysq.model.response.GiftListModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
 import com.atman.wysq.ui.base.MyBaseApplication;
@@ -166,9 +167,10 @@ public class SelectGiftActivity extends MyBaseActivity {
     @Override
     public void doInitBaseHttp() {
         super.doInitBaseHttp();
-        OkHttpUtils.get().url(Common.Url_Get_GiftList).id(Common.NET_GET_GIFTLIST)
+        OkHttpUtils.get().url(Common.Url_Get_UserIndex)
                 .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
-                .tag(Common.NET_GET_GIFTLIST).build().execute(new MyStringCallback(mContext, this, true));
+                .tag(Common.NET_GET_USERINDEX).id(Common.NET_GET_USERINDEX).build()
+                .execute(new MyStringCallback(mContext, this, true));
     }
 
     @Override
@@ -182,7 +184,13 @@ public class SelectGiftActivity extends MyBaseActivity {
     @Override
     public void onStringResponse(String data, Response response, int id) {
         super.onStringResponse(data, response, id);
-        if (id == Common.NET_GET_GIFTLIST) {
+        if (id == Common.NET_GET_USERINDEX) {
+            GetMyUserIndexModel mGetUserIndexModel = mGson.fromJson(data, GetMyUserIndexModel.class);
+            MyBaseApplication.mGetMyUserIndexModel = mGetUserIndexModel;
+            OkHttpUtils.get().url(Common.Url_Get_GiftList).id(Common.NET_GET_GIFTLIST)
+                    .addHeader("cookie", MyBaseApplication.getApplication().getCookie())
+                    .tag(Common.NET_GET_GIFTLIST).build().execute(new MyStringCallback(mContext, this, true));
+        } else if (id == Common.NET_GET_GIFTLIST) {
             mGiftListModel = mGson.fromJson(data, GiftListModel.class);
             mGiftList = mGiftListModel.getBody();
             Comparator comp = new SortComparator();
@@ -195,6 +203,7 @@ public class SelectGiftActivity extends MyBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(Common.NET_GET_GIFTLIST);
+        OkHttpUtils.getInstance().cancelTag(Common.NET_GET_USERINDEX);
     }
 
     @Override

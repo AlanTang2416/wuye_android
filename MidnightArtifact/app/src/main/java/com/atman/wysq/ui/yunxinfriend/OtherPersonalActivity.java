@@ -15,6 +15,7 @@ import com.atman.wysq.R;
 import com.atman.wysq.model.bean.AddFriendRecord;
 import com.atman.wysq.model.bean.TouChuanGiftNotice;
 import com.atman.wysq.model.bean.TouChuanOtherNotice;
+import com.atman.wysq.model.event.YunXinAddFriendEvent;
 import com.atman.wysq.model.greendao.gen.AddFriendRecordDao;
 import com.atman.wysq.model.response.GetUserIndexModel;
 import com.atman.wysq.ui.base.MyBaseActivity;
@@ -35,6 +36,9 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomNotification;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tbl.okhttputils.OkHttpUtils;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -414,6 +418,15 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
             // 发送自定义通知
             NIMClient.getService(MsgService.class).sendCustomNotification(notification);
             showToast("赠送礼物["+giftName+"]成功！");
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) //第2步:注册一个在后台线程执行的方法,用于接收事件
+    public void onMessageEvent(YunXinAddFriendEvent event) {//参数必须是ClassEvent类型, 否则不会调用此方法
+        if (event.id==2) {
+            otherpersonalRelationshipBt.setText("删除");
+            otherpersonalRelationshipTv.setText("好友");
+            mGetMyUserIndexModel.getBody().setFriend(true);
         }
     }
 
