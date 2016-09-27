@@ -435,6 +435,14 @@ public class OtherPersonalActivity extends MyBaseActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.otherpersonal_gift_bt:
+                if (!isLogin()) {
+                    showLogin();
+                    return;
+                }
+                if (id==MyBaseApplication.getApplication().mGetMyUserIndexModel.getBody().getUserDetailBean().getUserId()) {
+                    showWraning("亲，这是你自己哦！");
+                    return;
+                }
                 startActivityForResult(SelectGiftActivity.buildIntent(mContext, String.valueOf(id)), Common.toSelectGift);
                 break;
             case R.id.otherpersonal_relationship_bt:

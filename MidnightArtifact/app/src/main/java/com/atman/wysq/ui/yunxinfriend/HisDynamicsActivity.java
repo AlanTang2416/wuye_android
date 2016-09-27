@@ -173,12 +173,12 @@ public class HisDynamicsActivity extends MyBaseActivity implements AdapterInterf
             }
         } else if (id == Common.NET_GET_BLOGCOLLECTION) {
             showToast("收藏成功");
-            mAdapter.setFavoriteById(1, position);
+            mAdapter.updataView(mAdapter.setFavoriteById(1, position), pullToRefreshListView.getRefreshableView(), 2);
         } else if (id == Common.NET_GET_BLOGCOLLECTION_NOT) {
             showToast("已取消收藏");
-            mAdapter.setFavoriteById(0, position);
+            mAdapter.updataView(mAdapter.setFavoriteById(0, position), pullToRefreshListView.getRefreshableView(), 2);
         } else if (id == Common.NET_ADD_BROWSE) {
-            mAdapter.addBrowse(blogId);
+            mAdapter.updataView(mAdapter.addBrowse(blogId), pullToRefreshListView.getRefreshableView(), 1);
         }
     }
 

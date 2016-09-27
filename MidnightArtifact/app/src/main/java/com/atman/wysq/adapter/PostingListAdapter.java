@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.atman.wysq.utils.MyTools;
 import com.atman.wysq.widget.face.SmileUtils;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.util.DensityUtil;
+import com.base.baselibs.util.LogUtils;
 import com.base.baselibs.widget.CustomImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -73,7 +75,7 @@ public class PostingListAdapter extends BaseAdapter {
         return shop.get(position);
     }
 
-    public void setFavoriteById(int isOk, int num) {
+    public int setFavoriteById(int isOk, int num) {
         if (isOk == 1) {//收藏
             shop.get(num).setFavorite_id(1);
             shop.get(num).setFavorite_count(shop.get(num).getFavorite_count() + 1);
@@ -81,16 +83,47 @@ public class PostingListAdapter extends BaseAdapter {
             shop.get(num).setFavorite_id(0);
             shop.get(num).setFavorite_count(shop.get(num).getFavorite_count() - 1);
         }
-        notifyDataSetChanged();
+        return num;
     }
 
-    public void addBrowse(int num) {
+    public int addBrowse(int num) {
+        int p=0;
         for (int i = 0; i < shop.size(); i++) {
             if (num == shop.get(i).getBlog_id()) {
                 shop.get(i).setView_count(shop.get(i).getView_count() + 1);
+                p=i;
             }
         }
-        notifyDataSetChanged();
+        return p;
+    }
+
+    public void updataView(int posi, ListView listView, int headNum) {
+        int num = headNum;
+        int visibleFirstPosi = listView.getFirstVisiblePosition();
+        int visibleLastPosi = listView.getLastVisiblePosition();
+        if (visibleFirstPosi != 0) {
+            visibleFirstPosi -= headNum;
+            visibleLastPosi -= headNum;
+            num = 0;
+        }
+        if (posi >= visibleFirstPosi && posi <= visibleLastPosi) {
+            View view = listView.getChildAt(posi - visibleFirstPosi+num);
+            ViewHolder holder = (ViewHolder) view.getTag();
+
+            if (holder==null) {
+                return;
+            }
+            holder.itemBloglistBrowseTx.setText(shop.get(posi).getView_count()+"");
+            Drawable drawable = null;
+            if (shop.get(posi).getFavorite_id() > 0) {
+                drawable = context.getResources().getDrawable(R.mipmap.square_like_press);
+            } else {
+                drawable = context.getResources().getDrawable(R.mipmap.square_like_default);
+            }
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            holder.itemBloglistCollectionimgTx.setCompoundDrawables(drawable, null, null, null);
+        }
     }
 
     @Override

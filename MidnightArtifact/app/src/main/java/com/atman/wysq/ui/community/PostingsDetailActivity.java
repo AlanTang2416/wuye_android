@@ -760,7 +760,6 @@ public class PostingsDetailActivity extends MyBaseActivity implements AdapterInt
 
         @JavascriptInterface
         public void openImage(int num) {
-            LogUtils.e("imgStr:" + imgStr + ",num:" + num);
             Intent intent = new Intent();
             intent.putExtra("image", imgStr);
             intent.putExtra("num", num);

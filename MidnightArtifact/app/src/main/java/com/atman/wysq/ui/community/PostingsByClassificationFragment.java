@@ -8,6 +8,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.atman.wysq.R;
@@ -19,6 +20,7 @@ import com.atman.wysq.ui.yunxinfriend.OtherPersonalActivity;
 import com.atman.wysq.utils.Common;
 import com.base.baselibs.iimp.AdapterInterface;
 import com.base.baselibs.net.MyStringCallback;
+import com.base.baselibs.util.LogUtils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.tbl.okhttputils.OkHttpUtils;
@@ -187,12 +189,12 @@ public class PostingsByClassificationFragment extends MyBaseFragment implements 
             }
         } else if (id==Common.NET_GET_BLOGCOLLECTION) {
             showToast("收藏成功");
-            mAdapter.setFavoriteById(1, position);
+            mAdapter.updataView(mAdapter.setFavoriteById(1, position), pullToRefreshListView.getRefreshableView(), 2);
         } else if (id==Common.NET_GET_BLOGCOLLECTION_NOT) {
             showToast("已取消收藏");
-            mAdapter.setFavoriteById(0, position);
+            mAdapter.updataView(mAdapter.setFavoriteById(0, position), pullToRefreshListView.getRefreshableView(), 2);
         } else if (id == Common.NET_ADD_BROWSE) {
-            mAdapter.addBrowse(blogId);
+            mAdapter.updataView(mAdapter.addBrowse(blogId), pullToRefreshListView.getRefreshableView(), 2);
         }
     }
 

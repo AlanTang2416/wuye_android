@@ -108,11 +108,14 @@ public class MycollectionActivity extends MyBaseActivity implements AdapterInter
                 }
                 mAdapter.addBody(mGetMyCollectionModel.getBody());
             }
-        } else if (id==Common.NET_GET_BLOGCOLLECTION_NOT) {
+        } else if (id==Common.NET_GET_BLOGCOLLECTION) {
+            showToast("收藏成功");
+            mAdapter.updataView(mAdapter.setFavoriteById(1, position), pullToRefreshListView.getRefreshableView(), 1);
+        }  else if (id==Common.NET_GET_BLOGCOLLECTION_NOT) {
             showToast("已取消收藏");
-            mAdapter.deleteById(position);
+            mAdapter.updataView(mAdapter.setFavoriteById(0, position), pullToRefreshListView.getRefreshableView(), 1);
         } else if (id == Common.NET_ADD_BROWSE) {
-            mAdapter.addBrowse(blogId);
+            mAdapter.updataView(mAdapter.addBrowse(blogId), pullToRefreshListView.getRefreshableView(), 1);
         }
     }
 
