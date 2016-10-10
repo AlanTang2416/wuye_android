@@ -286,6 +286,8 @@ public class MyBaseApplication extends BaseApplication {
                         mTouChuanOtherNotice.setTime(String.valueOf(System.currentTimeMillis()));
                         mTouChuanOtherNotice.setNoticeType(4);
                         getDaoSession().getTouChuanOtherNoticeDao().insert(mTouChuanOtherNotice);
+                    } else if (mGiftMessageModel!=null && mGiftMessageModel.getType()==20030) {//踢下线
+                        logout();
                     }
                     EventBus.getDefault().post(new YunXinAddFriendEvent());
                 } catch (JsonSyntaxException e){
@@ -786,13 +788,16 @@ public class MyBaseApplication extends BaseApplication {
                     public void onEvent(StatusCode status) {
                         LogUtils.e("User status changed to: " + status);
                         if (status.wontAutoLogin()) {
-                            // 被踢出、账号被禁用、密码错误等情况，自动登录失败，需要返回到登录界面进行重新登录操作
-                            cleanLoginData();
-//                            Toast.makeText(getmContext(), "账号已在其他地方登陆", Toast.LENGTH_SHORT).show();
-                            EventBus.getDefault().post(new YunXinAuthOutEvent());
+                            logout();
                         }
                     }
                 }, b);
+    }
+
+    private void logout() {
+        // 被踢出、账号被禁用、密码错误等情况，自动登录失败，需要返回到登录界面进行重新登录操作
+        cleanLoginData();
+        EventBus.getDefault().post(new YunXinAuthOutEvent());
     }
 
     @Override

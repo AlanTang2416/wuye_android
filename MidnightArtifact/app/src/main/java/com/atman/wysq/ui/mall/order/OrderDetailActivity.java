@@ -208,7 +208,7 @@ public class OrderDetailActivity extends MyBaseActivity implements PayDialog.pay
             orderDetailBt.setTextColor(getResources().getColor(R.color.color_black));
         } else {
             orderDetailBt.setText("联系客服");
-            orderDetailBt.setBackgroundResource(R.drawable.bt_orderlist_selector);
+            orderDetailBt.setBackgroundResource(R.drawable.bt_order_selector);
             orderDetailBt.setTextColor(getResources().getColor(R.color.orderdetail_text__bt));
         }
 

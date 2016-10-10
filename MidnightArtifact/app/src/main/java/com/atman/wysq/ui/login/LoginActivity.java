@@ -147,6 +147,10 @@ public class LoginActivity extends MyBaseActivity implements EditCheckBack {
                     .execute(new MyStringCallback(mContext, this, true));
         } else if (id == Common.NET_GET_USERINDEX) {
             GetMyUserIndexModel mGetMyUserIndexModel = mGson.fromJson(data, GetMyUserIndexModel.class);
+            if (mGetMyUserIndexModel.getBody().getUserDetailBean().getUserExt().getStatus()==3) {
+                showToast("因您违规操作，账号已被禁用");
+                return;
+            }
             MyBaseApplication.mGetMyUserIndexModel = mGetMyUserIndexModel;
             MyBaseApplication.getApplication().initObserver(true);
             Intent mIntent = new Intent();

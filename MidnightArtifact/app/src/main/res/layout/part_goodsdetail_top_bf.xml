@@ -104,7 +104,7 @@
                 android:paddingBottom="@dimen/dimen_dp_10"
                 android:paddingTop="@dimen/dimen_dp_10"
                 android:singleLine="true"
-                android:textColor="#700168"
+                android:textColor="#d78b31"
                 android:textSize="@dimen/dimen_sp_15" />
 
             <TextView
@@ -127,7 +127,7 @@
                 android:layout_marginLeft="@dimen/dimen_dp_10"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/part_goodsdetail_top_bf_originalprice_tx"
-                android:background="#5D5580"
+                android:background="#d78b31"
                 android:padding="@dimen/dimen_dp_5"
                 android:visibility="gone"
                 android:textSize="@dimen/dimen_sp_10"

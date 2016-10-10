@@ -36,7 +36,7 @@
             android:paddingTop="@dimen/dimen_dp_2"
             android:singleLine="true"
             android:text="¥660.00"
-            android:textColor="#700168"
+            android:textColor="#d78b31"
             android:textSize="@dimen/dimen_sp_13" />
 
         <TextView

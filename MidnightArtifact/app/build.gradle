@@ -10,7 +10,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
-        versionName "2.1.0"
+        versionName "2.1.1"
         multiDexEnabled true
     }
 
@@ -51,7 +51,8 @@ android {
             buildConfigField "boolean", "LEO_DEBUG", "false"
 
             minifyEnabled false
-            shrinkResources true
+            //移除无用资源
+            shrinkResources false
             zipAlignEnabled true
 
             signingConfig signingConfigs.releaseConfig

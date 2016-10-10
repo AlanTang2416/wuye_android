@@ -286,7 +286,7 @@
             android:layout_weight="1"
             android:gravity="right"
             android:text="总金额："
-            android:textColor="#DC44A0"
+            android:textColor="#d78b31"
             android:textSize="@dimen/dimen_sp_14" />
     </LinearLayout>
 
@@ -298,7 +298,7 @@
         android:layout_marginBottom="@dimen/dimen_dp_10"
         android:layout_marginLeft="@dimen/dimen_dp_40"
         android:layout_marginRight="@dimen/dimen_dp_40"
-        android:background="@drawable/bt_orderlist_selector"
+        android:background="@drawable/bt_order_selector"
         android:text="联系客服"
         android:textColor="#50D173"
         android:textSize="@dimen/dimen_sp_13" />

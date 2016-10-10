@@ -1,17 +1,17 @@
 [
     {
-        "outputFile": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\build\\intermediates\\res\\merged\\debug\\values\\values.xml",
+        "outputFile": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
         "map": [
             {
                 "to": {
-                    "startLine": 4,
+                    "startLine": 17,
                     "startColumn": 4,
-                    "startOffset": 1783,
+                    "startOffset": 1932,
                     "endColumn": 63,
-                    "endOffset": 1842
+                    "endOffset": 1991
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\dimens.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/dimens.xml",
                     "position": {
                         "startLine": 6,
                         "startColumn": 4,
@@ -23,14 +23,14 @@
             },
             {
                 "to": {
-                    "startLine": 5,
+                    "startLine": 18,
                     "startColumn": 4,
-                    "startOffset": 1847,
+                    "startOffset": 1996,
                     "endColumn": 63,
-                    "endOffset": 1906
+                    "endOffset": 2055
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\dimens.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/dimens.xml",
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,
@@ -42,14 +42,14 @@
             },
             {
                 "to": {
-                    "startLine": 6,
+                    "startLine": 19,
                     "startColumn": 4,
-                    "startOffset": 1911,
+                    "startOffset": 2060,
                     "endColumn": 54,
-                    "endOffset": 1961
+                    "endOffset": 2110
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\dimens.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/dimens.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -61,14 +61,14 @@
             },
             {
                 "to": {
-                    "startLine": 7,
+                    "startLine": 20,
                     "startColumn": 4,
-                    "startOffset": 1966,
+                    "startOffset": 2115,
                     "endColumn": 56,
-                    "endOffset": 2018
+                    "endOffset": 2167
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\dimens.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/dimens.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -80,14 +80,14 @@
             },
             {
                 "to": {
-                    "startLine": 8,
+                    "startLine": 21,
                     "startColumn": 4,
-                    "startOffset": 2023,
+                    "startOffset": 2172,
                     "endColumn": 54,
-                    "endOffset": 2073
+                    "endOffset": 2222
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\dimens.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/dimens.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -99,14 +99,14 @@
             },
             {
                 "to": {
-                    "startLine": 9,
+                    "startLine": 22,
                     "startColumn": 4,
-                    "startOffset": 2078,
+                    "startOffset": 2227,
                     "endColumn": 74,
-                    "endOffset": 2148
+                    "endOffset": 2297
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\build\\intermediates\\exploded-aar\\com.android.support\\recyclerview-v7\\22.2.1\\res\\values\\values.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.2.1/res/values/values.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -118,14 +118,14 @@
             },
             {
                 "to": {
-                    "startLine": 10,
+                    "startLine": 23,
                     "startColumn": 4,
-                    "startOffset": 2153,
+                    "startOffset": 2302,
                     "endColumn": 37,
-                    "endOffset": 2186
+                    "endOffset": 2335
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\ids.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/ids.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -137,14 +137,14 @@
             },
             {
                 "to": {
-                    "startLine": 11,
+                    "startLine": 24,
                     "startColumn": 4,
-                    "startOffset": 2191,
+                    "startOffset": 2340,
                     "endColumn": 65,
-                    "endOffset": 2252
+                    "endOffset": 2401
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\build\\intermediates\\exploded-aar\\com.android.support\\recyclerview-v7\\22.2.1\\res\\values\\values.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.2.1/res/values/values.xml",
                     "position": {
                         "startLine": 8,
                         "startColumn": 4,
@@ -156,14 +156,14 @@
             },
             {
                 "to": {
-                    "startLine": 12,
+                    "startLine": 25,
                     "startColumn": 4,
-                    "startOffset": 2257,
+                    "startOffset": 2406,
                     "endColumn": 39,
-                    "endOffset": 2292
+                    "endOffset": 2441
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\ids.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/ids.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -175,14 +175,14 @@
             },
             {
                 "to": {
-                    "startLine": 13,
+                    "startLine": 26,
                     "startColumn": 4,
-                    "startOffset": 2297,
+                    "startOffset": 2446,
                     "endColumn": 36,
-                    "endOffset": 2329
+                    "endOffset": 2478
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\ids.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/ids.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -194,14 +194,14 @@
             },
             {
                 "to": {
-                    "startLine": 14,
+                    "startLine": 27,
                     "startColumn": 4,
-                    "startOffset": 2334,
+                    "startOffset": 2483,
                     "endColumn": 101,
-                    "endOffset": 2431
+                    "endOffset": 2580
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/pull_refresh_strings.xml",
                     "position": {
                         "startLine": 8,
                         "startColumn": 4,
@@ -213,14 +213,14 @@
             },
             {
                 "to": {
-                    "startLine": 15,
+                    "startLine": 28,
                     "startColumn": 4,
-                    "startOffset": 2436,
+                    "startOffset": 2585,
                     "endColumn": 113,
-                    "endOffset": 2545
+                    "endOffset": 2694
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/pull_refresh_strings.xml",
                     "position": {
                         "startLine": 10,
                         "startColumn": 4,
@@ -232,14 +232,14 @@
             },
             {
                 "to": {
-                    "startLine": 16,
+                    "startLine": 29,
                     "startColumn": 4,
-                    "startOffset": 2550,
+                    "startOffset": 2699,
                     "endColumn": 107,
-                    "endOffset": 2653
+                    "endOffset": 2802
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/pull_refresh_strings.xml",
                     "position": {
                         "startLine": 9,
                         "startColumn": 4,
@@ -251,14 +251,14 @@
             },
             {
                 "to": {
-                    "startLine": 17,
+                    "startLine": 30,
                     "startColumn": 4,
-                    "startOffset": 2658,
+                    "startOffset": 2807,
                     "endColumn": 71,
-                    "endOffset": 2725
+                    "endOffset": 2874
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/pull_refresh_strings.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -270,14 +270,14 @@
             },
             {
                 "to": {
-                    "startLine": 18,
+                    "startLine": 31,
                     "startColumn": 4,
-                    "startOffset": 2730,
+                    "startOffset": 2879,
                     "endColumn": 69,
-                    "endOffset": 2795
+                    "endOffset": 2944
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/pull_refresh_strings.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -289,14 +289,14 @@
             },
             {
                 "to": {
-                    "startLine": 19,
+                    "startLine": 32,
                     "startColumn": 4,
-                    "startOffset": 2800,
+                    "startOffset": 2949,
                     "endColumn": 77,
-                    "endOffset": 2873
+                    "endOffset": 3022
                 },
                 "from": {
-                    "file": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\values\\pull_refresh_strings.xml",
+                    "file": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/values/pull_refresh_strings.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,

@@ -1,10 +1,10 @@
 [
     {
-        "merged": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\build\\intermediates\\res\\merged\\release\\drawable\\indicator_bg_top.xml",
-        "source": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\drawable\\indicator_bg_top.xml"
+        "merged": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/build/intermediates/res/merged/release/drawable/indicator_bg_top.xml",
+        "source": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/drawable/indicator_bg_top.xml"
     },
     {
-        "merged": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\build\\intermediates\\res\\merged\\release\\drawable\\indicator_bg_bottom.xml",
-        "source": "D:\\AndroidStudioProjects\\wuye_android\\MidnightArtifact\\handmark_pull_library\\src\\main\\res\\drawable\\indicator_bg_bottom.xml"
+        "merged": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/build/intermediates/res/merged/release/drawable/indicator_bg_bottom.xml",
+        "source": "/Users/tangbingliang/Desktop/AndroidStudioProjects/wuye_android/MidnightArtifact/handmark_pull_library/src/main/res/drawable/indicator_bg_bottom.xml"
     }
 ]

@@ -126,7 +126,7 @@
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#DC44A0"
+            android:textColor="#d78b31"
             android:text="总金额：¥ 14"/>
         
         <Button
@@ -135,7 +135,7 @@
             android:layout_height="@dimen/dimen_dp_25"
             android:text="联系客服"
             android:textSize="@dimen/dimen_sp_13"
-            android:textColor="#50D173"
+            android:textColor="@color/tab_text_selector"
             android:background="@drawable/bt_orderlist_selector"/>
     </LinearLayout>
 
